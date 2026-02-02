@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Basics — How AI Models Are Built, Trained & Used</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="model-basics.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <button class="nav-btn nav-home" id="homeBtn" aria-label="Go to first slide">⌂</button>
+        <div class="nav-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-text" id="progressText">1 / 1</span>
+        </div>
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn" aria-label="Previous">←</button>
+            <button class="nav-btn" id="nextBtn" aria-label="Next">→</button>
+        </div>
+    </nav>
+
+    <!-- Slides Container -->
+    <main class="slides-container" id="slidesContainer">
+        <!-- Slides rendered here -->
+    </main>
+
+    <script src="cards-data.js"></script>
+    <script src="model-basics.js"></script>
+</body>
+</html>
