@@ -416,7 +416,7 @@ const cardsData = [
             'These scores are turned into probabilities. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.'
         ],
         bullets: [
-            '<strong>Temperature:</strong> Controls the "risk." High temperature = roll the dice on lower-probability words (creativity)',
+            '<strong>Temperature:</strong> Controls the "risk." High temperature = roll the dice on lower-probability words (creativity). You often see this as a slider in AI apps.',
             '<strong>Autoregressive:</strong> The model picks one token, adds it to the prompt, and runs the entire skyscraper again for the next one',
             '<strong>Streaming:</strong> Why you see text appear word-by-word'
         ],

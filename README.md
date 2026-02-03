@@ -23,35 +23,34 @@ This presentation covers 24 comprehensive topics about AI models, from the basic
 
 ### Architecture (Arch)
 1. Introduction to modern AI models
-2. Before Transformers
-3. Tokens & Tokenization
-4. From Numbers to Meaning: Embeddings
-5. The Transformer Architecture
-6. Inside a Transformer Layer
-7. Attention: Query, Key, Value
-8. Multi-Head Attention
+2. Tokens & Tokenization
+3. From Numbers to Meaning: Embeddings
+4. Feed-Forward Neural Networks
+5. Recurrent Neural Networks (RNNs)
+6. Long Short-Term Memory (LSTM)
+7. Attention Mechanism
+8. The Transformer Architecture
+9. Inside a Transformer Layer
+10. Attention: Query, Key, Value
+11. Multi-Head Attention
 
 ### Training (Train)
-9. Pre-Training
-10. Post-Training
-11. Bias, Fairness & Limitations
+12. Pre-Training
+13. Post-Training
+14. Bias, Fairness & Limitations
 
 ### Inference (Infer)
-12. The Frozen State
-13. The Prompt Stack
-14. The Selection Dice Roll
-15. What happens when you send a message?
-23. Understanding the System
+15. The Frozen State & Prompt Stack
+16. What happens when you send a message?
+17. The Selection Dice Roll
 
 ### Advanced (Adv)
-16. Embedding Models: From Text to Vectors
-17. Semantic Search, Vector DBs & RAG
-18. Multimodal Models
-19. RAG (Retrieval-Augmented Generation)
-20. Tool Use (Function Calling)
-21. Reasoning: Two Paradigms
-22. Agentic Workflows
-24. Beyond Transformers
+18. RAG: Giving Models Access to Knowledge
+19. Beyond Text: Multimodal Models & Tool Use
+20. Reasoning: Two Paradigms
+21. Agentic Workflows
+22. Recap: Key Learnings
+23. Beyond Transformers
 
 ## Getting Started
 
