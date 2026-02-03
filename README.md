@@ -75,7 +75,7 @@ AI-model-basics/
 ├── model-basics.css    # Stylesheet
 ├── model-basics.js     # Slideshow logic
 ├── cards-data.js       # Slide content data
-└── README.md          # This file
+└── README.md           # This file
 ```
 
 ## Browser Support
