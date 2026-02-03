@@ -156,7 +156,35 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '7. Attention Mechanism',
+        title: '7. Encoder-Decoder Architecture (Seq2Seq)',
+        description: 'Encoder-decoder architecture enables models to transform variable-length input sequences into variable-length output sequences.',
+        paragraphs: [
+            'RNNs and LSTMs process sequences, but they struggle with a key challenge: how do you transform one sequence into another sequence of different length? Translating "Hello" to "Bonjour" (5 letters → 7 letters), or summarizing a document into a headline. <strong>Encoder-decoder architecture</strong> (also called <strong>Seq2Seq</strong>) was invented to solve this problem.',
+            'The architecture splits the task between two RNNs working together: The <strong>encoder</strong> processes the entire input sequence token-by-token, compressing all that information into a single fixed-size vector called the <strong>context vector</strong> (usually the final hidden state). The <strong>decoder</strong> then takes this context vector and generates the output sequence, one token at a time, using its own RNN.',
+            'This was a breakthrough for machine translation (2014). Instead of word-by-word replacement, the model could "read" an entire sentence, understand its meaning, then "write" the translation. Both encoder and decoder were typically LSTMs, leveraging their improved memory capabilities.',
+            'However, encoder-decoder models revealed a critical limitation: the <strong>context bottleneck</strong>. The entire meaning of the input—whether a short phrase or a long document—must be compressed into a single fixed-size vector. For long sequences, this vector becomes an information bottleneck. Imagine compressing the entire plot of "War and Peace" into a single paragraph—you lose critical details. This limitation directly motivated the invention of attention mechanisms.'
+        ],
+        bullets: [
+            '<strong>Two-Part Architecture:</strong> Encoder (input → context vector) + Decoder (context vector → output)',
+            '<strong>Variable-Length I/O:</strong> Handles different input and output lengths, unlike feed-forward networks',
+            '<strong>Still Sequential:</strong> Both encoder and decoder are RNNs (usually LSTMs), processing one token at a time',
+            '<strong>Context Bottleneck:</strong> Fixed-size vector must capture entire input meaning—struggles with long sequences',
+            '<strong>Applications:</strong> Machine translation, text summarization, chatbots, image captioning'
+        ],
+        callout: {
+            type: 'insight',
+            content: '<strong>The Bottleneck Problem:</strong> Compressing "War and Peace" into a single vector? That fixed-size context vector became the limiting factor for long sequences. This fundamental limitation led directly to the invention of attention mechanisms, which let the decoder "look back" at the entire input instead of relying on a single compressed representation.'
+        },
+        resources: [
+            { type: 'video', title: 'Sequence-to-Sequence (seq2seq), Clearly Explained', meta: '14 min · StatQuest', url: 'https://www.youtube.com/watch?v=L8HKweZIOmg' },
+            { type: 'article', title: 'Visualizing A Neural Machine Translation Model', meta: '12 min · Jay Alammar', url: 'https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/' },
+            { type: 'video', title: 'LSTM-Based Seq2Seq Explained', meta: '10 min · Encoder-Decoder', url: 'https://www.youtube.com/watch?v=L0sut0EL0mM' }
+        ]
+    },
+    {
+        category: 'arch',
+        badge: 'Architecture',
+        title: '8. Attention Mechanism',
         description: 'Attention allows models to focus on relevant parts of the input sequence, solving long-range dependency problems.',
         paragraphs: [
             'The <strong>attention mechanism</strong> was introduced to solve the long-range dependency problem. Instead of compressing all information into a single hidden state, attention allows the model to directly look at and weight relevant parts of the input sequence.',
@@ -182,7 +210,7 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '8. The Transformer Architecture',
+        title: '9. The Transformer Architecture',
         description: 'The Transformer is a stack of repeating layers that progressively refine token representations through attention and processing.',
         paragraphs: [
             'A Transformer isn\'t a single operation—it\'s a <strong>stack of identical layers</strong> (typically 12, 24, 48, or more) that process embeddings sequentially. Think of it as a skyscraper: each floor performs the same two operations on every token\'s vector as it passes through.',
@@ -207,7 +235,7 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '9. Inside a Transformer Layer',
+        title: '10. Inside a Transformer Layer',
         description: 'Each layer contains attention, feed-forward processing, normalization, and residual connections.',
         paragraphs: [
             'Each Transformer layer has a consistent structure that repeats throughout the network. Understanding this pattern reveals how information flows and accumulates:',
@@ -234,7 +262,7 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '10. Attention: Query, Key, Value',
+        title: '11. Attention: Query, Key, Value',
         description: 'Attention lets tokens look at each other through Query, Key, and Value vectors.',
         paragraphs: [
             'Attention solves a core problem: how can every token simultaneously understand context from all other tokens? The answer: Query, Key, Value.',
@@ -261,7 +289,7 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '11. Multi-Head Attention',
+        title: '12. Multi-Head Attention',
         description: 'Models run attention multiple times in parallel, each "head" learning to focus on different relationships.',
         paragraphs: [
             'Models don\'t run attention once—they run it multiple times in parallel, called <strong>multi-head attention</strong>. A model might have 8, 16, or 32 attention heads operating simultaneously.',
@@ -287,7 +315,7 @@ const cardsData = [
     {
         category: 'train',
         badge: 'Training',
-        title: '12. Pre-Training',
+        title: '13. Pre-Training',
         description: 'Pre-training is where models learn the patterns, facts, and structures of human knowledge from massive text datasets.',
         paragraphs: [
             'During pre-training, the model consumes <strong>trillions of tokens</strong> from books, websites, research papers, and code repositories. The training objective is simple: predict the next token. Wrong predictions trigger tiny weight adjustments via backpropagation.',
@@ -310,7 +338,7 @@ const cardsData = [
     {
         category: 'train',
         badge: 'Training',
-        title: '13. Post-Training',
+        title: '14. Post-Training',
         description: 'Post-training transforms a knowledgeable but unruly base model into a helpful, safe, and aligned assistant.',
         paragraphs: [
             'Base models know a lot but behave poorly—generating offensive content, refusing simple requests, or rambling endlessly. <strong>Post-training</strong> teaches them to be useful assistants through two key techniques:',
@@ -334,7 +362,7 @@ const cardsData = [
     {
         category: 'train',
         badge: 'Training',
-        title: '14. Bias, Fairness & Limitations',
+        title: '15. Bias, Fairness & Limitations',
         description: 'AI models inherit the biases, gaps, and perspectives present in their training data—they are mirrors, not arbiters of truth.',
         paragraphs: [
             'Training data comes from the internet, books, and human-generated content—all of which contain biases, stereotypes, and uneven representation. Models learn these patterns just as they learn grammar and facts. If training data overrepresents certain demographics or perspectives, the model will too.',
@@ -358,7 +386,7 @@ const cardsData = [
     {
         category: 'infer',
         badge: 'Inference',
-        title: '15. The Frozen State & Prompt Stack',
+        title: '16. The Frozen State & Prompt Stack',
         description: 'After training, model weights are frozen. Inference uses a structured prompt stack to generate responses without learning.',
         paragraphs: [
             'Once training completes, the model\'s weights are <strong>locked</strong>. Inference (generating responses) reads these weights but never modifies them. This is why chatting doesn\'t teach the model anything permanent—corrections only affect the current conversation\'s context.',
@@ -384,7 +412,7 @@ const cardsData = [
     {
         category: 'infer',
         badge: 'Summary',
-        title: '16. What happens when you send a message?',
+        title: '17. What happens when you send a message?',
         description: 'A simple end-to-end view of the inference loop.',
         paragraphs: [
             'Every chat turn runs the same basic pipeline: assemble the prompt, run a forward pass, pick the next token, and repeat.'
@@ -409,7 +437,7 @@ const cardsData = [
     {
         category: 'infer',
         badge: 'Inference',
-        title: '17. The Selection Dice Roll',
+        title: '18. The Selection Dice Roll',
         description: 'The final step: turning a "massaged" vector back into a human word.',
         paragraphs: [
             'At the roof of the skyscraper, the model has a highly refined vector. It compares this "thought" against its entire vocabulary and gives every word a score (<strong>Logits</strong>).',
@@ -434,7 +462,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '18. RAG: Giving Models Access to Knowledge',
+        title: '19. RAG: Giving Models Access to Knowledge',
         description: 'RAG extends simple chat by letting models retrieve and use external documents—overcoming knowledge cutoffs and accessing private data.',
         paragraphs: [
             'Simple chat is limited to the model\'s training data (with a knowledge cutoff date) and has no access to your private documents. <strong>Retrieval-Augmented Generation (RAG)</strong> solves this by dynamically fetching relevant information and inserting it into the model\'s context before generating a response.',
@@ -460,7 +488,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '19. Beyond Text: Multimodal Models & Tool Use',
+        title: '20. Beyond Text: Multimodal Models & Tool Use',
         description: 'Models now extend beyond simple text chat by processing multiple input types and taking real-world actions.',
         paragraphs: [
             'Simple text chat is just the beginning. Modern AI systems extend in two complementary directions: <strong>richer inputs</strong> (multimodal) and <strong>actionable outputs</strong> (tool use).',
@@ -488,7 +516,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '20. Reasoning: Two Paradigms',
+        title: '21. Reasoning: Two Paradigms',
         description: 'Reasoning capability evolved from simple prompting tricks to fundamental architectural changes in how models think.',
         paragraphs: [
             'Early language models struggled with multi-step reasoning—they would jump to conclusions or make arithmetic errors. Two distinct approaches emerged to address this, representing fundamentally different philosophies about where "thinking" should happen.',
@@ -515,7 +543,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '21. Agentic Workflows',
+        title: '22. Agentic Workflows',
         description: 'Combining reasoning, tools, and planning creates autonomous agents that can accomplish complex multi-step tasks.',
         paragraphs: [
             'An <strong>agent</strong> is fundamentally different from simple LLM chat. While a standard chatbot generates one response and stops, an agent operates in a <strong>perception-reasoning-action loop</strong>: it observes the current state, reasons about what to do next, takes actions using tools, observes the results, and continues until the goal is achieved.',
@@ -541,7 +569,7 @@ const cardsData = [
     {
         category: 'infer',
         badge: 'Conclusion',
-        title: '22. Recap: Key Learnings',
+        title: '23. Recap: Key Learnings',
         description: 'Understanding how AI models work transforms you from a passive user into an informed practitioner.',
         paragraphs: [
             'Modern AI isn\'t magic. It\'s a <strong>high-fidelity statistical mirror</strong> of human-created text, trained on trillions of tokens to predict plausible continuations. Understanding this—the frozen weights, tokenization quirks, training phases, and inference mechanics—transforms AI from a mysterious black box into a predictable, engineered system whose failures and capabilities make sense.',
@@ -567,7 +595,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'What\'s Next',
-        title: '23. Beyond Transformers',
+        title: '24. Beyond Transformers',
         description: 'Beyond transformers: JEPA, Mamba, MoE, RWKV/RetNet, and hybrids are shaping the next wave of model architectures.',
         paragraphs: [
             'Transformers dominate today, but several directions are already in production or heavy research.',

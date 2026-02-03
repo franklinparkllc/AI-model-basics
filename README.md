@@ -28,29 +28,30 @@ This presentation covers 24 comprehensive topics about AI models, from the basic
 4. Feed-Forward Neural Networks
 5. Recurrent Neural Networks (RNNs)
 6. Long Short-Term Memory (LSTM)
-7. Attention Mechanism
-8. The Transformer Architecture
-9. Inside a Transformer Layer
-10. Attention: Query, Key, Value
-11. Multi-Head Attention
+7. Encoder-Decoder Architecture (Seq2Seq)
+8. Attention Mechanism
+9. The Transformer Architecture
+10. Inside a Transformer Layer
+11. Attention: Query, Key, Value
+12. Multi-Head Attention
 
 ### Training (Train)
-12. Pre-Training
-13. Post-Training
-14. Bias, Fairness & Limitations
+13. Pre-Training
+14. Post-Training
+15. Bias, Fairness & Limitations
 
 ### Inference (Infer)
-15. The Frozen State & Prompt Stack
-16. What happens when you send a message?
-17. The Selection Dice Roll
+16. The Frozen State & Prompt Stack
+17. What happens when you send a message?
+18. The Selection Dice Roll
 
 ### Advanced (Adv)
-18. RAG: Giving Models Access to Knowledge
-19. Beyond Text: Multimodal Models & Tool Use
-20. Reasoning: Two Paradigms
-21. Agentic Workflows
-22. Recap: Key Learnings
-23. Beyond Transformers
+19. RAG: Giving Models Access to Knowledge
+20. Beyond Text: Multimodal Models & Tool Use
+21. Reasoning: Two Paradigms
+22. Agentic Workflows
+23. Recap: Key Learnings
+24. Beyond Transformers
 
 ## Getting Started
 
