@@ -50,8 +50,12 @@ This presentation covers 24 comprehensive topics about AI models, from the basic
 20. Beyond Text: Multimodal Models & Tool Use
 21. Reasoning: Two Paradigms
 22. Agentic Workflows
+
+### Conclusion
 23. Recap: Key Learnings
-24. Beyond Transformers
+
+### Looking Ahead
+24. Looking Ahead — emerging architectures (JEPA, Mamba, MoE, RWKV/RetNet, hybrids). Separate from the core pipeline; optional forward-looking content.
 
 ## Getting Started
 

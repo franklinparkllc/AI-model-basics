@@ -216,7 +216,8 @@ const cardsData = [
             'A Transformer isn\'t a single operation—it\'s a <strong>stack of identical layers</strong> (typically 12, 24, 48, or more) that process embeddings sequentially. Think of it as a skyscraper: each floor performs the same two operations on every token\'s vector as it passes through.',
             '<strong>Each Transformer layer contains:</strong> (1) A <strong>self-attention mechanism</strong> that lets tokens "communicate" and update their representations based on context, and (2) A <strong>feed-forward network</strong> that processes each token\'s vector independently, refining its meaning.',
             'As vectors flow upward through the stack, they accumulate increasingly abstract and context-aware information. Early layers capture basic patterns like grammar and syntax. Middle layers learn relationships and simple logic. Deep layers encode complex reasoning, nuanced meaning, and task-specific behavior.',
-            'The power of Transformers comes from this <strong>deep, repeated processing</strong>. Each layer adds a small refinement, but stacking dozens of them allows the model to build sophisticated representations from simple token embeddings.'
+            'The power of Transformers comes from this <strong>deep, repeated processing</strong>. Each layer adds a small refinement, but stacking dozens of them allows the model to build sophisticated representations from simple token embeddings.',
+            'Most modern LLMs (GPT, Claude, etc.) use only the decoder part of this architecture—<strong>decoder-only Transformers</strong>—without a separate encoder.'
         ],
         bullets: [
             '<strong>Layer Structure:</strong> Self-attention + feed-forward network, repeated N times',
@@ -240,7 +241,7 @@ const cardsData = [
         paragraphs: [
             'Each Transformer layer has a consistent structure that repeats throughout the network. Understanding this pattern reveals how information flows and accumulates:',
             '<strong>Self-Attention:</strong> Tokens "talk" to each other, updating their vectors based on the entire sequence context (details in the next slide).',
-            '<strong>Feed-Forward Network:</strong> Each token\'s vector passes independently through a small neural network (expand to 4x size, transform, compress back). This adds non-linear processing power.',
+            '<strong>Feed-Forward Network:</strong> Each token\'s vector passes independently through a small neural network (expand to 4x size, transform, compress back). This adds non-linear processing power. (Here "feed-forward" means the small MLP inside each layer, not the earlier feed-forward network architecture in slide 4.)',
             '<strong>Layer Normalization:</strong> Before attention and before feed-forward, vectors are normalized to consistent scale. This prevents training instability in deep networks.',
             '<strong>Residual Connections:</strong> After attention and feed-forward, the original input is added back. These "skip connections" preserve information and enable training of 100+ layer networks.'
         ],
@@ -267,7 +268,7 @@ const cardsData = [
         paragraphs: [
             'Attention solves a core problem: how can every token simultaneously understand context from all other tokens? The answer: Query, Key, Value.',
             'For each token, the model creates three vectors: <strong>Query (Q)</strong> — "What am I looking for?", <strong>Key (K)</strong> — "What do I represent?", and <strong>Value (V)</strong> — "What do I carry?"',
-            'Each token\'s Query is compared (dot product) to all Keys, producing <strong>attention scores</strong>. High scores = relevance. Scores are normalized (softmax) to weights, then used to compute a weighted average of all Values.',
+            'Each token\'s Query is compared (dot product) to all Keys, producing <strong>attention scores</strong>. High scores = relevance. Scores are normalized by <strong>softmax</strong> (which turns scores into probabilities that sum to 1) to weights, then used to compute a weighted average of all Values.',
             '<strong>Example:</strong> In "The bank by the river," "bank" compares its Query to all Keys. "River" scores high, so "bank" pulls in its Value, morphing toward "riverbank" not "financial institution."'
         ],
         bullets: [
@@ -343,9 +344,10 @@ const cardsData = [
         paragraphs: [
             'Base models know a lot but behave poorly—generating offensive content, refusing simple requests, or rambling endlessly. <strong>Post-training</strong> teaches them to be useful assistants through two key techniques:',
             '<strong>Supervised Fine-Tuning (SFT):</strong> Humans write ideal responses to thousands of prompts. The model learns to mimic this helpful behavior.',
-            '<strong>Reinforcement Learning from Human Feedback (RLHF):</strong> Humans rank multiple model responses (A > B > C). The model learns to maximize preference scores. Modern alternatives like <strong>DPO</strong> (Direct Preference Optimization) streamline this process.'
+            '<strong>Reinforcement Learning from Human Feedback (RLHF):</strong> Humans rank multiple model responses (A > B > C). The model learns to maximize preference scores. Modern alternatives like <strong>Direct Preference Optimization (DPO)</strong> streamline this process—DPO optimizes preferences directly without training a separate reward model.'
         ],
         bullets: [
+            '<strong>DPO (Direct Preference Optimization):</strong> Optimizes preferences directly from preference data, without a separate reward model—simpler and often more stable than RLHF',
             'Post-training instills safety guardrails (refusing harmful requests)',
             'Models learn conversational norms: being concise, admitting uncertainty, citing sources',
             'Trade-off: alignment reduces raw creativity and capability slightly'
@@ -395,7 +397,7 @@ const cardsData = [
         ],
         bullets: [
             '<strong>No Learning During Inference:</strong> Feedback doesn\'t update weights—the model is frozen',
-            '<strong>Context Window:</strong> The only "memory"—once it\'s full, earlier messages get truncated',
+            '<strong>Context Window:</strong> The fixed maximum number of tokens the model can see at once—the only "memory"; once it\'s full, earlier messages get truncated',
             '<strong>Long Conversations:</strong> Get slower and more expensive—entire history is reprocessed every turn',
             '<strong>Context Rot:</strong> In long chats, constraints can get buried or dropped, leading to drift',
             '<strong>Prompt Engineering:</strong> Clear instructions, examples, and formatting improve outputs'
@@ -522,13 +524,14 @@ const cardsData = [
             'Early language models struggled with multi-step reasoning—they would jump to conclusions or make arithmetic errors. Two distinct approaches emerged to address this, representing fundamentally different philosophies about where "thinking" should happen.',
             '<strong>Chain-of-Thought (CoT) — 2022:</strong> Discovered by Google Research, CoT is a <strong>prompting technique</strong> where you ask the model to "think step by step" or show its work. By generating intermediate reasoning steps, models dramatically improve on math, logic, and complex questions. Accuracy on grade-school math jumped from ~20% to ~60% with CoT prompting on GPT-3. <strong>Key limitation:</strong> The reasoning is visible, token-inefficient, and requires user-side prompt engineering.',
             '<strong>Inference-Time Compute (Test-Time Scaling) — 2024-2025:</strong> A paradigm shift where reasoning is <strong>built into the model itself</strong>. Instead of immediately answering, the model generates <strong>hidden reasoning tokens</strong>—internal "thoughts" not shown to the user. It explores multiple solution paths, verifies steps, and backtracks from errors. Models like OpenAI\'s o1, o3, and DeepSeek-R1 can "think" for seconds or minutes before responding. Performance scales with thinking time—on competitive programming and math olympiad problems, these models approach human expert level.',
-            'This shift represents a fundamental change: reasoning moved from <strong>prompt engineering</strong> (user responsibility) to <strong>model architecture</strong> (system capability). Modern reasoning models automatically invest compute in reasoning when problems are hard—they don\'t need to be asked to think step-by-step.'
+            'This shift represents a fundamental change: reasoning moved from <strong>prompt engineering</strong> (user responsibility) to <strong>model architecture</strong> (system capability). Modern reasoning models automatically invest compute in reasoning when problems are hard—they don\'t need to be asked to think step-by-step.',
+            'Unlike training compute, which is fixed before deployment, <strong>test-time compute</strong> is spent at each query—more thinking time generally means better answers on hard problems.'
         ],
         bullets: [
             '<strong>CoT (2022):</strong> Visible reasoning, user controls format, token-inefficient, works with any model',
             '<strong>Inference-Time Compute (2024+):</strong> Hidden reasoning, model controls strategy, token-efficient output, requires specialized training',
             '<strong>Performance Trade-off:</strong> Reasoning models are slower and more expensive per query, but dramatically more accurate on complex tasks',
-            '<strong>Scaling Law:</strong> Test-time compute scales inference—more thinking time → better results (unlike training compute which scales the model)'
+            '<strong>Scaling Law:</strong> Test-time compute scales inference—more thinking time → better results (unlike training compute, which scales the model)'
         ],
         callout: {
             type: 'insight',
@@ -594,22 +597,22 @@ const cardsData = [
     },
     {
         category: 'adv',
-        badge: 'What\'s Next',
-        title: '24. Beyond Transformers',
-        description: 'Beyond transformers: JEPA, Mamba, MoE, RWKV/RetNet, and hybrids are shaping the next wave of model architectures.',
+        badge: 'Looking Ahead',
+        title: '24. Looking Ahead',
+        description: 'A look beyond the core content: emerging architectures and research directions.',
         paragraphs: [
             'Transformers dominate today, but several directions are already in production or heavy research.',
             '<strong>JEPA (Joint Embedding Predictive Architecture):</strong> Yann LeCun\'s vision—predict in <em>representation space</em>, not pixels or tokens. Goal: sample-efficient learning, world models, planning. V-JEPA and I-JEPA are early implementations.',
             '<strong>Mamba & State Space Models (SSMs):</strong> Linear or near-linear sequence complexity instead of quadratic attention. Recurrent state, long context without the same memory cost. Used in some long-context and efficient LLMs.',
             '<strong>Mixture of Experts (MoE):</strong> Sparse activation—route each token to a subset of "expert" sub-networks instead of one dense stack. Lets you scale total parameters (e.g. 400B+) while keeping compute per token similar. Used in DeepSeek-V3, Llama-4, Gemini-2.5, Mixtral.',
-            '<strong>RWKV & RetNet:</strong> RNN-like inference (O(1) memory, no KV cache) with parallelizable training. "Successor to Transformer" narrative; constant-memory decoding and long context. RWKV-7 and RetNet are in active use.',
+            '<strong>RWKV & RetNet:</strong> RNN-like inference (O(1) memory) with parallelizable training. "Successor to Transformer" narrative; constant-memory decoding and long context. RWKV-7 and RetNet are in active use.',
             '<strong>Hybrids:</strong> Models that mix attention with SSMs and/or MoE (e.g. Jamba: attention + Mamba + MoE; Qwen3-Next, linear attention). "Attention was never enough"—combining mechanisms is a major trend.'
         ],
         bullets: [
             '<strong>JEPA:</strong> Predict in latent space → world models, planning',
             '<strong>Mamba/SSMs:</strong> Linear-time sequences → long context, efficiency',
             '<strong>MoE:</strong> Sparse experts → scale parameters without scaling compute per token',
-            '<strong>RWKV/RetNet:</strong> Recurrent inference, parallel training → O(1) decode, no KV cache',
+            '<strong>RWKV/RetNet:</strong> Recurrent inference, parallel training → O(1) decode',
             '<strong>Hybrids:</strong> Attention + SSM + MoE in one model; already in production'
         ],
         resources: [
