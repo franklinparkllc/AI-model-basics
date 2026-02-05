@@ -35,7 +35,7 @@ const cardsData = [
         paragraphs: [
             'AI models operate on numbers, not letters. A <strong>tokenizer</strong> converts text into integer IDs representing vocabulary fragments. For example, "Ingenious" might split into three tokens: <code>In</code>, <code>gen</code>, and <code>ious</code>.',
             'This approach (often <strong>BPE</strong>—<strong>Byte Pair Encoding</strong>—or similar) balances efficiency and flexibility: common words stay whole, rare words split into reusable parts.',
-            'BPE works at the byte level, using the 256 possible byte values (0-255) as a universal foundation. This allows it to represent any language, emoji, or Unicode character through UTF-8 encoding, making it language-agnostic.',
+            'Modern implementations like GPT\'s tokenizer use byte-level BPE, which operates on raw bytes rather than characters, using the 256 possible byte values (0-255) as a universal foundation. This allows it to represent any language, emoji, or Unicode character through UTF-8 encoding, making it language-agnostic.',
             'Multimodal models do the same idea for images (patches) and audio (chunks).'
         ],
         bullets: [
@@ -62,7 +62,7 @@ const cardsData = [
             'After tokenization, the model has a sequence of token IDs—integers like [4829, 2121, 8945]. But numbers alone are meaningless. The model needs to understand what each token <em>represents</em>.',
             'Enter <strong>embeddings</strong>: the model looks up each token ID in a massive learned table (the <strong>embedding matrix</strong>) and retrieves its corresponding <strong>vector</strong>—a list of hundreds or thousands of numbers. Each dimension captures some aspect of meaning: semantic properties, grammatical role, contextual patterns learned during training.',
             'These vectors live in <strong>Latent Space</strong>, a high-dimensional coordinate system where similar meanings cluster together. Early AI tried to pre-define these features (e.g., "Gender" or "Size"), but modern models discover them organically. A vector might have 4,096 dimensions, each representing a "latent" feature the model found useful, even if humans don\'t have a name for it.',
-            'The model also adds <strong>positional encodings</strong>—patterns that tell it where each token appears in the sequence. Without position, "dog bites man" and "man bites dog" would look identical. Position + meaning = the full input representation that flows into the Transformer layers.'
+            'The model also adds <strong>positional encodings</strong>—patterns that tell it where each token appears in the sequence. These encodings can be learned during training or use fixed mathematical patterns (like sine waves at different frequencies) to represent position. Without position, "dog bites man" and "man bites dog" would look identical. Position + meaning = the full input representation that flows into the Transformer layers.'
         ],
         bullets: [
             '<strong>Embedding Lookup:</strong> Token ID → retrieve learned vector from embedding table',
@@ -160,7 +160,7 @@ const cardsData = [
         description: 'The "Seq2Seq" breakthrough introduced the "Thought Vector"—a way to turn a whole sentence into a single mathematical point.',
         paragraphs: [
             'RNNs and LSTMs process sequences, but they struggle with a key challenge: how do you transform one sequence into another sequence of different length? <strong>Encoder-decoder architecture</strong> (also called <strong>Seq2Seq</strong>) was invented in 2014 by Ilya Sutskever and Kyunghyun Cho to solve this.',
-            'The architecture splits the task between two RNNs: The <strong>encoder</strong> processes the entire input sequence, compressing it into a single fixed-size vector in Latent Space called the <strong>context vector</strong> (often called a "Thought Vector"). The <strong>decoder</strong> then takes this single vector and "unpacks" it into a new sequence.',
+            'The architecture splits the task between two RNNs: The <strong>encoder</strong> processes the entire input sequence, compressing it into a single fixed-size vector in Latent Space called the <strong>context vector</strong> (often called a "Thought Vector"). The <strong>decoder</strong> then takes this single vector and "unpacks" it into a new sequence. (Note: "Thought Vector" was popular in early Seq2Seq work; modern papers typically just say "context vector.")',
             'Think of the "Thought Vector" as a <strong>universal coordinate</strong> for a concept. If you translate "The cat is on the mat" to French, the encoder finds the exact spot in the Map of Meaning (Latent Space) where that specific "thought" lives. The decoder then looks at that coordinate and describes it using French words.',
             'However, this revealed a critical limitation: the <strong>context bottleneck</strong>. Trying to compress a long, complex document into one single vector is like trying to summarize a whole book into one sentence—you lose the nuances. This limitation directly motivated the invention of <strong>Attention</strong>.'
         ],
@@ -229,7 +229,8 @@ const cardsData = [
             content: '<strong>The Skyscraper Analogy:</strong> Ground floor tokens know only their own meaning. As they ride the elevator through dozens of floors—each adding context from surrounding words—they emerge at the top with rich, nuanced understanding of their role in the specific sentence.'
         },
         resources: [
-            { type: 'video', title: 'Transformers, the tech behind LLMs', meta: '58 min · 3Blue1Brown', url: 'https://www.youtube.com/watch?v=KJtZARuO3JY' }
+            { type: 'video', title: 'Transformers, the tech behind LLMs', meta: '58 min · 3Blue1Brown', url: 'https://www.youtube.com/watch?v=KJtZARuO3JY' },
+            { type: 'article', title: 'The Illustrated GPT-2', meta: 'Jay Alammar · Visualizing GPT-2', url: 'https://jalammar.github.io/illustrated-gpt2/' }
         ]
     },
     {
