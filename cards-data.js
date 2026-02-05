@@ -56,23 +56,23 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '3. From Numbers to Meaning: Embeddings',
-        description: 'Token IDs are just numbers—embeddings transform them into rich, meaningful representations the model can process.',
+        title: '3. From Numbers to Meaning: Embeddings & Latent Space',
+        description: 'Token IDs are just numbers—embeddings transform them into rich, meaningful representations in a high-dimensional "Latent Space."',
         paragraphs: [
             'After tokenization, the model has a sequence of token IDs—integers like [4829, 2121, 8945]. But numbers alone are meaningless. The model needs to understand what each token <em>represents</em>.',
             'Enter <strong>embeddings</strong>: the model looks up each token ID in a massive learned table (the <strong>embedding matrix</strong>) and retrieves its corresponding <strong>vector</strong>—a list of hundreds or thousands of numbers. Each dimension captures some aspect of meaning: semantic properties, grammatical role, contextual patterns learned during training.',
-            'These vectors live in <strong>embedding space</strong>, a high-dimensional coordinate system where similar meanings cluster together. "Dog" and "puppy" sit close to each other. "King" and "queen" differ primarily along a "gender" axis. This geometry is how the model "understands" relationships without explicit rules.',
+            'These vectors live in <strong>Latent Space</strong>, a high-dimensional coordinate system where similar meanings cluster together. Early AI tried to pre-define these features (e.g., "Gender" or "Size"), but modern models discover them organically. A vector might have 4,096 dimensions, each representing a "latent" feature the model found useful, even if humans don\'t have a name for it.',
             'The model also adds <strong>positional encodings</strong>—patterns that tell it where each token appears in the sequence. Without position, "dog bites man" and "man bites dog" would look identical. Position + meaning = the full input representation that flows into the Transformer layers.'
         ],
         bullets: [
             '<strong>Embedding Lookup:</strong> Token ID → retrieve learned vector from embedding table',
-            '<strong>High-Dimensional Space:</strong> Vectors typically have 768, 1024, 4096+ dimensions',
-            '<strong>Learned During Training:</strong> The embedding table is optimized alongside the rest of the model',
+            '<strong>Latent Space:</strong> An organic "map of meaning" where distance = difference in concept',
+            '<strong>Learned Features:</strong> Models discover their own N-dimensional features (e.g., "blue," "tall," "hairy") during training',
             '<strong>Positional Encoding:</strong> Adds order information so word sequence matters'
         ],
         callout: {
             type: 'analogy',
-            content: '<strong>Analogy:</strong> If tokenization assigns each word a locker number, embeddings are the contents of that locker—a profile describing the word\'s meaning, usage, and relationships. Position encoding adds a timestamp: when that locker was opened in the sequence.'
+            content: '<strong>The Flavor Profile Analogy:</strong> If tokenization assigns each word a locker number, embeddings are the contents—a profile describing the word\'s "flavor." One dimension might be "sweetness," another "spiciness." In a 4,096-dimensional space, the model creates a hyper-detailed profile for every concept.'
         },
         resources: [
             { type: 'video', title: 'Tokens and Embeddings', meta: '7 min · Visual', url: 'https://www.youtube.com/watch?v=izbifbq3-eI' },
@@ -157,23 +157,22 @@ const cardsData = [
         category: 'arch',
         badge: 'Architecture',
         title: '7. Encoder-Decoder Architecture (Seq2Seq)',
-        description: 'Encoder-decoder architecture enables models to transform variable-length input sequences into variable-length output sequences.',
+        description: 'The "Seq2Seq" breakthrough introduced the concept of the "Thought Vector," enabling models to translate meaning rather than just words.',
         paragraphs: [
-            'RNNs and LSTMs process sequences, but they struggle with a key challenge: how do you transform one sequence into another sequence of different length? Translating "Hello" to "Bonjour" (5 letters → 7 letters), or summarizing a document into a headline. <strong>Encoder-decoder architecture</strong> (also called <strong>Seq2Seq</strong>) was invented to solve this problem.',
-            'The architecture splits the task between two RNNs working together: The <strong>encoder</strong> processes the entire input sequence token-by-token, compressing all that information into a single fixed-size vector called the <strong>context vector</strong> (usually the final hidden state). The <strong>decoder</strong> then takes this context vector and generates the output sequence, one token at a time, using its own RNN.',
-            'This was a breakthrough for machine translation (2014). Instead of word-by-word replacement, the model could "read" an entire sentence, understand its meaning, then "write" the translation. Both encoder and decoder were typically LSTMs, leveraging their improved memory capabilities.',
-            'However, encoder-decoder models revealed a critical limitation: the <strong>context bottleneck</strong>. The entire meaning of the input—whether a short phrase or a long document—must be compressed into a single fixed-size vector. For long sequences, this vector becomes an information bottleneck. Imagine compressing the entire plot of "War and Peace" into a single paragraph—you lose critical details. This limitation directly motivated the invention of attention mechanisms.'
+            'RNNs and LSTMs process sequences, but they struggle with a key challenge: how do you transform one sequence into another sequence of different length? <strong>Encoder-decoder architecture</strong> (also called <strong>Seq2Seq</strong>) was invented in 2014 by Ilya Sutskever and Kyunghyun Cho to solve this.',
+            'The architecture splits the task between two RNNs: The <strong>encoder</strong> processes the entire input sequence, compressing it into a single fixed-size vector in Latent Space called the <strong>context vector</strong> (or "Thought Vector"). The <strong>decoder</strong> then takes this single vector and "unpacks" it into a new sequence.',
+            'This was a massive shift in AI history. Instead of word-for-word replacement, the model could "read" an entire sentence, find its coordinate in the map of meaning (Latent Space), and then "write" that meaning in a different language or format.',
+            'However, this revealed a critical limitation: the <strong>context bottleneck</strong>. Trying to compress a long, complex document into one single vector is like trying to summarize a whole book into one sentence—you lose the nuances. This limitation directly motivated the invention of <strong>Attention</strong>.'
         ],
         bullets: [
-            '<strong>Two-Part Architecture:</strong> Encoder (input → context vector) + Decoder (context vector → output)',
-            '<strong>Variable-Length I/O:</strong> Handles different input and output lengths, unlike feed-forward networks',
-            '<strong>Still Sequential:</strong> Both encoder and decoder are RNNs (usually LSTMs), processing one token at a time',
-            '<strong>Context Bottleneck:</strong> Fixed-size vector must capture entire input meaning—struggles with long sequences',
-            '<strong>Applications:</strong> Machine translation, text summarization, chatbots, image captioning'
+            '<strong>The Thought Vector:</strong> A single point in Latent Space representing an entire sequence\'s meaning',
+            '<strong>Variable-Length I/O:</strong> Finally allowed mapping different input and output lengths (e.g., translation)',
+            '<strong>Historical Bridge:</strong> Scaled the logic of Word2Vec (words as vectors) to entire sentences',
+            '<strong>Context Bottleneck:</strong> A single fixed-size vector cannot hold infinite detail'
         ],
         callout: {
             type: 'insight',
-            content: '<strong>The Bottleneck Problem:</strong> Compressing "War and Peace" into a single vector? That fixed-size context vector became the limiting factor for long sequences. This fundamental limitation led directly to the invention of attention mechanisms, which let the decoder "look back" at the entire input instead of relying on a single compressed representation.'
+            content: '<strong>The Bottleneck:</strong> Imagine trying to compress the entire plot of "War and Peace" into a single paragraph. You get the gist, but you lose the details. This "bottleneck" is what led researchers to ask: <em>What if the decoder could look back at the original words whenever it needed to?</em>'
         },
         resources: [
             { type: 'video', title: 'Sequence-to-Sequence (seq2seq), Clearly Explained', meta: '14 min · StatQuest', url: 'https://www.youtube.com/watch?v=L8HKweZIOmg' },
