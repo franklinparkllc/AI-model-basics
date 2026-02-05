@@ -82,13 +82,13 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '4. Feed-Forward Neural Networks',
-        description: 'Feed-forward networks process data in one direction, forming the foundation for all neural network architectures.',
+        title: '4. Feed-Forward Neural Networks (FFNN)',
+        description: 'The "classic" neural network architecture where data flows in one direction—the ancestor of all modern AI.',
         paragraphs: [
-            '<strong>Feed-forward neural networks</strong> were the first successful neural network architecture, dating back to the <strong>Perceptron</strong> developed by Frank Rosenblatt in 1957-1958. These networks process information in a single direction: input → hidden layers → output, with no feedback loops or memory.',
-            'Early single-layer perceptrons could only solve linearly separable problems. The breakthrough came with <strong>multilayer feed-forward networks</strong> and the <strong>backpropagation algorithm</strong>. Paul Werbos developed backpropagation in 1971, but it remained largely unknown until Rumelhart, Hinton, and Williams popularized it in 1986.',
-            '<strong>Backpropagation</strong> enables training of deep networks by propagating errors backward through layers, adjusting weights to minimize prediction errors. This made it possible to train networks with multiple hidden layers, unlocking the power of deep learning.',
-            'However, feed-forward networks have a fundamental limitation: they process each input independently with no memory of previous inputs. This makes them excellent for static data (images, tabular data) but unsuitable for sequential data where order and context matter.'
+            '<strong>Feed-forward neural networks</strong> were the first successful neural network architecture, dating back to the <strong>Perceptron</strong> (1958). These networks process information in a single direction: input → hidden layers → output, with no loops or memory.',
+            'Early perceptrons could only solve simple linear problems. The breakthrough came with <strong>multilayer networks</strong> and <strong>backpropagation</strong> (1986), which allowed models to learn complex, non-linear relationships by adjusting weights across multiple layers.',
+            'While these "classic" FFNNs are the foundation of deep learning, they have a fundamental limitation: they process each input independently. They have no "memory" of what came before, making them unsuitable for sequential data like sentences or music on their own.',
+            '<strong>Note on Terminology:</strong> In modern Transformers, we still use small FFNNs <em>inside</em> every layer (see Slide 10) to process tokens, but the overall Transformer architecture uses Attention to solve the "no memory" problem.'
         ],
         bullets: [
             '<strong>One-Way Flow:</strong> Data flows forward only (input → output), no feedback loops',
@@ -157,17 +157,17 @@ const cardsData = [
         category: 'arch',
         badge: 'Architecture',
         title: '7. Encoder-Decoder Architecture (Seq2Seq)',
-        description: 'The "Seq2Seq" breakthrough introduced the concept of the "Thought Vector," enabling models to translate meaning rather than just words.',
+        description: 'The "Seq2Seq" breakthrough introduced the "Thought Vector"—a way to turn a whole sentence into a single mathematical point.',
         paragraphs: [
             'RNNs and LSTMs process sequences, but they struggle with a key challenge: how do you transform one sequence into another sequence of different length? <strong>Encoder-decoder architecture</strong> (also called <strong>Seq2Seq</strong>) was invented in 2014 by Ilya Sutskever and Kyunghyun Cho to solve this.',
-            'The architecture splits the task between two RNNs: The <strong>encoder</strong> processes the entire input sequence, compressing it into a single fixed-size vector in Latent Space called the <strong>context vector</strong> (or "Thought Vector"). The <strong>decoder</strong> then takes this single vector and "unpacks" it into a new sequence.',
-            'This was a massive shift in AI history. Instead of word-for-word replacement, the model could "read" an entire sentence, find its coordinate in the map of meaning (Latent Space), and then "write" that meaning in a different language or format.',
+            'The architecture splits the task between two RNNs: The <strong>encoder</strong> processes the entire input sequence, compressing it into a single fixed-size vector in Latent Space called the <strong>context vector</strong> (often called a "Thought Vector"). The <strong>decoder</strong> then takes this single vector and "unpacks" it into a new sequence.',
+            'Think of the "Thought Vector" as a <strong>universal coordinate</strong> for a concept. If you translate "The cat is on the mat" to French, the encoder finds the exact spot in the Map of Meaning (Latent Space) where that specific "thought" lives. The decoder then looks at that coordinate and describes it using French words.',
             'However, this revealed a critical limitation: the <strong>context bottleneck</strong>. Trying to compress a long, complex document into one single vector is like trying to summarize a whole book into one sentence—you lose the nuances. This limitation directly motivated the invention of <strong>Attention</strong>.'
         ],
         bullets: [
-            '<strong>The Thought Vector:</strong> A single point in Latent Space representing an entire sequence\'s meaning',
+            '<strong>Context Vector:</strong> A single point in Latent Space representing an entire sequence\'s meaning',
+            '<strong>Universal Coordinate:</strong> The same "thought" should sit in the same spot, regardless of the language used to describe it',
             '<strong>Variable-Length I/O:</strong> Finally allowed mapping different input and output lengths (e.g., translation)',
-            '<strong>Historical Bridge:</strong> Scaled the logic of Word2Vec (words as vectors) to entire sentences',
             '<strong>Context Bottleneck:</strong> A single fixed-size vector cannot hold infinite detail'
         ],
         callout: {
@@ -240,7 +240,8 @@ const cardsData = [
         paragraphs: [
             'Each Transformer layer has a consistent structure that repeats throughout the network. Understanding this pattern reveals how information flows and accumulates:',
             '<strong>Self-Attention:</strong> Tokens "talk" to each other, updating their vectors based on the entire sequence context (details in the next slide).',
-            '<strong>Feed-Forward Network:</strong> Each token\'s vector passes independently through a small neural network (expand to 4x size, transform, compress back). This adds non-linear processing power. (Here "feed-forward" means the small MLP inside each layer, not the earlier feed-forward network architecture in slide 4.)',
+            '<strong>Feed-Forward Network:</strong> Each token\'s vector passes independently through a small neural network (expand to 4x size, transform, compress back). This is where the model "thinks" about each token individually after the attention step has gathered context.',
+            '<strong>Terminology Note:</strong> While the <em>overall</em> Transformer isn\'t a feed-forward network (because of Attention), it uses these small FFNN blocks inside every layer as "processing stations" for the tokens.',
             '<strong>Layer Normalization:</strong> Before attention and before feed-forward, vectors are normalized to consistent scale. This prevents training instability in deep networks.',
             '<strong>Residual Connections:</strong> After attention and feed-forward, the original input is added back. These "skip connections" preserve information and enable training of 100+ layer networks.'
         ],
@@ -267,7 +268,7 @@ const cardsData = [
         paragraphs: [
             'Attention solves a core problem: how can every token simultaneously understand context from all other tokens? The answer: Query, Key, Value.',
             'For each token, the model creates three vectors: <strong>Query (Q)</strong> — "What am I looking for?", <strong>Key (K)</strong> — "What do I represent?", and <strong>Value (V)</strong> — "What do I carry?"',
-            'Each token\'s Query is compared (dot product) to all Keys, producing <strong>attention scores</strong>. High scores = relevance. Scores are normalized by <strong>softmax</strong> (which turns scores into probabilities that sum to 1) to weights, then used to compute a weighted average of all Values.',
+            'Each token\'s Query is compared (dot product) to all Keys, producing <strong>attention scores</strong>. High scores = relevance. These scores are normalized by <strong>softmax</strong>—a function that converts raw scores into probabilities that sum to 1. High scores get most of the "probability mass," while low scores get nearly zero. These weights are then used to compute a weighted average of all Values.',
             '<strong>Example:</strong> In "The bank by the river," "bank" compares its Query to all Keys. "River" scores high, so "bank" pulls in its Value, morphing toward "riverbank" not "financial institution."'
         ],
         bullets: [
@@ -318,7 +319,8 @@ const cardsData = [
         title: '13. Pre-Training',
         description: 'Pre-training is where models learn the patterns, facts, and structures of human knowledge from massive text datasets.',
         paragraphs: [
-            'During pre-training, the model consumes <strong>trillions of tokens</strong> from books, websites, research papers, and code repositories. The training objective is simple: predict the next token. Wrong predictions trigger tiny weight adjustments via backpropagation.',
+            'During pre-training, the model consumes <strong>trillions of tokens</strong> from books, websites, research papers, and code repositories. The training objective is simple: predict the next token. Wrong predictions trigger tiny weight adjustments via <strong>backpropagation</strong>.',
+            'The same backpropagation algorithm popularized in 1986 (see Slide 4) now runs across thousands of GPUs simultaneously, allowing the model to learn from errors at an astronomical scale.',
             'This process takes months on thousands of GPUs and costs millions of dollars. The result? A <strong>base model</strong> that can complete sentences, generate code, and recall facts—but often produces rambling or unhelpful outputs.'
         ],
         bullets: [
@@ -343,7 +345,7 @@ const cardsData = [
         paragraphs: [
             'Base models know a lot but behave poorly—generating offensive content, refusing simple requests, or rambling endlessly. <strong>Post-training</strong> teaches them to be useful assistants through two key techniques:',
             '<strong>Supervised Fine-Tuning (SFT):</strong> Humans write ideal responses to thousands of prompts. The model learns to mimic this helpful behavior.',
-            '<strong>Reinforcement Learning from Human Feedback (RLHF):</strong> Humans rank multiple model responses (A > B > C). The model learns to maximize preference scores. Modern alternatives like <strong>Direct Preference Optimization (DPO)</strong> streamline this process—DPO optimizes preferences directly without training a separate reward model.'
+            '<strong>Reinforcement Learning from Human Feedback (RLHF):</strong> Humans rank multiple model responses (A > B > C). The model learns to maximize preference scores. Modern alternatives like <strong>Direct Preference Optimization (DPO)</strong> streamline this process—DPO skips the reward model entirely by directly optimizing the policy to prefer better responses, making training more stable and efficient.'
         ],
         bullets: [
             '<strong>DPO (Direct Preference Optimization):</strong> Optimizes preferences directly from preference data, without a separate reward model—simpler and often more stable than RLHF',
@@ -391,19 +393,18 @@ const cardsData = [
         description: 'After training, model weights are frozen. Inference uses a structured prompt stack to generate responses without learning.',
         paragraphs: [
             'Once training completes, the model\'s weights are <strong>locked</strong>. Inference (generating responses) reads these weights but never modifies them. This is why chatting doesn\'t teach the model anything permanent—corrections only affect the current conversation\'s context.',
-            '<strong>In-Context Learning</strong> is the workaround: if you provide examples in your prompt, the model adapts its outputs to match those patterns—but only for that single interaction. After the conversation ends, the model "forgets" everything.',
-            'When you send a message, the model doesn\'t just see your text. It processes a <strong>prompt stack</strong> with multiple layers: <strong>System Prompt</strong> (hidden instructions defining the model\'s persona), <strong>Conversation History</strong> (every prior message re-sent on each turn), and <strong>User Prompt</strong> (your actual message, often wrapped in XML tags).'
+            'When you send a message, the system assembles a <strong>prompt stack</strong>: (1) <strong>System Prompt</strong> (hidden instructions defining persona), (2) <strong>Conversation History</strong> (prior messages re-sent on each turn), and (3) <strong>User Prompt</strong> (your message).',
+            'This entire stack is tokenized and fed through the "skyscraper" of Transformer layers. The model then enters an <strong>Autoregressive Loop</strong>: it predicts one token, appends it to the prompt, and runs the entire process again to find the next token. This is why you see text appear word-by-word (streaming).'
         ],
         bullets: [
-            '<strong>No Learning During Inference:</strong> Feedback doesn\'t update weights—the model is frozen',
-            '<strong>Context Window:</strong> The fixed maximum number of tokens the model can see at once—the only "memory"; once it\'s full, earlier messages get truncated',
-            '<strong>Long Conversations:</strong> Get slower and more expensive—entire history is reprocessed every turn',
-            '<strong>Context Rot:</strong> In long chats, constraints can get buried or dropped, leading to drift',
-            '<strong>Prompt Engineering:</strong> Clear instructions, examples, and formatting improve outputs'
+            '<strong>Frozen Weights:</strong> Feedback doesn\'t update the model\'s "brain" permanently',
+            '<strong>Context Window:</strong> The fixed maximum number of tokens the model can "see" at once',
+            '<strong>Prompt Assembly:</strong> System + History + User message = the full input',
+            '<strong>Autoregressive Loop:</strong> The model generates one token at a time, feeding its own output back as input'
         ],
         callout: {
             type: 'note',
-            content: '<strong>Note:</strong> This is why long conversations become expensive and slow. Each new response requires reprocessing thousands of prior tokens. <strong>Tip:</strong> Periodically restate the goal and key constraints (or start a fresh thread with a short summary) to reduce drift.'
+            content: '<strong>The Context Bottleneck:</strong> Because the entire history is re-processed every turn, long conversations get slower and more expensive. Once the context window is full, the model "forgets" the earliest parts of the chat.'
         },
         resources: [
             { type: 'article', title: 'Claude Prompting Best Practices', meta: 'Anthropic · Prompt engineering', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices' },
@@ -412,58 +413,33 @@ const cardsData = [
     },
     {
         category: 'infer',
-        badge: 'Summary',
-        title: '17. What happens when you send a message?',
-        description: 'A simple end-to-end view of the inference loop.',
-        paragraphs: [
-            'Every chat turn runs the same basic pipeline: assemble the prompt, run a forward pass, pick the next token, and repeat.'
-        ],
-        bullets: [
-            '<strong>1. Input Assembly:</strong> System prompt + conversation history + user message → tokenized into integer IDs',
-            '<strong>2. Forward Pass:</strong> Token IDs flow through the frozen Transformer layers (attention + feed-forward layers)',
-            '<strong>3. Token Selection:</strong> The model scores possible next tokens → picks one (greedy or sampling/temperature)',
-            '<strong>4. Autoregressive Loop:</strong> Append the generated token, feed it back in, repeat until a stop condition',
-            '<strong>5. Optional System Steps:</strong> Apply safety policies, execute tool calls, and/or insert retrieved documents (RAG)',
-            '<strong>6. Streaming:</strong> Tokens are sent to the user incrementally as they are generated'
-        ],
-        callout: {
-            type: 'note',
-            content: '<strong>Note:</strong> Speed depends on model size, hardware, context length, and how much extra reasoning/tool use is happening.'
-        },
-        resources: [
-            { type: 'video', title: 'AI Inference: The Secret to AI\'s Superpowers', meta: 'IBM Technology', url: 'https://www.youtube.com/watch?v=XtT5i0ZeHHE&t=19s' },
-            { type: 'video', title: 'An AI Prompt Engineer Shares Her Secrets', meta: 'Fortune Magazine', url: 'https://www.youtube.com/watch?v=AxfmzLz9xXM' }
-        ]
-    },
-    {
-        category: 'infer',
         badge: 'Inference',
-        title: '18. The Selection Dice Roll',
+        title: '17. The Selection Dice Roll',
         description: 'The final step: turning a "massaged" vector back into a human word.',
         paragraphs: [
             'At the roof of the skyscraper, the model has a highly refined vector. It compares this "thought" against its entire vocabulary and gives every word a score (<strong>Logits</strong>).',
-            'These scores are turned into probabilities. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.'
+            'These scores are turned into probabilities. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.',
+            '<strong>Temperature</strong> controls the "risk." High temperature = roll the dice on lower-probability words (creativity). Low temperature = pick the most likely word (predictability).'
         ],
         bullets: [
-            '<strong>Temperature:</strong> Controls the "risk." High temperature = roll the dice on lower-probability words (creativity). You often see this as a slider in AI apps.',
-            '<strong>Autoregressive:</strong> The model picks one token, adds it to the prompt, and runs the entire skyscraper again for the next one',
-            '<strong>Streaming:</strong> Why you see text appear word-by-word'
+            '<strong>Logits:</strong> Raw scores for every possible token in the vocabulary',
+            '<strong>Temperature:</strong> A slider that adjusts how much "risk" the model takes in selection',
+            '<strong>Probabilistic:</strong> The model is optimized for "plausibility," not necessarily truth',
+            '<strong>Streaming:</strong> Tokens are sent to the user as they are generated, one by one'
         ],
         callout: {
             type: 'insight',
-            content: '<strong>Prediction, not Truth:</strong> The model is optimized for "plausibility." If the most statistically likely next word is a hallucination, the model will pick it because its math told it to, not because it "wants" to lie.'
+            content: '<strong>Prediction, not Truth:</strong> If the most statistically likely next word is a hallucination, the model will pick it because its math told it to, not because it "wants" to lie. It is a statistical mirror, not a database.'
         },
         resources: [
             { type: 'video', title: 'Why LLMs Hallucinate', meta: 'Practical · Video', url: 'https://www.youtube.com/watch?v=cfqtFvWOfg0' },
-            { type: 'article', title: 'Why language models hallucinate', meta: 'OpenAI · Research', url: 'https://openai.com/index/why-language-models-hallucinate/' },
-            { type: 'article', title: 'Mata v. Avianca (fabricated citations)', meta: 'SDNY · Primary source', url: 'https://law.justia.com/cases/federal/district-courts/new-york/nysdce/1:2022cv01461/575368/54/' },
-            { type: 'article', title: 'Google Bard demo error (JWST)', meta: 'Reuters · Feb 2023', url: 'https://www.reuters.com/technology/google-ai-chatbot-bard-offers-inaccurate-information-company-ad-2023-02-08/' }
+            { type: 'article', title: 'Why language models hallucinate', meta: 'OpenAI · Research', url: 'https://openai.com/index/why-language-models-hallucinate/' }
         ]
     },
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '19. RAG: Giving Models Access to Knowledge',
+        title: '18. RAG: Giving Models Access to Knowledge',
         description: 'RAG extends simple chat by letting models retrieve and use external documents—overcoming knowledge cutoffs and accessing private data.',
         paragraphs: [
             'Simple chat is limited to the model\'s training data (with a knowledge cutoff date) and has no access to your private documents. <strong>Retrieval-Augmented Generation (RAG)</strong> solves this by dynamically fetching relevant information and inserting it into the model\'s context before generating a response.',
@@ -489,7 +465,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '20. Beyond Text: Multimodal Models & Tool Use',
+        title: '19. Beyond Text: Multimodal Models & Tool Use',
         description: 'Models now extend beyond simple text chat by processing multiple input types and taking real-world actions.',
         paragraphs: [
             'Simple text chat is just the beginning. Modern AI systems extend in two complementary directions: <strong>richer inputs</strong> (multimodal) and <strong>actionable outputs</strong> (tool use).',
@@ -517,7 +493,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '21. Reasoning: Two Paradigms',
+        title: '20. Reasoning: Two Paradigms',
         description: 'Reasoning capability evolved from simple prompting tricks to fundamental architectural changes in how models think.',
         paragraphs: [
             'Early language models struggled with multi-step reasoning—they would jump to conclusions or make arithmetic errors. Two distinct approaches emerged to address this, representing fundamentally different philosophies about where "thinking" should happen.',
@@ -534,7 +510,7 @@ const cardsData = [
         ],
         callout: {
             type: 'insight',
-            content: '<strong>The Evolution:</strong> CoT proved that models <em>can</em> reason if given space to think. Inference-time compute took the next step: teaching models <em>when and how</em> to allocate that thinking automatically. This mirrors human cognition—System 1 (fast, intuitive) vs. System 2 (slow, deliberate)—and represents AI\'s first true "pause and think" capability.'
+            content: '<strong>The Evolution:</strong> CoT proved that models <em>can</em> reason if given space to think. Inference-time compute took the next step: teaching models <em>when and how</em> to allocate that thinking automatically. This mirrors human cognition: <strong>System 1</strong> (fast, intuitive, "autopilot") vs. <strong>System 2</strong> (slow, deliberate, "effortful thinking"). Reasoning models represent AI\'s first true "pause and think" capability.'
         },
         resources: [
             { type: 'video', title: 'Chain-of-Thought Explained', meta: '8 min · 2022 breakthrough', url: 'https://www.youtube.com/watch?v=AFE6x81AP4k' },
@@ -545,7 +521,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '22. Agentic Workflows',
+        title: '21. Agentic Workflows',
         description: 'Combining reasoning, tools, and planning creates autonomous agents that can accomplish complex multi-step tasks.',
         paragraphs: [
             'An <strong>agent</strong> is fundamentally different from simple LLM chat. While a standard chatbot generates one response and stops, an agent operates in a <strong>perception-reasoning-action loop</strong>: it observes the current state, reasons about what to do next, takes actions using tools, observes the results, and continues until the goal is achieved.',
@@ -571,7 +547,7 @@ const cardsData = [
     {
         category: 'infer',
         badge: 'Conclusion',
-        title: '23. Recap: Key Learnings',
+        title: '22. Recap: Key Learnings',
         description: 'Understanding how AI models work transforms you from a passive user into an informed practitioner.',
         paragraphs: [
             'Modern AI isn\'t magic. It\'s a <strong>high-fidelity statistical mirror</strong> of human-created text, trained on trillions of tokens to predict plausible continuations. Understanding this—the frozen weights, tokenization quirks, training phases, and inference mechanics—transforms AI from a mysterious black box into a predictable, engineered system whose failures and capabilities make sense.',
@@ -597,7 +573,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Looking Ahead',
-        title: '24. Looking Ahead',
+        title: '23. Looking Ahead',
         description: 'A look beyond the core content: emerging architectures and research directions.',
         paragraphs: [
             'Transformers dominate today, but several directions are already in production or heavy research.',
