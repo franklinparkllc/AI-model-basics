@@ -62,13 +62,14 @@ const cardsData = [
             'After tokenization, the model has a sequence of token IDs—integers like [4829, 2121, 8945]. But numbers alone are meaningless. The model needs to understand what each token <em>represents</em>.',
             'Enter <strong>embeddings</strong>: the model looks up each token ID in a massive learned table (the <strong>embedding matrix</strong>) and retrieves its corresponding <strong>vector</strong>—a list of hundreds or thousands of numbers. Each dimension captures some aspect of meaning: semantic properties, grammatical role, contextual patterns learned during training.',
             'These vectors live in <strong>Latent Space</strong>, a high-dimensional coordinate system where similar meanings cluster together. Early AI tried to pre-define these features (e.g., "Gender" or "Size"), but modern models discover them organically. A vector might have 4,096 dimensions, each representing a "latent" feature the model found useful, even if humans don\'t have a name for it.',
-            'The model also adds <strong>positional encodings</strong>—patterns that tell it where each token appears in the sequence. These encodings can be learned during training or use fixed mathematical patterns (like sine waves at different frequencies) to represent position. Without position, "dog bites man" and "man bites dog" would look identical. Position + meaning = the full input representation that flows into the Transformer layers.'
+            'The model also adds <strong>positional encodings</strong>—patterns that tell it where each token appears in the sequence. This step happens <em>after</em> the embedding lookup and <em>before</em> the first Transformer layer; it gives self-attention access to position so it can weigh tokens by both content and location. These encodings can be learned during training or use fixed mathematical patterns (like sine waves at different frequencies) to represent position. Without position, "dog bites man" and "man bites dog" would look identical. Position + meaning = the full input representation that flows into the Transformer layers.'
         ],
         bullets: [
             '<strong>Embedding Lookup:</strong> Token ID → retrieve learned vector from embedding table',
             '<strong>Latent Space:</strong> An organic "map of meaning" where distance = difference in concept',
             '<strong>Learned Features:</strong> Models discover their own N-dimensional features (e.g., "blue," "tall," "hairy") during training',
-            '<strong>Positional Encoding:</strong> Adds order information so word sequence matters'
+            '<strong>Positional Encoding:</strong> Adds order information so word sequence matters; applied after embed, before first layer—enables self-attention to use position',
+            '<strong>Fixed Structure:</strong> The prompt is a tensor of shape (sequence length × dimension). Through every layer this shape stays the same; only the vector values change (attention and FFNs update the numbers, not the dimensions or token count)'
         ],
         callout: {
             type: 'analogy',

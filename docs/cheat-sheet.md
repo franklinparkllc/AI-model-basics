@@ -42,6 +42,11 @@
   - Linear operations can represent semantic operations (e.g., king - man + woman ≈ queen)
 - **Visualization:** Often reduced to 2D/3D using techniques like t-SNE or UMAP for visualization.
 
+**Positional Encoding**
+- **Technical Definition:** Patterns (learned or fixed, e.g. sinusoidal) added to token embeddings to indicate position in the sequence.
+- **When:** Applied after embedding lookup, before the first Transformer layer.
+- **Why:** Self-attention is permutation-equivariant on raw embeddings; positional encoding gives the model order so "dog bites man" ≠ "man bites dog."
+
 ---
 
 ### Architecture Components
@@ -103,10 +108,11 @@
 - **Process:**
   1. Tokenize input prompt
   2. Convert tokens to embeddings
-  3. Pass through transformer layers
-  4. Generate probability distribution over vocabulary
-  5. Sample next token
-  6. Repeat until completion
+  3. Add positional encoding (after embeddings, before first layer—provides order for self-attention)
+  4. Pass through transformer layers
+  5. Generate probability distribution over vocabulary
+  6. Sample next token
+  7. Repeat until completion
 
 **Temperature**
 - **Range:** Typically 0.0 to 2.0

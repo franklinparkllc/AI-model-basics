@@ -14,6 +14,8 @@ Before the engine can run, it needs fuel. Computers do not read letters; they pr
 
 Once we have those IDs, we need to give them meaning. In AI, every token is assigned a "scouting report" called an Embedding. This is a list of thousands of numbers—Dimensions—that represent traits. The model discovers these traits organically during training. These embeddings live in Latent Space, a high-dimensional coordinate system where similar concepts cluster together. In this space, "Apple" the fruit and "Orange" sit physically close to each other, while "Apple" the technology company lives in a different neighborhood entirely.
 
+Before the first layer, the model adds Positional Encoding—patterns that tell it where each token sits in the sequence. That step is what lets self-attention know order: without it, "dog bites man" and "man bites dog" would look identical. So the pipeline is: tokenize, embed, add position, then the stack of layers. Once that structure is set, the prompt is like a fixed-shape array: the same number of tokens and dimensions from bottom to top. Through every layer, only the numbers in those vectors change—attention and feed-forward update the values, not the shape.
+
 ### 4:30 – 8:30 | The Memory Crisis and the Attention Revolution
 
 The biggest hurdle in AI history was Memory. Language is sequential; the meaning of a word at the end of a sentence often depends on a word at the very beginning.
