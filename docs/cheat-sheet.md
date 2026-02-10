@@ -28,10 +28,12 @@
 - **Example:** "Ingenious" → ["In", "gen", "ious"] (3 tokens)
 - **Why It Matters:** Token count determines API costs and context limits. Different models use different tokenizers.
 - **Common Tokenizers:** BPE (Byte Pair Encoding), SentencePiece, WordPiece
+- **Origin:** BPE originated in data compression (1994) and was later adopted for NLP tokenization; modern tokenizers repurpose that idea.
 
 **Embedding**
 - **Technical Definition:** A dense vector representation of a token in high-dimensional space (typically 512-4096 dimensions).
 - **Properties:** Similar words have similar embeddings (measured by cosine similarity).
+- **Lineage:** The idea that meaning can come from context—"you shall know a word by the company it keeps" (distributional semantics, 1957)—led to latent-space methods like LSA (1990) and later to neural word embeddings (e.g. Word2Vec, 2013), which modern models extend.
 - **Training:** Learned during pre-training through self-supervised learning.
 - **Use Cases:** Semantic search, similarity matching, feature extraction.
 

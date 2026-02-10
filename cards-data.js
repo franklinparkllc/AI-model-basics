@@ -41,7 +41,8 @@ const cardsData = [
         bullets: [
             'Token count determines cost and speed—more tokens = higher compute',
             'Tokenization explains quirks: spelling/backwards tasks are hard (tokens don\'t map 1:1 to letters)',
-            '<strong>Tokens are pieces, not words:</strong> The model often sees subwords like <code>un</code> + <code>believ</code> + <code>able</code>'
+            '<strong>Tokens are pieces, not words:</strong> The model often sees subwords like <code>un</code> + <code>believ</code> + <code>able</code>',
+            'BPE originated in data compression (1994) and was later adopted for NLP tokenization; modern tokenizers repurpose that idea.'
         ],
         callout: {
             type: 'insight',
@@ -61,6 +62,7 @@ const cardsData = [
         paragraphs: [
             'After tokenization, the model has a sequence of token IDs—integers like [4829, 2121, 8945]. But numbers alone are meaningless. The model needs to understand what each token <em>represents</em>.',
             'Enter <strong>embeddings</strong>: the model looks up each token ID in a massive learned table (the <strong>embedding matrix</strong>) and retrieves its corresponding <strong>vector</strong>—a list of hundreds or thousands of numbers. Each dimension captures some aspect of meaning: semantic properties, grammatical role, contextual patterns learned during training.',
+            'The idea that meaning can come from context—\'you shall know a word by the company it keeps\' (distributional semantics, 1957)—led to latent-space methods like LSA (1990) and later to neural word embeddings (e.g. Word2Vec, 2013), which modern models extend.',
             'These vectors live in <strong>Latent Space</strong>, a high-dimensional coordinate system where similar meanings cluster together. Early AI tried to pre-define these features (e.g., "Gender" or "Size"), but modern models discover them organically. A vector might have 4,096 dimensions, each representing a "latent" feature the model found useful, even if humans don\'t have a name for it.',
             'The model also adds <strong>positional encodings</strong>—patterns that tell it where each token appears in the sequence. This step happens <em>after</em> the embedding lookup and <em>before</em> the first Transformer layer; it gives self-attention access to position so it can weigh tokens by both content and location. These encodings can be learned during training or use fixed mathematical patterns (like sine waves at different frequencies) to represent position. Without position, "dog bites man" and "man bites dog" would look identical. Position + meaning = the full input representation that flows into the Transformer layers.'
         ],
