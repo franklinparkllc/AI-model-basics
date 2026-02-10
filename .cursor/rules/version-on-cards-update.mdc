@@ -1,0 +1,14 @@
+---
+description: Bump nav version when slide content (cards-data.js) changes
+globs: cards-data.js
+alwaysApply: false
+---
+
+# Version Bump When Updating Slide Content
+
+Whenever you edit [cards-data.js](cards-data.js) (slide content, bullets, paragraphs, resources, or structure), also increment the version number shown in the nav.
+
+- **Where:** [index.html](index.html) — the `<span class="version">vN</span>` in the nav (e.g. `v10` → `v11`).
+- **When:** Same commit or change set as the cards-data.js edit.
+
+This keeps the displayed version in sync with slide content changes.
