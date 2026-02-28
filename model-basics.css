@@ -50,6 +50,13 @@ body {
     justify-content: space-between;
     padding: 0 20px;
     z-index: 100;
+    gap: 12px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .version {
@@ -85,6 +92,23 @@ body {
 .nav-btn:disabled {
     opacity: 0.35;
     cursor: not-allowed;
+}
+
+/* Timeline link styling */
+.nav-link-timeline {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    cursor: pointer;
+    padding: 6px 10px;
+}
+
+.nav-link-timeline:hover {
+    color: var(--accent);
 }
 
 .nav-progress {

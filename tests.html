@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Basics — Tests</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+            color: #374151;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1a1d23;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 24px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .test-section h2 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 14px;
+            color: #1a1d23;
+        }
+        .test-case {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 3px solid #e5e7eb;
+        }
+        .test-case.pass {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+        }
+        .test-case.fail {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        .test-case-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .test-case.pass .test-case-name {
+            color: #10b981;
+        }
+        .test-case.fail .test-case-name {
+            color: #ef4444;
+        }
+        .test-case-detail {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 16px;
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            color: #0c4a6e;
+        }
+        .summary-stat {
+            font-weight: 600;
+            margin-right: 16px;
+        }
+        code {
+            background: rgba(99, 102, 241, 0.08);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Model Basics — Test Suite</h1>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        // Test utilities
+        const tests = [];
+        const results = { pass: 0, fail: 0 };
+
+        function test(name, fn) {
+            tests.push({ name, fn });
+        }
+
+        function assert(condition, message) {
+            if (!condition) {
+                throw new Error(message);
+            }
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(`${message}\nExpected: ${expected}\nActual: ${actual}`);
+            }
+        }
+
+        function assertArrayEquals(actual, expected, message) {
+            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
+            }
+        }
+
+        // --- Data Tests ---
+
+        test('cardsData exists and is an array', function() {
+            assert(typeof cardsData !== 'undefined', 'cardsData is undefined');
+            assert(Array.isArray(cardsData), 'cardsData is not an array');
+            assert(cardsData.length > 0, 'cardsData is empty');
+        });
+
+        test('each card has required fields', function() {
+            cardsData.forEach((card, idx) => {
+                assert(card.category, `Card ${idx + 1} missing category`);
+                assert(card.badge, `Card ${idx + 1} missing badge`);
+                assert(card.title, `Card ${idx + 1} missing title`);
+            });
+        });
+
+        test('card categories are valid', function() {
+            const validCategories = ['arch', 'train', 'infer', 'adv'];
+            cardsData.forEach((card, idx) => {
+                assert(validCategories.includes(card.category),
+                    `Card ${idx + 1} has invalid category: ${card.category}`);
+            });
+        });
+
+        test('callout types are valid', function() {
+            const validTypes = ['insight', 'analogy', 'note'];
+            cardsData.forEach((card, idx) => {
+                if (card.callout) {
+                    assert(validTypes.includes(card.callout.type),
+                        `Card ${idx + 1} has invalid callout type: ${card.callout.type}`);
+                }
+            });
+        });
+
+        test('resource types are valid', function() {
+            const validTypes = ['video', 'article', 'tool', 'interactive'];
+            cardsData.forEach((card, idx) => {
+                if (card.resources) {
+                    card.resources.forEach((res, ridx) => {
+                        const type = res.type || 'article';
+                        assert(validTypes.includes(type),
+                            `Card ${idx + 1}, Resource ${ridx + 1} has invalid type: ${type}`);
+                    });
+                }
+            });
+        });
+
+        test('all resource URLs are valid', function() {
+            cardsData.forEach((card, idx) => {
+                if (card.resources) {
+                    card.resources.forEach((res, ridx) => {
+                        assert(res.url && (res.url.startsWith('http://') || res.url.startsWith('https://')),
+                            `Card ${idx + 1}, Resource ${ridx + 1} has invalid URL`);
+                    });
+                }
+            });
+        });
+
+        test('slide titles are numbered correctly', function() {
+            cardsData.forEach((card, idx) => {
+                const slideNum = idx + 1;
+                assert(card.title.includes(slideNum.toString()),
+                    `Card ${slideNum} title doesn't include number: "${card.title}"`);
+            });
+        });
+
+        // --- Slideshow Logic Tests (requires model-basics.js) ---
+
+        test('parseHashSlide returns correct indices', function() {
+            assertEqual(parseHashSlide('#slide-1'), 0, 'slide-1 should be index 0');
+            assertEqual(parseHashSlide('#slide-5'), 4, 'slide-5 should be index 4');
+            assertEqual(parseHashSlide('#slide-24'), 23, 'slide-24 should be index 23');
+        });
+
+        test('parseHashSlide returns null for invalid hashes', function() {
+            assertEqual(parseHashSlide(''), null, 'empty string should return null');
+            assertEqual(parseHashSlide('#invalid'), null, 'invalid hash should return null');
+            assertEqual(parseHashSlide('#slide-abc'), null, 'non-numeric should return null');
+            assertEqual(parseHashSlide(null), null, 'null should return null');
+        });
+
+        test('CONFIG has required properties', function() {
+            assert(CONFIG.TOUCH_THRESHOLD !== undefined, 'CONFIG missing TOUCH_THRESHOLD');
+            assert(CONFIG.HASH_PREFIX !== undefined, 'CONFIG missing HASH_PREFIX');
+            assert(CONFIG.RESOURCE_TYPES !== undefined, 'CONFIG missing RESOURCE_TYPES');
+        });
+
+        test('CONFIG.RESOURCE_TYPES has all icon types', function() {
+            const requiredTypes = ['video', 'article', 'tool', 'interactive'];
+            requiredTypes.forEach(type => {
+                assert(CONFIG.RESOURCE_TYPES[type] !== undefined,
+                    `CONFIG.RESOURCE_TYPES missing ${type}`);
+            });
+        });
+
+        test('getElement caches DOM elements', function() {
+            // Create a mock element for testing
+            const div = document.createElement('div');
+            div.id = 'test-element-123';
+            document.body.appendChild(div);
+
+            const first = getElement('test-element-123');
+            const second = getElement('test-element-123');
+            assert(first === second, 'getElement should return cached element');
+
+            document.body.removeChild(div);
+        });
+
+        // Run tests
+        function runTests() {
+            const resultsDiv = document.getElementById('testResults');
+            const sections = {};
+
+            tests.forEach(t => {
+                const section = t.name.split(':')[0] || 'General';
+                if (!sections[section]) {
+                    sections[section] = [];
+                }
+
+                try {
+                    t.fn();
+                    results.pass++;
+                    sections[section].push({ ...t, passed: true });
+                } catch (error) {
+                    results.fail++;
+                    sections[section].push({ ...t, passed: false, error: error.message });
+                }
+            });
+
+            // Render results
+            Object.keys(sections).forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'test-section';
+                const h2 = document.createElement('h2');
+                h2.textContent = section;
+                sectionDiv.appendChild(h2);
+
+                sections[section].forEach(t => {
+                    const caseDiv = document.createElement('div');
+                    caseDiv.className = `test-case ${t.passed ? 'pass' : 'fail'}`;
+
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'test-case-name';
+                    nameDiv.textContent = (t.passed ? '✓ ' : '✗ ') + t.name;
+                    caseDiv.appendChild(nameDiv);
+
+                    if (!t.passed) {
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = 'test-case-detail';
+                        detailDiv.textContent = t.error;
+                        caseDiv.appendChild(detailDiv);
+                    }
+
+                    sectionDiv.appendChild(caseDiv);
+                });
+
+                resultsDiv.appendChild(sectionDiv);
+            });
+
+            // Summary
+            const summary = document.createElement('div');
+            summary.className = 'summary';
+            const passColor = results.fail === 0 ? '#059669' : '#0c4a6e';
+            summary.innerHTML = `
+                <span class="summary-stat" style="color: ${passColor}">✓ ${results.pass} passed</span>
+                ${results.fail > 0 ? `<span class="summary-stat" style="color: #dc2626">✗ ${results.fail} failed</span>` : ''}
+                <span style="color: #6b7280">(${results.pass + results.fail} total)</span>
+            `;
+            resultsDiv.appendChild(summary);
+        }
+
+        // Wait for DOM and scripts to load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runTests);
+        } else {
+            runTests();
+        }
+    </script>
+
+    <!-- Include the data and main script -->
+    <script src="cards-data.js"></script>
+    <script src="model-basics.js"></script>
+</body>
+</html>
