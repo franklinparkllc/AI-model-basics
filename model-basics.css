@@ -177,6 +177,7 @@ body {
 
 /* Slide Content - compact to fit viewport, with breathing room */
 .slide-content {
+    position: relative;
     width: 100%;
     max-width: min(960px, calc(100vw - 40px));
     max-height: calc(100vh - var(--nav-h) - 32px);
@@ -185,6 +186,8 @@ body {
     padding: 26px 34px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .slide-badge {
@@ -407,37 +410,176 @@ body {
     border-radius: 3px;
 }
 
+/* Scrollbar - on slide-content when text overflows */
+.slide-content::-webkit-scrollbar {
+    width: 5px;
+}
+
+.slide-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.slide-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.slide-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.38);
+}
+
+/* Illustration image button */
+.slide-img-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 32px;
+    height: 32px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    z-index: 2;
+    line-height: 1;
+}
+
+.slide-img-btn:hover {
+    opacity: 1;
+    background: rgba(99, 102, 241, 0.08);
+    border-color: var(--accent);
+}
+
+/* Image lightbox modal */
+.img-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-modal[hidden] {
+    display: none;
+}
+
+.img-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+
+.img-modal-panel {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    max-width: min(800px, calc(100vw - 40px));
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+}
+
+.img-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    line-height: 1;
+}
+
+.img-modal-close:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.img-modal-img {
+    max-width: 100%;
+    max-height: calc(100vh - 200px);
+    height: auto;
+    border-radius: var(--radius-sm);
+    display: block;
+    object-fit: contain;
+}
+
+.img-modal-caption {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+}
+
+.img-modal-attribution {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.img-modal-attribution::before {
+    content: 'Source: ';
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .nav {
         padding: 0 14px;
         height: 48px;
     }
-    
+
     :root {
         --nav-h: 48px;
     }
-    
+
     .slides-container {
         top: 48px;
     }
-    
+
     .slide {
         padding: 10px 12px;
     }
-    
+
     .slide-content {
         padding: 18px 22px;
         max-height: calc(100vh - 48px - 20px);
     }
-    
+
     .slide-title {
         font-size: 1.15rem;
     }
-    
+
     .resource-link {
         padding: 4px 8px;
         font-size: 0.72rem;
+    }
+
+    .slide-img-btn {
+        top: 14px;
+        right: 14px;
     }
 }
 

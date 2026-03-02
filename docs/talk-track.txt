@@ -5,37 +5,13 @@
 
 Thanks for coming today. I'm really looking forward to this.
 
-About six months ago I decided to jump into the deep end — not just to *use* AI tools, but to actually understand what's happening when I use them. What's going on under the hood when these very powerful systems do what they do?
+Over a year ago I decided to incorporate AI tools into my professional life, and I did a small talk at Fitler talking about Cursor and how I was developing some basic software with that tool. About three months ago I decided to jump into the deep end — not just to *use* AI tools, but to actually understand what's happening when I use them. What's going on under the hood and how are these tools built?
 
-Out of that process I built two web resources, and they're what we're going to anchor on today.
+Out of that process I built two web resources, and they're what we're going to anchor on today. Both resources are public GitHub repositories rendered on GitHub pages. I'll be tending to them, but I would  genuinely welcome your contributions, corrections, and suggestions. Everything is linked in the Discord channel, so ping away at your leisure.
 
-**The first is a timeline** — a curated history of the key research and key events in machine learning and AI, going back to the 1940s. About 230 events that I kept encountering as I was reading: the papers, the labs, the breakthroughs that successively led us to where we are now — these extraordinarily capable models and agentic systems.
+The first resource is a timeline — a curated history of the key research and key events in machine learning and AI, going back to the 1940s. Currently there are about 250 events that I kept encountering as I was consuming research and videos. You'll find some controls to search and filter the events or move about through time at your leisure. Each event card should have a link to the paper or summary of the event. 
 
-**The second is something closer to a mini-course** — a structured resource guide I'm calling Model Basics. It's 23 slides, and we are definitely not going to get through all of them today. Please treat it as a reference, something you can return to on your own time.
-
-Both of these are living documents — public GitHub repositories. I'll be tending to them, and I'd genuinely welcome your contributions, corrections, and suggestions. Everything is linked in the Discord channel, so ping away at your leisure.
-
----
-
-Here's how I want to use our time together:
-
-First, I want to walk you through these resources — how they're structured, how to navigate them, and how you might actually use them to go deeper on your own.
-
-Then I want to give you a bit of intuition for what's happening *inside* these systems when you're working with them. My hope is that it'll help you think more deliberately about how you're interacting with chatbots and agents — whether you're a daily user or someone getting closer to the technical side.
-
----
-
-**The Timeline** is fairly straightforward to navigate. At the top there's a search bar — you can search by author, publication, company, or just keyword. It's a curated dataset, so the signal-to-noise is intentional.
-
-At the bottom there's a time slider so you can move through the decades. There are also a few filter options at the top — you can view all events, or narrow to notable or landmark events. A few ways to zoom in and out depending on what you're looking for.
-
-One thing I've been thinking about adding: visual connection lines between cards — showing which ideas influenced which. As you'll see in Model Basics, one of the things I've been doing mentally is rewiring how I think about these topics: less linearly, more associatively. Connection lines might reinforce that — or they might just clutter things up. I honestly haven't decided yet.
-
----
-
-**Model Basics** is 23 slides. You navigate with your left and right arrow keys. Again — living document, additions welcome.
-
-It's organized roughly in order of conceptual precedence, meaning each section tries to build on the last.
+The second resource is an interactive slide-show that digs into the details of how AI models are built and used.
 
 Broadly it breaks into four sections:
 
@@ -44,20 +20,17 @@ Broadly it breaks into four sections:
 3. **Inference** — how models generate outputs when you use them (Slides 16–17)
 4. **Advanced Capabilities** — RAG, multimodal, reasoning, agents, and what's emerging at the frontier (Slides 18–23)
 
-Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for building intuition. Not just reading about it, but actually understanding it.
+Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for drilling into a particular topic.
 
-A few I'll call out specifically: *Generative AI in a Nutshell* is a great entry point — a high-level, approachable framing of where AI is and how to think about it. OKAI, the Brown University interactive lab, is excellent if you're a hands-on learner like me. And I can't say enough about the 3Blue1Brown series on AI and machine learning — some of the clearest visual explanations of what's happening mathematically, without needing to be a mathematician.
+I wanted to call out a few of the early resources as great starting points and friendly resources to get going:
+- *Generative AI in a Nutshell* is a great entry point — a high-level, approachable framing of where AI is and how to think about it. 
+- OKAI, the Brown University interactive lab, is excellent if you're a hands-on learner like me.
+- And I can't say enough about the 3Blue1Brown series on AI and machine learning — some of the clearest visual explanations of what's happening mathematically, without needing to be a mathematician.
 
-Okay — let's look at the actual content.
 
 ---
 
-I. THE BASIC THING TO KEEP IN MIND — Neural Networks, Weights & Biases
-[Slides 4, 9–12 — ~2.5 minutes]
-
-Before we get into the slides, I want to give you one mental model that I think is worth holding onto for everything else that follows.
-
-At its most fundamental level, an AI model is a neural network. That phrase gets thrown around a lot, but what does it actually mean?
+At its most fundamental level, an AI model is a neural network. It was
 
 A single neuron is just a number — a value. You wire thousands, then millions, then billions of these neurons together in layers, and you have a neural network. What flows between them are mathematical operations — mostly linear algebra: matrix multiplications, dot products, additions. If you've ever multiplied a grid of numbers by another grid of numbers, that's roughly what's happening, just at a scale that's hard to visualize. (Slide 4 gives a clean look at the basic feed-forward structure — data flowing in one direction, layers stacked on top of each other.)
 

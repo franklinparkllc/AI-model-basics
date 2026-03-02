@@ -26,13 +26,24 @@
             <button class="nav-btn" id="prevBtn" aria-label="Previous">←</button>
             <button class="nav-btn" id="nextBtn" aria-label="Next">→</button>
         </div>
-        <span class="version">v11</span>
+        <span class="version">v12</span>
     </nav>
 
     <!-- Slides Container -->
     <main class="slides-container" id="slidesContainer">
         <!-- Slides rendered here -->
     </main>
+
+    <!-- Image lightbox modal -->
+    <div id="imgModal" class="img-modal" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+        <div class="img-modal-backdrop"></div>
+        <div class="img-modal-panel">
+            <button class="img-modal-close" id="imgModalClose" aria-label="Close">&times;</button>
+            <img class="img-modal-img" id="imgModalImg" src="" alt="">
+            <div class="img-modal-caption" id="imgModalCaption"></div>
+            <div class="img-modal-attribution" id="imgModalAttribution"></div>
+        </div>
+    </div>
 
     <script src="cards-data.js"></script>
     <script src="model-basics.js"></script>

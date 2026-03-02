@@ -23,9 +23,15 @@ const cardsData = [
         },
         resources: [
             { type: 'video', title: 'Generative AI in a Nutshell', meta: '18 min · Henrik Knibbe', url: 'https://www.youtube.com/watch?v=2IK3DFHRFfw' },
+            { type: 'article', title: 'A Short History of Neural Networks', meta: '20 min · David D. Nolte', url: 'https://galileo-unbound.blog/2025/02/05/a-short-history-of-neural-networks/' },
             { type: 'interactive', title: 'OKAI — Interactive Intro to AI', meta: 'Brown University', url: 'https://okai.brown.edu/' },
             { type: 'video', title: 'Large Language Models, briefly', meta: '8 min · 3Blue1Brown', url: 'https://www.youtube.com/watch?v=LPZh9BOjkQs' }
-        ]
+        ],
+        image: {
+            url: 'https://media.geeksforgeeks.org/wp-content/uploads/20251209120638608023/bhu.webp',
+            caption: 'A perceptron diagram',
+            attribution: 'GeeksForGeeks'
+        }
     },
     {
         category: 'arch',
@@ -51,8 +57,14 @@ const cardsData = [
         resources: [
             { type: 'tool', title: 'OpenAI Tokenizer', meta: 'Interactive · Try BPE', url: 'https://platform.openai.com/tokenizer' },
             { type: 'video', title: 'Byte Pair Encoding Explained', meta: '7 min · Tokenization', url: 'https://www.youtube.com/watch?v=4A_nfXyBD08' },
-            { type: 'video', title: 'Build GPT Tokenizer', meta: '2h 13min · Andrej Karpathy', url: 'https://www.youtube.com/watch?v=zduSFxRajkE' }
-        ]
+            { type: 'video', title: 'Build GPT Tokenizer', meta: '2h 13min · Andrej Karpathy', url: 'https://www.youtube.com/watch?v=zduSFxRajkE' },
+            { type: 'article', title: 'The Art of Tokenization', meta: 'Towards Data Science', url: 'https://towardsdatascience.com/the-art-of-tokenization-breaking-down-text-for-ai-43c7bccaed25/' }
+        ],
+        image: {
+            url: 'https://towardsdatascience.com/wp-content/uploads/2024/09/1QVXvydRMEWTWiUP42bYBAg.png',
+            caption: 'Tokenization visualization',
+            attribution: 'Towards Data Science'
+        }
     },
     {
         category: 'arch',
@@ -79,8 +91,14 @@ const cardsData = [
         },
         resources: [
             { type: 'video', title: 'Tokens and Embeddings', meta: '7 min · Visual', url: 'https://www.youtube.com/watch?v=izbifbq3-eI' },
-            { type: 'video', title: 'Language Models & Transformers', meta: '20 min · Computerphile', url: 'https://www.youtube.com/watch?v=rURRYI66E54' }
-        ]
+            { type: 'video', title: 'Language Models & Transformers', meta: '20 min · Computerphile', url: 'https://www.youtube.com/watch?v=rURRYI66E54' },
+            { type: 'article', title: 'An Introduction to Embeddings', meta: 'DDBM', url: 'https://www.ddbm.com/en/blog/an-introduction-to-embeddings' }
+        ],
+        image: {
+            url: 'https://www.ddbm.com/hs-fs/hubfs/Imported_Blog_Media/linear-relationships-4-1.jpg?width=1534&name=linear-relationships-4-1.jpg',
+            caption: 'Embeddings in latent space',
+            attribution: 'DDBM'
+        }
     },
     {
         category: 'arch',
@@ -106,7 +124,12 @@ const cardsData = [
         resources: [
             { type: 'video', title: 'The Essential Main Ideas of Neural Networks', meta: '19 min · StatQuest', url: 'https://youtu.be/CqOfi41LfDw?si=vGamzRxa1mtcQ3nf' },
             { type: 'video', title: 'What is Backpropagation?', meta: '14 min · 3Blue1Brown', url: 'https://www.3blue1brown.com/lessons/backpropagation' }
-        ]
+        ],
+        image: {
+            url: 'https://media.geeksforgeeks.org/wp-content/uploads/20251209120638608023/bhu.webp',
+            caption: 'A perceptron diagram',
+            attribution: 'GeeksForGeeks'
+        }
     },
     {
         category: 'arch',

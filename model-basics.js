@@ -87,6 +87,7 @@ function renderSlides() {
 
         let html = `
             <div class="slide-content">
+                ${card.image ? `<button class="slide-img-btn" data-slide-index="${index}" aria-label="View illustration: ${card.image.caption}" title="View illustration">&#128247;</button>` : ''}
                 <div class="slide-badge">${card.badge}</div>
                 <h1 class="slide-title">${card.title}</h1>
                 ${card.description ? `<p class="slide-description">${card.description}</p>` : ''}
@@ -183,6 +184,25 @@ function updateUI() {
     getElement('nextBtn').disabled = currentSlide === totalSlides - 1;
 }
 
+// --- Image Modal ---
+
+function openImageModal(image) {
+    const modal = document.getElementById('imgModal');
+    document.getElementById('imgModalImg').src = image.url;
+    document.getElementById('imgModalImg').alt = image.caption || '';
+    document.getElementById('imgModalCaption').textContent = image.caption || '';
+    document.getElementById('imgModalAttribution').textContent = image.attribution || '';
+    modal.hidden = false;
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imgModal');
+    if (!modal.hidden) {
+        modal.hidden = true;
+        document.getElementById('imgModalImg').src = '';
+    }
+}
+
 // Setup event listeners
 function setupEvents() {
     getElement('homeBtn').addEventListener('click', () => showSlide(0));
@@ -193,6 +213,7 @@ function setupEvents() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') prevSlide();
         if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'Escape') closeImageModal();
     });
 
     // Touch swipe
@@ -213,6 +234,23 @@ function setupEvents() {
             else prevSlide();
         }
     });
+
+    // Image lightbox — delegated from slides container
+    container.addEventListener('click', (e) => {
+        const btn = e.target.closest('.slide-img-btn');
+        if (!btn) return;
+        const slideIndex = parseInt(btn.getAttribute('data-slide-index'), 10);
+        const card = slides[slideIndex];
+        if (card && card.image) {
+            openImageModal(card.image);
+        }
+    });
+
+    // Modal close — X button
+    document.getElementById('imgModalClose').addEventListener('click', closeImageModal);
+
+    // Modal close — backdrop click
+    document.querySelector('.img-modal-backdrop').addEventListener('click', closeImageModal);
 
     // Hash change (browser back/forward)
     window.addEventListener('hashchange', () => {
