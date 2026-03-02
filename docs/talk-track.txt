@@ -1,11 +1,8 @@
-# March 3 AI Workshop — Model Theory Session
-## Talk Track (v2) — ~5-6 minutes per section
-
 ---
 
 Thanks for coming today. I'm really looking forward to this.
 
-Over a year ago I decided to incorporate AI tools into my professional life, and I did a small talk at Fitler talking about Cursor and how I was developing some basic software with that tool. About three months ago I decided to jump into the deep end — not just to *use* AI tools, but to actually understand what's happening when I use them. What's going on under the hood and how are these tools built?
+Over a year ago I decided to incorporate AI tools into my professional life, and I did a small presentation in the theater at Fitler. I was developing some basic software with that tool. About three months ago I decided to jump into the deep end — not just to *use* AI tools, but to actually understand what's happening when I use them. What's going on under the hood and how are these tools built?
 
 Out of that process I built two web resources, and they're what we're going to anchor on today. Both resources are public GitHub repositories rendered on GitHub pages. I'll be tending to them, but I would  genuinely welcome your contributions, corrections, and suggestions. Everything is linked in the Discord channel, so ping away at your leisure.
 
@@ -15,10 +12,10 @@ The second resource is an interactive slide-show that digs into the details of h
 
 The slides are organized into four large topics:
 
-1. **Architecture** — the building blocks: what are neural networks, how did we get from simple perceptrons to GPT models? (Slides 1–12)
-2. **Training** — how models learn from data (Slides 13–15)
-3. **Inference** — how models generate outputs when you use them (Slides 16–17)
-4. **Advanced Capabilities** — RAG, multimodal, reasoning, agents, and what's emerging at the frontier (Slides 18–23)
+1. **Architecture** — the building blocks: what are neural networks, how did we get from simple perceptrons to GPT models? (Slides 1–9)
+2. **Inference** — how models generate outputs when you use them (Slides 10–13)
+3. **Training** — how models learn from data (Slides 14–16)
+4. **Advanced Capabilities** — RAG, multimodal, tool use, reasoning, agents, and what's emerging at the frontier (Slides 17–23)
 
 Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for drilling into a particular topic.
 
@@ -40,54 +37,56 @@ Now here's the important part. Running through all those connections are two typ
 **Weights** control how much one neuron influences the next — how loud or quiet a signal is as it passes through.
 **Biases** are offsets — they shift a neuron's output up or down before it passes to the next layer.
 
-When you're using Claude or ChatGPT, you are running a model whose weights and biases were set during training — and they are now frozen. The model is a fixed mathematical object. Billions of tuned numbers, locked in place. (Slide 16 covers this directly.)
+When you're using Claude or ChatGPT, you are running a model whose weights and biases were set during training — and they are now frozen. The model is a fixed mathematical object. Billions of tuned numbers, locked in place. (Slide 10 covers this directly.)
 
 This is one of the most practically important things to understand: **chatting with a model doesn't teach it anything permanent.** When you correct it, it adjusts within your current conversation — but the underlying weights don't change. You're not training it. You're querying a frozen artifact.
 
-The architecture that made modern models possible — and that you'll see referenced throughout the slide deck — is called the **Transformer**, introduced in a 2017 paper called "Attention is All You Need." (Slides 9 through 12.) What made it revolutionary was that it could process all tokens in a sequence simultaneously — in parallel — rather than one at a time, as the earlier recurrent networks had to do. That parallelism enabled scale. Billions of parameters trained on trillions of tokens.
+The architecture that made modern models possible — and that you'll see referenced throughout the slide deck — is called the **Transformer**, introduced in a 2017 paper called "Attention is All You Need." (Slides 8 and 9.) What made it revolutionary was that it could process all tokens in a sequence simultaneously — in parallel — rather than one at a time, as the earlier recurrent networks had to do. That parallelism enabled scale. Billions of parameters trained on trillions of tokens.
 
 ---
 
-II. TRAINING — Where the Intelligence Is Born
-[Slides 13–15 — ~2.5 minutes]
-
-So how do those billions of weights get tuned in the first place? That's what training is.
-
-**Pre-training** (Slide 13) is where the model acquires what we might loosely call general intelligence. The objective is almost laughably simple: given a sequence of tokens, predict the next one. That's it. The model sees "The cat sat on the..." and has to predict "mat." When it's wrong, the error travels backward through the network — a process called **backpropagation** — and the weights are nudged, just slightly, in the right direction.
-
-Now do that billions of times, across trillions of tokens of text from books, the internet, research papers, code — and something remarkable happens. In order to get good at next-token prediction, the model has to learn grammar, facts, logic, reasoning, even some understanding of cause and effect. It's not explicitly taught any of those things. They emerge as a consequence of doing one thing — prediction — at extraordinary scale.
-
-This process runs for months on thousands of GPUs and costs millions to hundreds of millions of dollars. What you get at the end is called a **base model** — which is knowledgeable but not particularly useful. It completes sentences. It rambles. It doesn't know how to have a conversation.
-
-That's where **post-training** comes in. (Slide 14.) This is the phase where humans write ideal responses to thousands of prompts, and the model is fine-tuned to mimic helpful behavior. Then comes RLHF — Reinforcement Learning from Human Feedback — where humans rank responses, and the model learns to prefer the ones humans prefer. A newer alternative called **DPO** — Direct Preference Optimization — streamlines this by skipping the separate reward model entirely, optimizing preferences directly. This phase is where the guardrails go in, where the conversational norms are learned, where the model starts to become an assistant rather than just a text-completion engine.
-
-Two practical implications here. First, the training data has a cutoff — the model doesn't know about things that happened after it was trained, unless you tell it or give it a tool to look things up. Second — and Slide 15 covers this directly — the model inherits whatever biases, gaps, and skewed representations exist in its training data. It's a mirror of the text it was trained on, not an arbiter of truth. That matters especially in high-stakes domains like hiring, legal analysis, or healthcare. No amount of post-training alignment fully eliminates those underlying biases — it reduces harmful outputs, but critical evaluation and human oversight remain essential.
-
----
-
-III. INFERENCE — What Happens When You Hit Send
-[Slides 16, 17 — ~2 minutes]
+II. INFERENCE — What Happens When You Hit Send
+[Slides 10–13 — ~2 minutes]
 
 You've typed a message. What actually happens?
 
-The system assembles what I think of as a **prompt stack** (Slide 16): first there's a **system prompt** — hidden instructions that define how the model should behave. Then there's **conversation history** — because the model has no memory, every prior message in your conversation gets re-sent every single turn. Then there's **your message**.
+The system assembles what I think of as a **prompt stack** (Slide 10): first there's a **system prompt** — hidden instructions that define how the model should behave. Then there's **conversation history** — because the model has no memory, every prior message in your conversation gets re-sent every single turn. Then there's **your message**.
 
 This entire stack gets tokenized — broken into numeric token IDs, as described in Slide 2 — and run through all those frozen Transformer layers. What comes out the other side is a probability distribution over every token in the model's vocabulary.
 
-That's the dice roll (Slide 17). The model doesn't "know" the answer. It computes that "Medici" has a 75% probability of being the next right token, or that "Florence" has a 15% chance. Then it picks one, appends it to the sequence, and runs the whole process again for the next token. That's why text streams — you're watching the model generate one token at a time, each one feeding into the next.
+That's the dice roll (Slide 13). The model doesn't "know" the answer. It computes that "Medici" has a 75% probability of being the next right token, or that "Florence" has a 15% chance. Then it picks one, appends it to the sequence, and runs the whole process again for the next token. That's why text streams — you're watching the model generate one token at a time, each one feeding into the next.
 
 The **temperature** setting you may have seen in some interfaces is literally a dial on that dice roll. Low temperature: always pick the highest-probability token — safe, predictable. High temperature: let lower-probability tokens through — more creative, more surprising, more prone to going off the rails.
 
 And here's the practical insight about hallucinations: if the statistically most plausible next token is factually wrong, the model will pick it anyway. It's optimizing for plausibility, not truth. It's a very sophisticated mirror — not a database.
 
+We've seen how the machine runs. Now let's talk about how we built the machine — the difference between using a map and drawing the map.
+
+---
+
+III. TRAINING — Where the Intelligence Is Born
+[Slides 14–16 — ~2.5 minutes]
+
+So how do those billions of weights get tuned in the first place? That's what training is.
+
+**Pre-training** (Slide 14) is where the model acquires what we might loosely call general intelligence. The objective is almost laughably simple: given a sequence of tokens, predict the next one. That's it. The model sees "The cat sat on the..." and has to predict "mat." When it's wrong, the error travels backward through the network — a process called **backpropagation** — and the weights are nudged, just slightly, in the right direction.
+
+Now do that billions of times, across trillions of tokens of text from books, the internet, research papers, code — and something remarkable happens. In order to get good at next-token prediction, the model has to learn grammar, facts, logic, reasoning, even some understanding of cause and effect. It's not explicitly taught any of those things. They emerge as a consequence of doing one thing — prediction — at extraordinary scale.
+
+This process runs for months on thousands of GPUs and costs millions to hundreds of millions of dollars. What you get at the end is called a **base model** — which is knowledgeable but not particularly useful. It completes sentences. It rambles. It doesn't know how to have a conversation.
+
+That's where **post-training** comes in. (Slide 15.) This is the phase where humans write ideal responses to thousands of prompts, and the model is fine-tuned to mimic helpful behavior. Then comes RLHF — Reinforcement Learning from Human Feedback — where humans rank responses, and the model learns to prefer the ones humans prefer. A newer alternative called **DPO** — Direct Preference Optimization — streamlines this by skipping the separate reward model entirely, optimizing preferences directly. This phase is where the guardrails go in, where the conversational norms are learned, where the model starts to become an assistant rather than just a text-completion engine.
+
+Two practical implications here. First, the training data has a cutoff — the model doesn't know about things that happened after it was trained, unless you tell it or give it a tool to look things up. Second — and Slide 16 covers this directly — the model inherits whatever biases, gaps, and skewed representations exist in its training data. It's a mirror of the text it was trained on, not an arbiter of truth. That matters especially in high-stakes domains like hiring, legal analysis, or healthcare. No amount of post-training alignment fully eliminates those underlying biases — it reduces harmful outputs, but critical evaluation and human oversight remain essential.
+
 ---
 
 IV. RAG & VECTOR SEARCH — Teaching a Frozen Model New Tricks
-[Slide 18 — ~1.5 minutes]
+[Slide 17 — ~1.5 minutes]
 
 Here's the practical problem. The model is frozen. Its training data has a cutoff. It knows nothing about your firm's documents, your portfolio companies, or anything that happened last month.
 
-**RAG** — Retrieval-Augmented Generation — is the most important solution to this problem, and it's worth understanding at a conceptual level because it underlies most serious enterprise AI deployments. (Slide 18.)
+**RAG** — Retrieval-Augmented Generation — is the most important solution to this problem, and it's worth understanding at a conceptual level because it underlies most serious enterprise AI deployments. (Slide 17.)
 
 The idea is straightforward: before the model generates a response, you retrieve relevant information from an external source and inject it into the prompt. You're not retraining the model — you're giving it better context at inference time.
 
@@ -95,7 +94,7 @@ The magic is in how you retrieve. This is where **vector search** comes in, and 
 
 **Graph RAG** is a newer evolution — instead of just retrieving similar chunks, you build a knowledge graph that captures relationships between entities. Who invested in what, which company is connected to which thesis, what events led to what outcomes. This is more expensive to build but gets you much closer to genuine knowledge retrieval for complex, multi-hop questions.
 
-The practical implication: if you're building an internal intelligence tool — and several of you are — RAG is probably at its core. Understanding the difference between vector similarity and keyword search changes how you design what goes into the retrieval layer.
+The practical implication: if you're building an internal intelligence tool — and several of you are — RAG is probably at its core. Understanding the difference between vector similarity and keyword search changes how you design what goes into the retrieval layer. And critically: your private data stays in your retrieval system. It's injected at inference time but never enters the model's training data or "global brain." This is the primary way to use proprietary data safely with AI.
 
 ---
 

@@ -46,7 +46,7 @@ const cardsData = [
         ],
         bullets: [
             'Token count determines cost and speed—more tokens = higher compute',
-            'Tokenization explains quirks: spelling/backwards tasks are hard (tokens don\'t map 1:1 to letters)',
+            '<strong>Blind to Characters:</strong> Tokenizers are blind to individual letters — the model doesn\'t see "c-a-t," it sees the single token <code>cat</code>. This explains why AI struggles with counting letters, spelling backwards, or any character-level task',
             '<strong>Tokens are pieces, not words:</strong> The model often sees subwords like <code>un</code> + <code>believ</code> + <code>able</code>',
             'BPE originated in data compression (1994) and was later adopted for NLP tokenization; modern tokenizers repurpose that idea.'
         ],
@@ -85,7 +85,7 @@ const cardsData = [
         ],
         callout: {
             type: 'analogy',
-            content: '<strong>The Flavor Profile Analogy:</strong> If tokenization assigns each word a locker number, embeddings are the contents—a profile describing the word\'s "flavor." One dimension might be "sweetness," another "spiciness." In a 4,096-dimensional space, the model creates a hyper-detailed profile for every concept.'
+            content: '<strong>The Flavor Profile Analogy:</strong> If tokenization assigns each word a locker number, embeddings are the contents—a profile describing the word\'s "flavor." One dimension might be "sweetness," another "spiciness." In a 4,096-dimensional space, the model creates a hyper-detailed profile for every concept.<br><br><strong>Latent Space Math:</strong> A "King" vector is high in "Royalty," "Masculinity," and "Power." Subtract the "Masculinity" dimension, add "Femininity," and the math physically moves the vector to the coordinates for "Queen." This is literal vector arithmetic in latent space — and it actually works.'
         },
         resources: [
             { type: 'video', title: 'Tokens and Embeddings', meta: '7 min · Visual', url: 'https://www.youtube.com/watch?v=izbifbq3-eI' },
@@ -176,8 +176,14 @@ const cardsData = [
         },
         resources: [
             { type: 'video', title: 'LSTM Networks - Clearly Explained', meta: '20 min · StatQuest', url: 'https://www.youtube.com/watch?v=YCzL96nL7j0' },
-            { type: 'article', title: 'Understanding LSTM Networks', meta: 'Chris Olah · Classic explainer', url: 'https://colah.github.io/posts/2015-08-Understanding-LSTMs/' }
-        ]
+            { type: 'article', title: 'Understanding LSTM Networks', meta: 'Chris Olah · Classic explainer', url: 'https://colah.github.io/posts/2015-08-Understanding-LSTMs/' },
+            { type: 'article', title: 'LSTM Networks | A Detailed Explanation', meta: 'Rian Dolphin · Towards Data Science', url: 'https://towardsdatascience.com/lstm-networks-a-detailed-explanation-8fae6aefc7f9/' }
+        ],
+        image: {
+            url: 'https://towardsdatascience.com/wp-content/uploads/2020/10/1jikKbzFXCq-IYnFZankIMg.png',
+            caption: 'LSTM cell architecture with forget, input, and output gates',
+            attribution: 'Rian Dolphin · Towards Data Science'
+        }
     },
     {
         category: 'arch',
@@ -226,7 +232,7 @@ const cardsData = [
         ],
         callout: {
             type: 'insight',
-            content: '<strong>The Skyscraper Analogy:</strong> Ground floor tokens know only their own meaning. As they ride the elevator through dozens of floors — each adding context from surrounding words — they emerge at the top with rich, nuanced understanding of their role in the sentence.'
+            content: '<strong>The Skyscraper Analogy:</strong> Each floor is a higher vantage point. The ground floor sees individual tokens — raw word fragments. Middle floors see sentences and grammatical relationships. The penthouse — the observation deck — sees intent, abstract concepts, and the full meaning of the passage. Ground floor tokens know only their own meaning. As they ride the elevator through dozens of floors, each adding context from surrounding words, they emerge at the top with rich, nuanced understanding of their role in the sentence.'
         },
         resources: [
             { type: 'video', title: 'Transformers, the tech behind LLMs', meta: '58 min · 3Blue1Brown', url: 'https://www.youtube.com/watch?v=KJtZARuO3JY' },
@@ -247,13 +253,13 @@ const cardsData = [
         ],
         bullets: [
             '<strong>Learned Weights:</strong> Each layer\'s Q, K, V matrices are trained parameters — the model learns <em>what to pay attention to</em>',
-            '<strong>Softmax:</strong> Converts raw scores to probabilities summing to 1 — this same function reappears at inference (Slide 15) to select output tokens',
+            '<strong>Softmax:</strong> Converts raw scores to probabilities summing to 1 — this same function reappears at inference (Slide 13) to select output tokens',
             '<strong>Multi-Head:</strong> 8-32 parallel attention operations, each specializing in different patterns',
             '<strong>All At Once:</strong> Every token attends to every other token simultaneously — no sequential bottleneck'
         ],
         callout: {
             type: 'analogy',
-            content: '<strong>The Cocktail Party:</strong> Imagine you\'re at a crowded party (self-attention). You tune into the conversations most relevant to you (high attention scores) and tune out background noise (low scores). Now imagine 16 versions of you at the same party, each listening for something different — one for names, one for emotions, one for topics. That\'s multi-head attention: multiple simultaneous filters on the same scene.<br><br><em>With the architecture understood, let\'s see how these structures actually learn.</em>'
+            content: '<strong>The Cocktail Party:</strong> Imagine you\'re at a crowded party (self-attention). You tune into the conversations most relevant to you (high attention scores) and tune out background noise (low scores). Now imagine 16 versions of you at the same party, each listening for something different — one for names, one for emotions, one for topics. That\'s multi-head attention: multiple simultaneous filters on the same scene.<br><br><em>With the architecture understood, let\'s see how these structures work when you use the model.</em>'
         },
         resources: [
             { type: 'video', title: 'Attention in Transformers', meta: '26 min · 3Blue1Brown', url: 'https://www.youtube.com/watch?v=eMlx5fFNoYc' },
@@ -262,9 +268,110 @@ const cardsData = [
         ]
     },
     {
+        category: 'infer',
+        badge: 'Inference',
+        title: '10. The Frozen State & Prompt Stack',
+        description: 'After training, model weights are frozen. Inference uses a structured prompt stack to generate responses without learning.',
+        paragraphs: [
+            'Once training completes, the model\'s weights are <strong>locked</strong>. Inference (generating responses) reads these weights but never modifies them. This is why chatting doesn\'t teach the model anything permanent—corrections only affect the current conversation\'s context.',
+            'When you send a message, the system assembles a <strong>prompt stack</strong>: (1) <strong>System Prompt</strong> (hidden instructions defining persona), (2) <strong>Conversation History</strong> (prior messages re-sent on each turn), and (3) <strong>User Prompt</strong> (your message).',
+            'This entire stack is tokenized and fed through the "skyscraper" of Transformer layers (the stacked architecture from Slide 8). The model then enters an <strong>Autoregressive Loop</strong>: it predicts one token, appends it to the prompt, and runs the entire process again to find the next token. This is why you see text appear word-by-word (streaming).'
+        ],
+        bullets: [
+            '<strong>Frozen Weights:</strong> Feedback doesn\'t update the model\'s "brain" permanently',
+            '<strong>Weights vs. Activations:</strong> <strong>Weights</strong> are frozen long-term memory — the billions of parameters set during training. <strong>Activations</strong> are the transient signals flowing through the network during inference — they hold your current conversation\'s context but vanish when the session ends',
+            '<strong>Context Window:</strong> The fixed maximum number of tokens the model can "see" at once',
+            '<strong>Lost in the Middle:</strong> Models attend more strongly to the beginning and end of the context window than the middle — for long prompts, put the most important information first or last',
+            '<strong>Prompt Assembly:</strong> System + History + User message = the full input',
+            '<strong>Autoregressive Loop:</strong> The model generates one token at a time, feeding its own output back as input'
+        ],
+        callout: {
+            type: 'note',
+            content: '<strong>The Context Bottleneck:</strong> Because the entire history is re-processed every turn, long conversations get slower and more expensive. Once the context window is full, the model "forgets" the earliest parts of the chat.'
+        },
+        resources: [
+            { type: 'article', title: 'Claude Prompting Best Practices', meta: 'Anthropic · Prompt engineering', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices' },
+            { type: 'video', title: 'Context Engineering Explained', meta: '17 min', url: 'https://www.youtube.com/watch?v=p6s82Ax8yrs' }
+        ]
+    },
+    {
+        category: 'infer',
+        badge: 'Inference',
+        title: '11. Preparing the Input',
+        description: 'Before the model can generate anything, your message must be assembled, tokenized, and embedded.',
+        paragraphs: [
+            'When you press "Send," a precise sequence of operations begins. The first three steps prepare the raw input before any generation can happen.',
+            '<strong>Step 1 — Prompt Assembly:</strong> The system combines hidden instructions (system prompt), prior conversation turns (history), and your new message into a single text block. This assembled prompt is the model\'s <em>entire</em> view of the conversation.',
+            '<strong>Step 2 — Tokenization:</strong> The full prompt is split into token IDs (Slide 2). A short question might become 20 tokens; a long conversation with system instructions might be 4,000+. Each token costs compute and counts against the context window.',
+            '<strong>Step 3 — Embedding & Position:</strong> Each token ID is converted into a vector (Slide 3), and positional encodings are added so the model knows word order. The result is a sequence of rich, position-aware vectors ready to enter the Transformer.'
+        ],
+        bullets: [
+            '<strong>Every Turn Re-Processes Everything:</strong> The full prompt (system + history + your message + tokens generated so far) is re-tokenized and re-run through all layers on every single token generation step',
+            '<strong>Cost Scales with Length:</strong> Longer conversations = more tokens = more compute per generated token',
+            '<strong>The Context Window Limit:</strong> When the total token count (input + output) exceeds the context window, the model can no longer see the earliest parts of the conversation'
+        ],
+        callout: {
+            type: 'note',
+            content: '<strong>Same Preparation, Every Token:</strong> These three steps happen identically whether the model is generating the first token of a response or the thousandth. The entire prompt — including all tokens generated so far — is reassembled and re-processed each time.'
+        },
+        resources: [
+            { type: 'article', title: 'What Is Inference?', meta: 'Anthropic · Fundamentals', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices' }
+        ]
+    },
+    {
+        category: 'infer',
+        badge: 'Inference',
+        title: '12. The Forward Pass & Autoregressive Loop',
+        description: 'The prepared vectors flow through the Transformer, a token is selected, and the process loops.',
+        paragraphs: [
+            '<strong>Step 4 — The Transformer Forward Pass:</strong> The full sequence of vectors flows upward through every Transformer layer (the "skyscraper" from Slide 8). Attention lets tokens communicate; feed-forward networks refine meaning. After dozens of layers, the <em>final</em> token\'s vector emerges at the top, encoding the model\'s best prediction for what comes next.',
+            '<strong>Step 5 — Token Selection:</strong> That final vector is compared against the entire vocabulary to produce scores (logits). A token is selected (details in the next slide) and streamed to you.',
+            '<strong>Step 6 — The Loop:</strong> The selected token is appended to the sequence, and <em>the entire process repeats</em> from Step 3. This is the autoregressive loop — one token at a time until the model produces a stop token or hits the output limit.'
+        ],
+        bullets: [
+            '<strong>Why Streaming Exists:</strong> Each token is available as soon as it\'s generated, so you see text appear word-by-word rather than waiting for the full response',
+            '<strong>KV Caching:</strong> In practice, systems cache the Key and Value vectors from previous tokens so they don\'t have to re-calculate the entire history for every new token — without this optimization, inference would be impractically slow',
+            '<strong>One Token at a Time:</strong> The model generates a single token per forward pass, then feeds its own output back as input for the next pass'
+        ],
+        callout: {
+            type: 'insight',
+            content: '<strong>Key Insight:</strong> There is no "memory" between turns. Every time you send a message, the model sees the entire conversation from scratch—as if reading it for the first time. This is why the same question can get different answers in different conversations, and why long chats eventually "forget" early context.'
+        },
+        resources: [
+            { type: 'video', title: 'How GPT Models Work', meta: '10 min · Visual walkthrough', url: 'https://www.youtube.com/watch?v=wjZofJX0v4M' }
+        ]
+    },
+    {
+        category: 'infer',
+        badge: 'Inference',
+        title: '13. The Selection Dice Roll',
+        description: 'The final step: turning a refined vector back into a human word.',
+        paragraphs: [
+            'At the roof of the skyscraper, the model has a highly refined vector representing "what should come next." To turn this back into a word, the model multiplies this vector against the <strong>unembedding matrix</strong> — producing a dot-product score (<strong>logit</strong>) for every token in its vocabulary. A high dot product means the output vector is "pointing in the same direction" as that token\'s embedding — i.e., the model considers it a plausible next word.',
+            'In many models, the unembedding matrix is actually the <strong>transpose of the embedding matrix</strong> from Slide 3 — a technique called <strong>weight tying</strong>. The same table that converts token IDs into vectors at the input is used in reverse to convert vectors back into token scores at the output. This closes a satisfying loop: <em>token → vector → [Transformer layers] → refined vector → dot product with embeddings → token</em>.',
+            'These logit scores are converted into probabilities via <strong>softmax</strong>. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.',
+            '<strong>Temperature</strong> acts as a confidence filter. At Temperature 0, the model is a cautious expert — always picks the safest, most probable path. At Temperature 1.0+, it becomes a creative risk-taker — willing to explore surprising edges of the vocabulary. Most production systems default to a moderate temperature that balances reliability with natural-sounding variation.'
+        ],
+        bullets: [
+            '<strong>Logits:</strong> Raw dot-product scores between the output vector and every token\'s embedding in the vocabulary',
+            '<strong>Weight Tying:</strong> Many models reuse the embedding matrix (transposed) as the unembedding matrix — the same table works in both directions',
+            '<strong>Temperature:</strong> A slider that adjusts how much "risk" the model takes in selection',
+            '<strong>Probabilistic:</strong> The model is optimized for "plausibility," not necessarily truth',
+            '<strong>Streaming:</strong> Tokens are sent to the user as they are generated, one by one'
+        ],
+        callout: {
+            type: 'insight',
+            content: '<strong>Prediction, not Truth:</strong> If the most statistically likely next word is a hallucination, the model will pick it because its math told it to, not because it "wants" to lie. It is a statistical mirror, not a database.<br><br><em>We\'ve seen how the machine runs — the forward pass through a frozen model. Next: how we built the machine. The difference between using a map and drawing the map.</em>'
+        },
+        resources: [
+            { type: 'video', title: 'Why LLMs Hallucinate', meta: 'Practical · Video', url: 'https://www.youtube.com/watch?v=cfqtFvWOfg0' },
+            { type: 'article', title: 'Why language models hallucinate', meta: 'OpenAI · Research', url: 'https://openai.com/index/why-language-models-hallucinate/' }
+        ]
+    },
+    {
         category: 'train',
         badge: 'Training',
-        title: '10. Pre-Training',
+        title: '14. Pre-Training',
         description: 'Pre-training is where models learn the patterns, facts, and structures of human knowledge from massive text datasets.',
         paragraphs: [
             'During pre-training, the model consumes <strong>trillions of tokens</strong> from books, websites, research papers, and code repositories. The training objective is simple: predict the next token. Wrong predictions trigger tiny weight adjustments via <strong>backpropagation</strong>. Every learnable parameter from the architecture section — the embedding matrix, the Q/K/V attention matrices, the feed-forward weights in every layer — is tuned through this process. Nothing is hand-programmed; the model discovers what to pay attention to and how to process meaning entirely from data.',
@@ -283,13 +390,19 @@ const cardsData = [
         },
         resources: [
             { type: 'video', title: 'Neural Networks & Backprop', meta: '2+ hrs · Andrej Karpathy', url: 'https://www.youtube.com/watch?v=VMj-3S1tku0' },
-            { type: 'video', title: 'What is Backpropagation?', meta: '14 min · 3Blue1Brown', url: 'https://www.3blue1brown.com/lessons/backpropagation' }
-        ]
+            { type: 'video', title: 'What is Backpropagation?', meta: '14 min · 3Blue1Brown', url: 'https://www.3blue1brown.com/lessons/backpropagation' },
+            { type: 'article', title: 'Understanding and Using Supervised Fine-Tuning (SFT)', meta: 'Cameron R. Wolfe · Deep Learning Focus', url: 'https://cameronrwolfe.substack.com/p/understanding-and-using-supervised' }
+        ],
+        image: {
+            url: 'https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4c51db77-8d97-45a9-bd2c-d71e930ff0b8_2292x1234.png',
+            caption: 'LLM training stages: Pre-training, SFT, and RLHF',
+            attribution: 'Cameron R. Wolfe · Deep Learning Focus'
+        }
     },
     {
         category: 'train',
         badge: 'Training',
-        title: '11. Post-Training',
+        title: '15. Post-Training',
         description: 'Post-training transforms a knowledgeable but unruly base model into a helpful, safe, and aligned assistant.',
         paragraphs: [
             'Base models know a lot but behave poorly—generating offensive content, refusing simple requests, or rambling endlessly. <strong>Post-training</strong> teaches them to be useful assistants through two key techniques:',
@@ -310,12 +423,17 @@ const cardsData = [
         resources: [
             { type: 'video', title: 'RLHF, Clearly Explained', meta: '18 min · StatQuest', url: 'https://www.youtube.com/watch?v=qPN_XZcJf_s' },
             { type: 'video', title: 'RLHF in 4 Minutes', meta: '4 min · Sebastian Raschka', url: 'https://www.youtube.com/watch?v=vJ4SsfmeQlk' }
-        ]
+        ],
+        image: {
+            url: 'https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F680ffa81-7b96-474f-832b-4be758e8d2e6_1176x638.png',
+            caption: 'Post-training pipeline: SFT, RLHF, and DPO alignment techniques',
+            attribution: 'Cameron R. Wolfe · Deep Learning Focus'
+        }
     },
     {
         category: 'train',
         badge: 'Training',
-        title: '12. Bias, Fairness & Limitations',
+        title: '16. Bias, Fairness & Limitations',
         description: 'AI models inherit the biases, gaps, and perspectives present in their training data—they are mirrors, not arbiters of truth.',
         paragraphs: [
             'Training data comes from the internet, books, and human-generated content—all of which contain biases, stereotypes, and uneven representation. Models learn these patterns just as they learn grammar and facts. If training data overrepresents certain demographics or perspectives, the model will too.',
@@ -326,11 +444,12 @@ const cardsData = [
             '<strong>Sources of Bias:</strong> Training data imbalances, historical stereotypes, language and cultural gaps, majority perspectives dominating',
             '<strong>Types of Harm:</strong> Stereotyping, erasure (underrepresented groups), performance gaps (works better for some demographics)',
             '<strong>Mitigation Strategies:</strong> Diverse training data, red-teaming for harmful outputs, constitutional AI principles, ongoing monitoring',
-            '<strong>User Responsibility:</strong> Critical evaluation of outputs, awareness of limitations, human oversight in high-stakes decisions'
+            '<strong>User Responsibility:</strong> Critical evaluation of outputs, awareness of limitations, human oversight in high-stakes decisions',
+            '<strong>Data Security:</strong> When using models with proprietary or sensitive data, RAG is the primary approach — your documents stay in your system and are injected at inference time, never entering the model\'s training data or "global brain"'
         ],
         callout: {
             type: 'insight',
-            content: '<strong>No Silver Bullet:</strong> Bias mitigation is an ongoing process, not a solved problem. Even the most carefully trained models can produce biased outputs. The goal is harm reduction and transparency, not perfection. Always apply human judgment, especially in consequential decisions.<br><br><em>Training is now complete and the model\'s weights are frozen. Next: what happens when you actually use it.</em>'
+            content: '<strong>No Silver Bullet:</strong> Bias mitigation is an ongoing process, not a solved problem. Even the most carefully trained models can produce biased outputs. The goal is harm reduction and transparency, not perfection. Always apply human judgment, especially in consequential decisions.<br><br><em>Training is complete. Next: advanced capabilities that extend this foundation.</em>'
         },
         resources: [
             { type: 'video', title: 'AI Bias Explained', meta: '9 min · TEDx', url: 'https://www.youtube.com/watch?v=59bMh59JQDo' },
@@ -338,88 +457,9 @@ const cardsData = [
         ]
     },
     {
-        category: 'infer',
-        badge: 'Inference',
-        title: '13. The Frozen State & Prompt Stack',
-        description: 'After training, model weights are frozen. Inference uses a structured prompt stack to generate responses without learning.',
-        paragraphs: [
-            'Once training completes, the model\'s weights are <strong>locked</strong>. Inference (generating responses) reads these weights but never modifies them. This is why chatting doesn\'t teach the model anything permanent—corrections only affect the current conversation\'s context.',
-            'When you send a message, the system assembles a <strong>prompt stack</strong>: (1) <strong>System Prompt</strong> (hidden instructions defining persona), (2) <strong>Conversation History</strong> (prior messages re-sent on each turn), and (3) <strong>User Prompt</strong> (your message).',
-            'This entire stack is tokenized and fed through the "skyscraper" of Transformer layers (the stacked architecture from Slide 8). The model then enters an <strong>Autoregressive Loop</strong>: it predicts one token, appends it to the prompt, and runs the entire process again to find the next token. This is why you see text appear word-by-word (streaming).'
-        ],
-        bullets: [
-            '<strong>Frozen Weights:</strong> Feedback doesn\'t update the model\'s "brain" permanently',
-            '<strong>Context Window:</strong> The fixed maximum number of tokens the model can "see" at once',
-            '<strong>Prompt Assembly:</strong> System + History + User message = the full input',
-            '<strong>Autoregressive Loop:</strong> The model generates one token at a time, feeding its own output back as input'
-        ],
-        callout: {
-            type: 'note',
-            content: '<strong>The Context Bottleneck:</strong> Because the entire history is re-processed every turn, long conversations get slower and more expensive. Once the context window is full, the model "forgets" the earliest parts of the chat.'
-        },
-        resources: [
-            { type: 'article', title: 'Claude Prompting Best Practices', meta: 'Anthropic · Prompt engineering', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices' },
-            { type: 'video', title: 'Context Engineering Explained', meta: '17 min', url: 'https://www.youtube.com/watch?v=p6s82Ax8yrs' }
-        ]
-    },
-    {
-        category: 'infer',
-        badge: 'Inference',
-        title: '14. What Happens When You Send a Message?',
-        description: 'A step-by-step walkthrough of the full inference pipeline—from keystrokes to streaming tokens.',
-        paragraphs: [
-            'When you press "Send," a precise sequence of operations begins. Understanding this pipeline demystifies why models behave the way they do—and where things can go wrong.',
-            '<strong>Step 1 — Prompt Assembly:</strong> The system combines hidden instructions (system prompt), prior conversation turns (history), and your new message into a single text block. This assembled prompt is the model\'s <em>entire</em> view of the conversation.',
-            '<strong>Step 2 — Tokenization:</strong> The full prompt is split into token IDs (Slide 2). A short question might become 20 tokens; a long conversation with system instructions might be 4,000+. Each token costs compute and counts against the context window.',
-            '<strong>Step 3 — Embedding & Position:</strong> Each token ID is converted into a vector (Slide 3), and positional encodings are added so the model knows word order.',
-            '<strong>Step 4 — The Transformer Forward Pass:</strong> The full sequence of vectors flows upward through every Transformer layer (the "skyscraper" from Slide 8). Attention lets tokens communicate; feed-forward networks refine meaning. After dozens of layers, the <em>final</em> token\'s vector emerges at the top, encoding the model\'s best prediction for what comes next.',
-            '<strong>Step 5 — Token Selection:</strong> That final vector is compared against the entire vocabulary to produce scores (logits). A token is selected (details in the next slide) and streamed to you.',
-            '<strong>Step 6 — The Loop:</strong> The selected token is appended to the sequence, and <em>the entire process repeats</em> from Step 3. This is the autoregressive loop — one token at a time until the model produces a stop token or hits the output limit.'
-        ],
-        bullets: [
-            '<strong>Every Turn Re-Processes Everything:</strong> The full prompt (system + history + your message + tokens generated so far) is re-tokenized and re-run through all layers on every single token generation step',
-            '<strong>Cost Scales with Length:</strong> Longer conversations = more tokens = more compute per generated token',
-            '<strong>Why Streaming Exists:</strong> Each token is available as soon as it\'s generated, so you see text appear word-by-word rather than waiting for the full response',
-            '<strong>The Context Window Limit:</strong> When the total token count (input + output) exceeds the context window, the model can no longer see the earliest parts of the conversation'
-        ],
-        callout: {
-            type: 'insight',
-            content: '<strong>Key Insight:</strong> There is no "memory" between turns. Every time you send a message, the model sees the entire conversation from scratch—as if reading it for the first time. This is why the same question can get different answers in different conversations, and why long chats eventually "forget" early context.'
-        },
-        resources: [
-            { type: 'video', title: 'How GPT Models Work', meta: '10 min · Visual walkthrough', url: 'https://www.youtube.com/watch?v=wjZofJX0v4M' },
-            { type: 'article', title: 'What Is Inference?', meta: 'Anthropic · Fundamentals', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices' }
-        ]
-    },
-    {
-        category: 'infer',
-        badge: 'Inference',
-        title: '15. The Selection Dice Roll',
-        description: 'The final step: turning a refined vector back into a human word.',
-        paragraphs: [
-            'At the roof of the skyscraper, the model has a highly refined vector. It compares this "thought" against its entire vocabulary and gives every word a score (<strong>Logits</strong>).',
-            'These scores are turned into probabilities. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.',
-            '<strong>Temperature</strong> controls the "risk." High temperature = roll the dice on lower-probability words (creativity). Low temperature = pick the most likely word (predictability).'
-        ],
-        bullets: [
-            '<strong>Logits:</strong> Raw scores for every possible token in the vocabulary',
-            '<strong>Temperature:</strong> A slider that adjusts how much "risk" the model takes in selection',
-            '<strong>Probabilistic:</strong> The model is optimized for "plausibility," not necessarily truth',
-            '<strong>Streaming:</strong> Tokens are sent to the user as they are generated, one by one'
-        ],
-        callout: {
-            type: 'insight',
-            content: '<strong>Prediction, not Truth:</strong> If the most statistically likely next word is a hallucination, the model will pick it because its math told it to, not because it "wants" to lie. It is a statistical mirror, not a database.<br><br><em>That\'s the core pipeline—architecture, training, and inference. Next: advanced capabilities that extend this foundation.</em>'
-        },
-        resources: [
-            { type: 'video', title: 'Why LLMs Hallucinate', meta: 'Practical · Video', url: 'https://www.youtube.com/watch?v=cfqtFvWOfg0' },
-            { type: 'article', title: 'Why language models hallucinate', meta: 'OpenAI · Research', url: 'https://openai.com/index/why-language-models-hallucinate/' }
-        ]
-    },
-    {
         category: 'adv',
         badge: 'Advanced',
-        title: '16. RAG: Giving Models Access to Knowledge',
+        title: '17. RAG: Giving Models Access to Knowledge',
         description: 'RAG extends simple chat by letting models retrieve and use external documents—overcoming knowledge cutoffs and accessing private data.',
         paragraphs: [
             'Simple chat is limited to the model\'s training data (with a knowledge cutoff date) and has no access to your private documents. <strong>Retrieval-Augmented Generation (RAG)</strong> solves this by dynamically fetching relevant information and inserting it into the model\'s context before generating a response.',
@@ -430,7 +470,8 @@ const cardsData = [
             '<strong>Key Benefits:</strong> Reduces hallucinations, enables citations/sources, keeps knowledge current without retraining, works with private data',
             '<strong>Use Cases:</strong> Customer support (search help docs), legal research (case law), enterprise Q&A (internal wikis), academic research (paper collections)',
             '<strong>Infrastructure:</strong> Requires embedding model + vector database (Pinecone, Weaviate, Chroma) to enable fast semantic search',
-            '<strong>Trade-offs:</strong> Adds latency, requires document indexing, quality depends on retrieval relevance'
+            '<strong>Trade-offs:</strong> Adds latency, requires document indexing, quality depends on retrieval relevance',
+            '<strong>Data Privacy:</strong> RAG is the primary way to use private or proprietary data with AI — your documents are retrieved and injected at inference time but never become part of the model\'s training data. The model\'s "global brain" never sees your data permanently'
         ],
         callout: {
             type: 'analogy',
@@ -439,41 +480,69 @@ const cardsData = [
         resources: [
             { type: 'video', title: 'What is RAG?', meta: '6 min · IBM', url: 'https://youtube.com/watch?v=T-D1OfcDW1M' },
             { type: 'article', title: 'OpenAI Embeddings Guide', meta: 'Technical docs · Foundation for RAG', url: 'https://platform.openai.com/docs/guides/embeddings' },
-            { type: 'video', title: 'Embeddings Explained', meta: '18 min · 3D visualizations', url: 'https://www.youtube.com/watch?v=eUbKYEC0D3Y' }
-        ]
+            { type: 'video', title: 'Embeddings Explained', meta: '18 min · 3D visualizations', url: 'https://www.youtube.com/watch?v=eUbKYEC0D3Y' },
+            { type: 'article', title: 'Building an End-to-End RAG Pipeline', meta: 'Chitika · From Ingestion to Generation', url: 'https://www.chitika.com/building-end-to-end-rag/' }
+        ],
+        image: {
+            url: 'https://www.chitika.com/content/images/2025/02/image2-7.jpg',
+            caption: 'End-to-end RAG pipeline: from data ingestion to generation',
+            attribution: 'Chitika'
+        }
     },
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '17. Beyond Text: Multimodal Models & Tool Use',
-        description: 'Models now extend beyond simple text chat by processing multiple input types and taking real-world actions.',
+        title: '18. Multimodal Models: Richer Perception',
+        description: 'Models now see images, hear audio, and watch video — by projecting every modality into the same embedding space as text.',
         paragraphs: [
-            'Simple text chat is just the beginning. Modern AI systems extend in two complementary directions: <strong>richer inputs</strong> (multimodal) and <strong>actionable outputs</strong> (tool use).',
-            '<strong>Multimodal Models — Processing More Than Text:</strong> Modern models can understand images, audio, and video alongside text. Images are split into patches and tokenized (like words), audio is converted to spectrograms, video combines both. All modalities are projected into a unified embedding space where a picture of a cat and the word "cat" occupy nearby points.',
-            '<strong>Examples:</strong> <strong>GPT-4V</strong> and <strong>Claude</strong> (vision + text) let you upload diagrams, screenshots, or photos and ask questions. <strong>Gemini</strong> handles text + images + video. <strong>Whisper</strong> transcribes audio. <strong>DALL-E/Midjourney</strong> generate images from text descriptions.',
-            '<strong>Tool Use (Function Calling) — Taking Actions:</strong> LLMs are prediction engines, not calculators or databases. Tool use lets models request external actions: run calculations, search the web, query databases, execute code, send emails, control APIs. The model outputs a structured request like <code>{"tool": "calculator", "input": "sqrt(144)"}</code>, your system executes it, and the result feeds back into the conversation.',
-            '<strong>Examples:</strong> Web search for current information, code interpreters for data analysis, API calls for booking flights, database queries for customer records. Modern models can chain multiple tools sequentially to accomplish complex tasks.'
+            'Simple text chat is just the beginning. Modern models can understand images, audio, and video alongside text. The key insight is the <strong>Unified Embedding Space</strong>: images are split into patches and tokenized (just like words), audio is converted to spectrograms, and video combines both. All modalities are projected into the same latent space where a picture of a cat and the word "cat" occupy nearby points — they share the same "flavor profile."',
+            'This works because the Transformer architecture doesn\'t care what the tokens represent — it only operates on vectors. If you can convert any input into a sequence of vectors, the same attention and feed-forward machinery processes it. This is why multimodal capabilities expanded so rapidly: the hard part (the Transformer) was already solved.',
+            '<strong>Examples:</strong> <strong>GPT-4V</strong> and <strong>Claude</strong> (vision + text) let you upload diagrams, screenshots, or photos and ask questions. <strong>Gemini</strong> handles text + images + video. <strong>Whisper</strong> transcribes audio. <strong>DALL-E/Midjourney</strong> generate images from text descriptions.'
         ],
         bullets: [
-            '<strong>Multimodal Use Cases:</strong> Analyze charts/diagrams, describe images for accessibility, transcribe meetings, generate creative visuals, ask questions about photos',
-            '<strong>Tool Use Cases:</strong> Precise calculations, real-time data (weather, stock prices), code execution, database access, workflow automation',
-            '<strong>Why It Matters:</strong> Together, these capabilities transform models from "text conversationalists" into versatile systems that can perceive richer inputs and take concrete actions',
-            '<strong>Technical Note:</strong> The same Transformer architecture handles all modalities—only the tokenization step differs, which is why capabilities expanded rapidly'
+            '<strong>Unified Embedding Space:</strong> All modalities — text, images, audio — are projected into the same vector space, enabling cross-modal understanding',
+            '<strong>Same Architecture:</strong> The Transformer processes all modalities identically — only the tokenization step differs',
+            '<strong>Use Cases:</strong> Analyze charts/diagrams, describe images for accessibility, transcribe meetings, generate creative visuals, ask questions about photos',
+            '<strong>Expanding Perception:</strong> Multimodal extends what models can <em>perceive</em> — from text alone to text + images + audio + video'
         ],
         callout: {
-            type: 'insight',
-            content: '<strong>The Extension Pattern:</strong> Multimodal extends what models can <em>perceive</em> (text → text + images + audio + video). Tool use extends what models can <em>do</em> (generate text → generate text + execute actions). Combined, they create systems that interact with the world more like humans do.'
+            type: 'analogy',
+            content: '<strong>The Flavor Profile Returns:</strong> Remember embeddings from Slide 3? Multimodal models extend the same idea. A photograph of a sunset, the phrase "golden hour," and an audio clip of waves crashing all get "flavor profiles" that land near each other in latent space. The model doesn\'t distinguish between seeing, reading, and hearing — it just works with vectors.'
         },
         resources: [
             { type: 'video', title: 'How Multimodal Models Work', meta: '12 min · Visual explanation', url: 'https://www.youtube.com/watch?v=vAmKB7iPkWw' },
-            { type: 'video', title: 'Function Calling Tutorial', meta: 'OpenAI · Tool use', url: 'https://www.youtube.com/watch?v=4Dj3j6WqcG0' },
             { type: 'article', title: 'Claude Vision Capabilities', meta: 'Anthropic · Multimodal', url: 'https://docs.anthropic.com/en/docs/build-with-claude/vision' }
         ]
     },
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '18. Reasoning: Two Paradigms',
+        title: '19. Tool Use: From Words to Actions',
+        description: 'Tool use lets models step beyond their frozen weights to interact with calculators, APIs, databases, and the real world.',
+        paragraphs: [
+            'LLMs are prediction engines, not calculators or databases. Their weights are frozen — they can\'t look up today\'s stock price or run a precise calculation. <strong>Tool use</strong> (also called <strong>function calling</strong>) solves this by letting the model request external actions during inference.',
+            'The mechanism is straightforward: instead of generating text, the model outputs a structured request like <code>{"tool": "calculator", "input": "sqrt(144)"}</code>. Your system intercepts this, executes the tool, and feeds the result back into the conversation. The model then incorporates that result into its response. This creates a loop where the model can reason about what tool to use, call it, observe the result, and continue.',
+            '<strong>Examples:</strong> Web search for current information, code interpreters for data analysis, API calls for booking flights, database queries for customer records. Modern models can chain multiple tools sequentially to accomplish complex tasks — and this chaining is exactly what powers the agentic workflows we\'ll see next.'
+        ],
+        bullets: [
+            '<strong>Why Tools Matter:</strong> Models can\'t do precise math, access real-time data, or interact with external systems on their own — tools extend their capabilities beyond text generation',
+            '<strong>Use Cases:</strong> Precise calculations, real-time data (weather, stock prices), code execution, database access, workflow automation',
+            '<strong>Structured Output:</strong> The model generates JSON or function-call syntax that your application intercepts and executes',
+            '<strong>Tool Chaining:</strong> Models can use multiple tools in sequence — search the web, then summarize, then email the result'
+        ],
+        callout: {
+            type: 'insight',
+            content: '<strong>Stepping Out of the Frozen State:</strong> Tool use is the model\'s way of reaching beyond its frozen weights. It can\'t update its own knowledge, but it can ask an external system to look something up, run a calculation, or take an action. This transforms models from "text conversationalists" into systems that can act on the world.'
+        },
+        resources: [
+            { type: 'video', title: 'Function Calling Tutorial', meta: 'OpenAI · Tool use', url: 'https://www.youtube.com/watch?v=4Dj3j6WqcG0' },
+            { type: 'article', title: 'Tool Use with Claude', meta: 'Anthropic · Function calling', url: 'https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview' }
+        ]
+    },
+    {
+        category: 'adv',
+        badge: 'Advanced',
+        title: '20. Reasoning: Two Paradigms',
         description: 'Reasoning capability evolved from simple prompting tricks to fundamental architectural changes in how models think.',
         paragraphs: [
             'Early language models struggled with multi-step reasoning—jumping to conclusions or making arithmetic errors. Two approaches emerged, representing different philosophies about where "thinking" should happen.',
@@ -499,7 +568,7 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '19. Agentic Workflows',
+        title: '21. Agentic Workflows',
         description: 'Combining reasoning, tools, and planning creates autonomous agents that can accomplish complex multi-step tasks.',
         paragraphs: [
             'An <strong>agent</strong> is fundamentally different from simple LLM chat. While a standard chatbot generates one response and stops, an agent operates in a <strong>perception-reasoning-action loop</strong>: it observes the current state, reasons about what to do next, takes actions using tools, observes the results, and continues until the goal is achieved.',
@@ -519,13 +588,42 @@ const cardsData = [
         },
         resources: [
             { type: 'video', title: 'What are AI Agents?', meta: '12 min · IBM Technology', url: 'https://www.youtube.com/watch?v=F8NKVhkZZWI' },
-            { type: 'article', title: 'LangGraph: Agent Framework', meta: 'LangChain · Build production agents', url: 'https://langchain-ai.github.io/langgraph/' }
+            { type: 'article', title: 'LangGraph: Agent Framework', meta: 'LangChain · Build production agents', url: 'https://langchain-ai.github.io/langgraph/' },
+            { type: 'article', title: 'The 4 Levels of AI Agents: Workflows vs Autonomous Systems', meta: 'Duncan Anderson · Barnacle Labs', url: 'https://www.barnacle.ai/blog/2025-09-25-agents-intro' }
+        ],
+        image: {
+            url: 'https://www.barnacle.ai/posts/2025-09-25-agents-intro/agent-loop.jpg',
+            caption: 'The basic agent loop: Observe → Think → Act → Reflect',
+            attribution: 'Barnacle Labs'
+        }
+    },
+    {
+        category: 'adv',
+        badge: 'Conclusion',
+        title: '22. Recap: Key Learnings',
+        description: 'Understanding how AI models work transforms you from a passive user into an informed practitioner.',
+        paragraphs: [
+            'Modern AI isn\'t magic. It\'s a <strong>high-fidelity statistical mirror</strong> of human-created text, trained on trillions of tokens to predict plausible continuations. Understanding this transforms AI from a mysterious black box into a predictable, engineered system whose failures and capabilities make sense.',
+            '<strong>Key Mental Models:</strong> (1) <strong>Frozen Artifact</strong>—chatting never teaches the model. (2) <strong>Plausibility Over Truth</strong>—it outputs what "sounds right," not what\'s correct. (3) <strong>Token-Level Reasoning</strong>—tokenization explains spelling/counting failures. (4) <strong>Context is Everything</strong>—once the window fills, early information vanishes.'
+        ],
+        bullets: [
+            '<strong>When to Use What:</strong> <strong>Prompt engineering</strong> (cheap, instant, start here) → <strong>RAG</strong> (factual accuracy, private data, citations) → <strong>Fine-tuning</strong> (specialized domains, high cost) → <strong>Reasoning models</strong> (complex logic/math, highest accuracy)',
+            '<strong>Model Size:</strong> An 8B model is a fast intern (fits on a laptop, prone to mistakes). A 400B+ model is a senior researcher (slower, deeper nuance). Choose the smallest model that meets your accuracy needs.',
+            '<strong>Strengths:</strong> Language fluency, pattern recognition, creative generation, code completion, summarization, explaining concepts',
+            '<strong>Weaknesses:</strong> Precise arithmetic, recent events, fact verification, counting/spelling — use tools (calculators, RAG, web search) to compensate'
+        ],
+        callout: {
+            type: 'insight',
+            content: '<strong>Final Thought:</strong> The "magic" of AI isn\'t that it thinks—it\'s that billions of mathematical operations, carefully arranged and trained on trillions of tokens, compress human knowledge into a queryable, frozen artifact. You now understand the machine: tokenization → embeddings → attention → prediction. This knowledge transforms you from a user who hopes AI works into a practitioner who knows <em>why</em> it works—and when it won\'t.'
+        },
+        resources: [
+            { type: 'video', title: 'Intro to Large Language Models', meta: '1 hour · Andrej Karpathy', url: 'https://www.youtube.com/watch?v=zjkBMFhNj_g' }
         ]
     },
     {
         category: 'adv',
         badge: 'Looking Ahead',
-        title: '20. Looking Ahead',
+        title: '23. Looking Ahead',
         description: 'A look beyond the core content: emerging architectures and research directions.',
         paragraphs: [
             'Transformers dominate today, but several directions are already in production or heavy research.',
@@ -549,31 +647,6 @@ const cardsData = [
             { type: 'video', title: 'What is Mixture of Experts?', meta: '7 min · IBM', url: 'https://www.youtube.com/watch?v=sYDlVVyJYn4' },
             { type: 'video', title: 'RWKV: Reinventing RNNs for the Transformer Era', meta: 'Paper Explained', url: 'https://www.youtube.com/watch?v=x8pW19wKfXQ' },
             { type: 'video', title: 'Retentive Network: A Successor to Transformer', meta: 'Paper Explained', url: 'https://www.youtube.com/watch?v=ec56a8wmfRk' }
-        ]
-    },
-    {
-        category: 'adv',
-        badge: 'Conclusion',
-        title: '21. Recap: Key Learnings',
-        description: 'Understanding how AI models work transforms you from a passive user into an informed practitioner.',
-        paragraphs: [
-            'Modern AI isn\'t magic. It\'s a <strong>high-fidelity statistical mirror</strong> of human-created text, trained on trillions of tokens to predict plausible continuations. Understanding this—the frozen weights, tokenization quirks, training phases, and inference mechanics—transforms AI from a mysterious black box into a predictable, engineered system whose failures and capabilities make sense.',
-            '<strong>Key Mental Models to Internalize:</strong> (1) <strong>Frozen Artifact</strong>—inference never teaches the model; corrections only affect the current context. (2) <strong>Plausibility Over Truth</strong>—the model outputs what statistically "sounds right," not what is factually correct. (3) <strong>Token-Level Reasoning</strong>—models don\'t see letters or words as humans do; tokenization explains why they struggle with spelling, counting characters, or reversing text. (4) <strong>Context is Everything</strong>—the prompt stack (system + history + user input) is the model\'s entire universe; once context fills up, early information vanishes.',
-            '<strong>Practical Decision Framework:</strong> When should you use different techniques? <strong>Prompt engineering</strong> (simple, cheap, instant, but limited)—start here for most tasks. <strong>RAG</strong> (retrieval-augmented generation)—when you need factual accuracy, citations, or access to private/current data. <strong>Fine-tuning</strong> (expensive, permanent, requires ML expertise)—when you need specialized behavior or domain expertise that can\'t fit in context; continues training on domain-specific data, permanently adjusting weights for specialized behavior like medical diagnosis or legal analysis. <strong>Reasoning models</strong> (o1, DeepSeek-R1)—when accuracy matters more than speed/cost, especially for math, code, and logic-heavy tasks.'
-        ],
-        bullets: [
-            '<strong>Core Understanding:</strong> Models are frozen prediction engines, not databases or calculators—they compress training data into patterns, not facts',
-            '<strong>Strengths:</strong> Language fluency, pattern recognition, creative generation, code completion, summarization, explaining concepts',
-            '<strong>Weaknesses:</strong> Precise arithmetic (use calculators), recent events (use RAG or web search), verifying facts (requires external validation), counting/spelling (tokenization limitations)',
-            '<strong>When to Choose What:</strong> Prompt engineering (default), RAG (factual accuracy/citations), fine-tuning (specialized domains), reasoning models (complex logic/math)',
-            '<strong>The Empowered User:</strong> Architecture knowledge lets you predict failures, debug issues, choose appropriate tools, and use AI as an informed practitioner rather than a passive consumer'
-        ],
-        callout: {
-            type: 'insight',
-            content: '<strong>Final Thought:</strong> The "magic" of AI isn\'t that it thinks—it\'s that billions of mathematical operations, carefully arranged and trained on trillions of tokens, compress human knowledge into a queryable, frozen artifact. You now understand the machine: tokenization → embeddings → attention → prediction. This knowledge transforms you from a user who hopes AI works into a practitioner who knows <em>why</em> it works—and when it won\'t.'
-        },
-        resources: [
-            { type: 'video', title: 'Intro to Large Language Models', meta: '1 hour · Andrej Karpathy', url: 'https://www.youtube.com/watch?v=zjkBMFhNj_g' }
         ]
     }
 ];
