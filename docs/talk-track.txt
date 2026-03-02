@@ -15,7 +15,7 @@ The second resource is an interactive slide-show that digs into the details of h
 
 The slides are organized into four large topics:
 
-1. **Architecture** — the building blocks: what are neural networks, what is a GPT model, and how are we mimicking human intelligence and processing language? (Slides 1–12)
+1. **Architecture** — the building blocks: what are neural networks, how did we get from simple perceptrons to GPT models? (Slides 1–12)
 2. **Training** — how models learn from data (Slides 13–15)
 3. **Inference** — how models generate outputs when you use them (Slides 16–17)
 4. **Advanced Capabilities** — RAG, multimodal, reasoning, agents, and what's emerging at the frontier (Slides 18–23)
@@ -23,6 +23,7 @@ The slides are organized into four large topics:
 Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for drilling into a particular topic.
 
 I wanted to call out a few of the early resources as great starting points and friendly resources to get going:
+
 - *Generative AI in a Nutshell* is a great entry point — a high-level, approachable framing of where AI is and how to think about it. 
 - OKAI, the Brown University interactive lab, is excellent if you're a hands-on learner like me.
 - And I can't say enough about the 3Blue1Brown series on AI and machine learning — some of the clearest visual explanations of what's happening mathematically, without needing to be a mathematician.
@@ -30,7 +31,7 @@ I wanted to call out a few of the early resources as great starting points and f
 
 ---
 
-Wh
+Let's rewind to 1958.
 
 A single neuron is just a number — a value. You wire thousands, then millions, then billions of these neurons together in layers, and you have a neural network. What flows between them are mathematical operations — mostly linear algebra: matrix multiplications, dot products, additions. If you've ever multiplied a grid of numbers by another grid of numbers, that's roughly what's happening, just at a scale that's hard to visualize. (Slide 4 gives a clean look at the basic feed-forward structure — data flowing in one direction, layers stacked on top of each other.)
 

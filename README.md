@@ -4,7 +4,7 @@ An interactive slideshow presentation that explains how modern AI models are bui
 
 ## Overview
 
-This presentation covers 24 comprehensive topics about AI models, from the basics of Transformers to advanced concepts like RAG, tool use, and agentic workflows. Each slide includes:
+This presentation covers 21 comprehensive topics about AI models, from the basics of Transformers to advanced concepts like RAG, tool use, and agentic workflows. Each slide includes:
 
 - Clear explanations with analogies
 - Key concepts and bullet points
@@ -29,33 +29,28 @@ This presentation covers 24 comprehensive topics about AI models, from the basic
 5. Recurrent Neural Networks (RNNs)
 6. Long Short-Term Memory (LSTM)
 7. Encoder-Decoder Architecture (Seq2Seq)
-8. Attention Mechanism
-9. The Transformer Architecture
-10. Inside a Transformer Layer
-11. Attention: Query, Key, Value
-12. Multi-Head Attention
+8. The Transformer Architecture
+9. How Attention Works
 
 ### Training (Train)
-13. Pre-Training
-14. Post-Training
-15. Bias, Fairness & Limitations
+10. Pre-Training
+11. Post-Training
+12. Bias, Fairness & Limitations
 
 ### Inference (Infer)
-16. The Frozen State & Prompt Stack
-17. What happens when you send a message?
-18. The Selection Dice Roll
+13. The Frozen State & Prompt Stack
+14. What Happens When You Send a Message?
+15. The Selection Dice Roll
 
 ### Advanced (Adv)
-19. RAG: Giving Models Access to Knowledge
-20. Beyond Text: Multimodal Models & Tool Use
-21. Reasoning: Two Paradigms
-22. Agentic Workflows
+16. RAG: Giving Models Access to Knowledge
+17. Beyond Text: Multimodal Models & Tool Use
+18. Reasoning: Two Paradigms
+19. Agentic Workflows
+20. Looking Ahead — emerging architectures (JEPA, Mamba, MoE, RWKV/RetNet, hybrids)
 
 ### Conclusion
-23. Recap: Key Learnings
-
-### Looking Ahead
-24. Looking Ahead — emerging architectures (JEPA, Mamba, MoE, RWKV/RetNet, hybrids). Separate from the core pipeline; optional forward-looking content.
+21. Recap: Key Learnings
 
 ## Getting Started
 

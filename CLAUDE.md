@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**AI Model Basics** is an interactive HTML5 slideshow presentation (no build process required) that teaches 24 core concepts about how modern AI models are built, trained, and used. The presentation flows through architecture, training, inference, and advanced capabilities.
+**AI Model Basics** is an interactive HTML5 slideshow presentation (no build process required) that teaches 21 core concepts about how modern AI models are built, trained, and used. The presentation flows through architecture, training, inference, and advanced capabilities.
 
 ## Architecture & File Organization
 
