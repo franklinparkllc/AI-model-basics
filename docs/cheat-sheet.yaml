@@ -1,0 +1,315 @@
+title: The AI Architecture Cheat Sheet
+subtitle: Quick Reference Guide
+lastUpdated: February 2025
+
+sections:
+
+  # ── Core Concepts (table) ──────────────────────────────────────────
+  - type: table
+    heading: Core Concepts
+    columns: [Term, Definition, Analogy]
+    rows:
+      - [Token,        "A fragment of a word (the model's basic unit).",                Reusable puzzle pieces.]
+      - [Embedding,    "A mathematical \"scouting report\" for a token.",               "A flavor profile (sweet, salty, etc.)."]
+      - [Latent Space, "A multi-dimensional map where tokens live.",                    A neighborhood of meaning.]
+      - [Attention,    "A mechanism to weight the importance of words.",                 A highlighter pen for context.]
+      - [Transformer,  "The standard architecture for modern LLMs.",                    A skyscraper of processing floors.]
+      - [Pre-training, "Learning from trillions of tokens of raw data.",                "A general education (reading everything)."]
+      - [Post-training,"Fine-tuning a model to be helpful and safe.",                   Professional etiquette training.]
+      - [Inference,    "The process of the model generating a response.",                Querying a frozen digital brain.]
+      - [RAG,          "Fetching external data to inform a response.",                   An open-book exam.]
+      - [Temperature,  "A setting that controls randomness/creativity.",                 A dice roll for the next word.]
+
+  # ── Tokenization & Text Processing ─────────────────────────────────
+  - type: definitions
+    heading: "Tokenization & Text Processing"
+    color: arch
+    items:
+      - term: Token
+        points:
+          - "**Technical Definition:** The smallest unit of text that a model processes. Can be a word, subword, or character."
+          - "**Example:** \"Ingenious\" → [\"In\", \"gen\", \"ious\"] (3 tokens)"
+          - "**Why It Matters:** Token count determines API costs and context limits. Different models use different tokenizers."
+          - "**Common Tokenizers:** BPE (Byte Pair Encoding), SentencePiece, WordPiece"
+          - "**Origin:** BPE originated in data compression (1994) and was later adopted for NLP tokenization."
+
+      - term: Embedding
+        points:
+          - "**Technical Definition:** A dense vector representation of a token in high-dimensional space (typically 512–4096 dimensions)."
+          - "**Properties:** Similar words have similar embeddings (measured by cosine similarity)."
+          - "**Lineage:** \"You shall know a word by the company it keeps\" (distributional semantics, 1957) → LSA (1990) → Word2Vec (2013) → modern embeddings."
+          - "**Training:** Learned during pre-training through self-supervised learning."
+          - "**Use Cases:** Semantic search, similarity matching, feature extraction."
+
+      - term: Latent Space
+        points:
+          - "**Technical Definition:** The high-dimensional vector space where embeddings exist."
+          - "**Properties:** Geometric relationships encode semantic relationships. Linear operations can represent semantic operations (e.g., king − man + woman ≈ queen)."
+          - "**Visualization:** Often reduced to 2D/3D using t-SNE or UMAP."
+
+      - term: Positional Encoding
+        points:
+          - "**Technical Definition:** Patterns (learned or fixed, e.g. sinusoidal) added to token embeddings to indicate position in the sequence."
+          - "**When:** Applied after embedding lookup, before the first Transformer layer."
+          - "**Why:** Self-attention is permutation-equivariant; positional encoding gives order so \"dog bites man\" ≠ \"man bites dog.\""
+
+  # ── Architecture Components ─────────────────────────────────────────
+  - type: definitions
+    heading: Architecture Components
+    color: arch
+    items:
+      - term: Attention Mechanism
+        points:
+          - "**Purpose:** Allows the model to focus on relevant parts of the input when processing each token."
+          - heading: "**Types:**"
+            sub:
+              - "**Self-Attention:** Tokens attend to other tokens in the same sequence"
+              - "**Cross-Attention:** Tokens attend to tokens in a different sequence"
+              - "**Multi-Head Attention:** Multiple mechanisms run in parallel, each focusing on different aspects"
+          - heading: "**QKV (Query, Key, Value):**"
+            sub:
+              - "**Query (Q):** \"What am I looking for?\""
+              - "**Key (K):** \"What do I represent?\""
+              - "**Value (V):** \"What information do I carry?\""
+        formula: "Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>) V"
+
+      - term: Transformer Architecture
+        points:
+          - heading: "**Components:**"
+            sub:
+              - "**Encoder:** Processes input (BERT, T5)"
+              - "**Decoder:** Generates output (GPT, PaLM)"
+              - "**Encoder-Decoder:** Both (T5, BART)"
+          - heading: "**Layer Structure:**"
+            ordered:
+              - "**Multi-Head Self-Attention:** Token-to-token communication"
+              - "**Feed-Forward Network:** Per-token processing"
+              - "**Layer Normalization:** Stabilizes training"
+              - "**Residual Connections:** Helps with gradient flow"
+          - "**Stacking:** Models typically have 12–96+ layers."
+
+  # ── Training Phases ─────────────────────────────────────────────────
+  - type: definitions
+    heading: Training Phases
+    color: train
+    items:
+      - term: Pre-training
+        points:
+          - "**Objective:** Learn general language patterns by predicting the next token (or masked tokens)."
+          - "**Data:** Massive text corpora (Common Crawl, books, code, etc.) — often trillions of tokens."
+          - "**Process:** Self-supervised learning — no human labels needed."
+          - "**Outcome:** Base model with broad but unfocused knowledge."
+          - "**Examples:** GPT-3, LLaMA base models, BERT base."
+
+      - term: Post-training (Fine-tuning)
+        points:
+          - "**Objective:** Adapt the base model for specific tasks or behaviors."
+          - heading: "**Methods:**"
+            sub:
+              - "**Supervised Fine-Tuning (SFT):** Train on labeled examples"
+              - "**RLHF:** Optimize for human preferences"
+              - "**Direct Preference Optimization (DPO):** More efficient alternative to RLHF"
+          - "**Use Cases:** Making models helpful/harmless/honest, domain adaptation, teaching formats or styles."
+          - "**Examples:** ChatGPT (RLHF), Claude (Constitutional AI), instruction-tuned models."
+
+  # ── Inference & Generation ──────────────────────────────────────────
+  - type: definitions
+    heading: "Inference & Generation"
+    color: infer
+    items:
+      - term: Inference
+        points:
+          - "**Definition:** Using a trained model to generate predictions/responses."
+          - "**Key Point:** Model weights are frozen — no learning happens during inference."
+          - heading: "**Process:**"
+            ordered:
+              - Tokenize input prompt
+              - Convert tokens to embeddings
+              - Add positional encoding
+              - Pass through transformer layers
+              - Generate probability distribution over vocabulary
+              - Sample next token
+              - Repeat until completion
+
+      - term: Temperature
+        points:
+          - "**Range:** Typically 0.0 to 2.0"
+          - "**Low (0.0–0.3):** More deterministic; good for factual tasks, code generation."
+          - "**High (0.7–2.0):** More creative; good for creative writing, brainstorming."
+          - "**Default:** Usually 0.7–1.0 for balanced creativity/consistency."
+
+      - term: Top-p (Nucleus Sampling)
+        points:
+          - "**Definition:** Consider only tokens whose cumulative probability exceeds p."
+          - "**Example:** Top-p = 0.9 means consider tokens until cumulative probability reaches 90%."
+
+      - term: Top-k Sampling
+        points:
+          - "**Definition:** Only consider the k most likely tokens."
+          - "**Example:** Top-k = 50 means sample from the 50 highest-probability tokens."
+
+  # ── Advanced Techniques ─────────────────────────────────────────────
+  - type: definitions
+    heading: Advanced Techniques
+    color: adv
+    items:
+      - term: RAG (Retrieval-Augmented Generation)
+        points:
+          - heading: "**Components:**"
+            ordered:
+              - "**Retrieval:** Search relevant documents/knowledge base"
+              - "**Augmentation:** Inject retrieved context into prompt"
+              - "**Generation:** Model generates answer using context"
+          - "**Benefits:** Up-to-date information, traceability (cite sources), domain-specific knowledge without retraining."
+          - "**Architecture:** Vector database + embedding model + LLM."
+          - "**Use Cases:** Knowledge bases, documentation Q&A, research assistants."
+
+      - term: Fine-Tuning vs. RAG
+        points:
+          - "**Fine-Tuning:** Model learns new information/patterns (permanent change)."
+          - "**RAG:** Model accesses external information (temporary context)."
+          - "**Choose Fine-Tuning When:** Need style change, domain-specific reasoning, consistent formatting."
+          - "**Choose RAG When:** Facts change frequently, need citations, multiple knowledge sources."
+
+      - term: Reasoning Models
+        points:
+          - "**Definition:** Models that use \"inference-time compute\" to think before responding."
+          - heading: "**Techniques:**"
+            sub:
+              - "**Chain-of-Thought (CoT):** Step-by-step reasoning"
+              - "**Tree-of-Thoughts:** Explore multiple reasoning paths"
+              - "**Self-Consistency:** Generate multiple answers and vote"
+          - "**Trade-off:** Slower inference but better accuracy on complex problems."
+
+  # ── Model Types & Sizes ─────────────────────────────────────────────
+  - type: table
+    heading: "Model Types & Sizes"
+    columns: [Size, Parameters, Use Cases, Hardware]
+    rows:
+      - [Small,  "1B – 7B",   "Edge devices, specific tasks, fast inference", "Consumer GPUs, CPUs"]
+      - [Medium, "13B – 70B", "General purpose, business apps",               "Server GPUs (A100, H100)"]
+      - [Large,  "100B+",     "Maximum capability, research",                 "Multi-GPU clusters, TPUs"]
+    extras:
+      - label: "Popular Models by Size"
+        items:
+          - "**Small:** GPT-2 (1.5B), LLaMA-2-7B, Mistral-7B"
+          - "**Medium:** LLaMA-2-70B, PaLM-2, GPT-3.5"
+          - "**Large:** GPT-4, Claude-3 Opus, PaLM-2 (540B)"
+
+  # ── Key Metrics & Evaluation ────────────────────────────────────────
+  - type: definitions
+    heading: "Key Metrics & Evaluation"
+    items:
+      - term: Perplexity
+        points:
+          - "**Definition:** Measure of how \"surprised\" the model is by the test data."
+          - "**Lower = Better:** Lower perplexity means better language modeling."
+
+      - term: BLEU Score
+        points:
+          - "**Definition:** Measures similarity between generated and reference text."
+          - "**Range:** 0–1 (or 0–100), higher is better."
+          - "**Limitations:** Doesn't capture semantic meaning well."
+
+      - term: ROUGE Score
+        points:
+          - "**Definition:** Measures overlap of n-grams (for summarization)."
+          - "**Variants:** ROUGE-1 (unigrams), ROUGE-2 (bigrams), ROUGE-L (longest common subsequence)."
+
+      - term: Human Evaluation
+        points:
+          - "**Metrics:** Helpfulness, harmlessness, honesty, factual accuracy."
+          - "**Methods:** Pairwise comparisons, rating scales, A/B testing."
+
+  # ── Common Acronyms ─────────────────────────────────────────────────
+  - type: table
+    heading: Common Acronyms
+    columns: [Acronym, Full Form, Description]
+    rows:
+      - [LLM,  Large Language Model,                                      General term for large AI language models]
+      - [GPT,  Generative Pre-trained Transformer,                        "OpenAI's model series"]
+      - [BERT, Bidirectional Encoder Representations from Transformers,   "Google's encoder model"]
+      - [RLHF, Reinforcement Learning from Human Feedback,                Training method for alignment]
+      - [DPO,  Direct Preference Optimization,                            Alternative to RLHF]
+      - [RAG,  Retrieval-Augmented Generation,                            Adding external knowledge]
+      - [API,  Application Programming Interface,                         Programmatic model access]
+      - [GPU,  Graphics Processing Unit,                                  Hardware for training/inference]
+      - [TPU,  Tensor Processing Unit,                                    "Google's specialized AI chip"]
+      - [PII,  Personally Identifiable Information,                       Data that identifies individuals]
+      - [CoT,  Chain-of-Thought,                                          Reasoning technique]
+      - [SFT,  Supervised Fine-Tuning,                                    Training on labeled examples]
+
+  # ── Quick Decision Trees ────────────────────────────────────────────
+  - type: trees
+    heading: Quick Decision Trees
+    items:
+      - label: Choosing a Model Size
+        tree: |
+          Do you need maximum capability?
+          ├─ Yes → Large model (100B+)
+          └─ No → Do you have GPU infrastructure?
+              ├─ Yes → Medium model (13-70B)
+              └─ No → Small model (1-7B) or API
+
+      - label: Choosing RAG vs. Fine-Tuning
+        tree: |
+          Does your data change frequently?
+          ├─ Yes → RAG
+          └─ No → Do you need style/format adaptation?
+              ├─ Yes → Fine-Tuning
+              └─ No → Base model may suffice
+
+      - label: Choosing Temperature
+        tree: |
+          What's your use case?
+          ├─ Factual/Coding → Low (0.0-0.3)
+          ├─ Balanced → Medium (0.7-1.0)
+          └─ Creative → High (1.0-2.0)
+
+  # ── Best Practices Checklist ────────────────────────────────────────
+  - type: checklists
+    heading: Best Practices Checklist
+    groups:
+      - label: Prompt Engineering
+        items:
+          - Be specific about the task
+          - Provide relevant context
+          - Include examples when helpful
+          - Specify output format
+          - Set appropriate constraints
+          - Iterate and refine
+
+      - label: Production Deployment
+        items:
+          - Implement error handling
+          - Set rate limits
+          - Monitor costs and usage
+          - Add logging and analytics
+          - Implement caching where appropriate
+          - Set up monitoring and alerts
+          - Plan for scaling
+          - Consider data privacy and security
+
+      - label: Model Selection
+        items:
+          - Match model size to task complexity
+          - Consider inference latency requirements
+          - Evaluate cost vs. capability trade-offs
+          - Test on your specific use case
+          - Consider fine-tuning vs. prompt engineering
+          - Plan for model updates and maintenance
+
+  # ── Common Pitfalls ─────────────────────────────────────────────────
+  - type: pitfalls
+    heading: Common Pitfalls to Avoid
+    items:
+      - "**Assuming models know truth:** They predict patterns, not facts"
+      - "**Ignoring context limits:** Models have maximum token limits"
+      - "**Using wrong temperature:** Too high for factual tasks, too low for creative"
+      - "**Not using RAG when needed:** For frequently changing information"
+      - "**Overlooking costs:** API costs can scale quickly"
+      - "**Ignoring privacy:** Understand data retention policies"
+      - "**Not testing thoroughly:** Models can fail in unexpected ways"
+      - "**Forgetting about latency:** Large models are slower"
+      - "**Not planning for updates:** Model capabilities improve rapidly"
+      - "**Underestimating prompt engineering:** Small prompt changes = big output differences"

@@ -111,6 +111,21 @@ body {
     color: var(--accent);
 }
 
+/* Cheat sheet link styling */
+.nav-link-cheatsheet {
+    font-size: 1rem;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    padding: 4px 6px;
+    opacity: 0.7;
+    line-height: 1;
+}
+
+.nav-link-cheatsheet:hover {
+    opacity: 1;
+}
+
 .nav-progress {
     flex: 1;
     display: flex;

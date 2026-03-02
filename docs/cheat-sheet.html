@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Architecture Cheat Sheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a1d23;
+            --accent: #6366f1;
+            --text: #374151;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+            --muted: #6b7280;
+            --arch: #6366f1;
+            --train: #ec4899;
+            --infer: #0ea5e9;
+            --adv: #10b981;
+            --radius: 10px;
+            --radius-sm: 6px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .page {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* Sections */
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 28px 24px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 1.15rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+        .section h3 {
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin: 20px 0 10px;
+            font-weight: 700;
+        }
+        .section h3:first-child { margin-top: 0; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            margin: 12px 0;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            background: var(--bg);
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        .term { font-weight: 700; color: var(--primary); white-space: nowrap; }
+        .analogy { color: var(--muted); font-style: italic; }
+
+        /* Definition blocks */
+        .def-block {
+            margin: 16px 0;
+            padding: 16px 18px;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+        }
+        .def-block.arch { border-left-color: var(--arch); }
+        .def-block.train { border-left-color: var(--train); }
+        .def-block.infer { border-left-color: var(--infer); }
+        .def-block.adv { border-left-color: var(--adv); }
+
+        .def-block h4 {
+            font-size: 0.95rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .def-block ul {
+            list-style: none;
+            padding: 0;
+        }
+        .def-block li {
+            font-size: 0.87rem;
+            padding: 3px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+        .def-block li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 6px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 50%;
+        }
+        .def-block strong { color: var(--primary); }
+
+        .def-block .sub-list {
+            margin: 4px 0 4px 16px;
+        }
+        .def-block .sub-list li { font-size: 0.84rem; }
+        .def-block .sub-list li::before {
+            width: 5px; height: 5px; top: 10px;
+            background: var(--border);
+        }
+
+        /* Ordered lists */
+        .def-block ol {
+            padding-left: 20px;
+        }
+        .def-block ol li {
+            padding-left: 4px;
+            font-size: 0.87rem;
+        }
+        .def-block ol li::before { display: none; }
+
+        /* Decision trees */
+        .tree {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 12px 0;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: var(--primary);
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            font-size: 0.87rem;
+            padding: 4px 0 4px 26px;
+            position: relative;
+        }
+        .checklist li::before {
+            content: '\2610';
+            position: absolute;
+            left: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Pitfalls */
+        .pitfalls {
+            padding-left: 20px;
+        }
+        .pitfalls li {
+            font-size: 0.87rem;
+            padding: 4px 0;
+        }
+        .pitfalls strong { color: var(--primary); }
+
+        /* Formula */
+        .formula {
+            display: inline-block;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 6px 14px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            margin: 6px 0;
+            color: var(--primary);
+        }
+
+        /* Extras list (e.g. Popular Models by Size) */
+        .extras-list {
+            list-style: none;
+            padding: 0;
+            font-size: 0.87rem;
+        }
+        .extras-list li { padding: 3px 0; }
+        .extras-list strong { color: var(--primary); }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-top: 40px;
+            font-style: italic;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .page { padding: 20px 14px 60px; }
+            .section { padding: 18px 16px; }
+            .header h1 { font-size: 1.4rem; }
+            table { font-size: 0.82rem; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <a href="../index.html" class="back-link">&larr; Back to Presentation</a>
+        <div id="app"><div class="loading">Loading cheat sheet&hellip;</div></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+    <script>
+    (async function () {
+        const app = document.getElementById('app');
+
+        /* ── Fetch & parse YAML ─────────────────────────────────── */
+        let data;
+        try {
+            const res = await fetch('cheat-sheet.yaml');
+            if (!res.ok) throw new Error(res.statusText);
+            data = jsyaml.load(await res.text());
+        } catch (e) {
+            app.innerHTML = '<p style="color:red">Failed to load cheat-sheet.yaml: ' + e.message + '</p>';
+            return;
+        }
+
+        /* ── Header ─────────────────────────────────────────────── */
+        let html = '';
+        html += '<div class="header">';
+        html += '<h1>' + esc(data.title) + '</h1>';
+        html += '<div class="subtitle">' + esc(data.subtitle) + '</div>';
+        html += '</div>';
+
+        /* ── Sections ───────────────────────────────────────────── */
+        for (const sec of data.sections) {
+            html += '<div class="section">';
+            html += '<h2>' + esc(sec.heading) + '</h2>';
+
+            if (sec.type === 'table')      html += renderTable(sec);
+            if (sec.type === 'definitions') html += renderDefinitions(sec);
+            if (sec.type === 'trees')       html += renderTrees(sec);
+            if (sec.type === 'checklists')  html += renderChecklists(sec);
+            if (sec.type === 'pitfalls')    html += renderPitfalls(sec);
+
+            html += '</div>';
+        }
+
+        /* ── Footer ─────────────────────────────────────────────── */
+        if (data.lastUpdated) {
+            html += '<div class="footer">Last Updated: ' + esc(data.lastUpdated) + '</div>';
+        }
+
+        app.innerHTML = html;
+
+        /* ────────────────────────────────────────────────────────
+           Renderers
+           ──────────────────────────────────────────────────────── */
+
+        function renderTable(sec) {
+            let h = '<table><thead><tr>';
+            for (const col of sec.columns) h += '<th>' + esc(col) + '</th>';
+            h += '</tr></thead><tbody>';
+            for (const row of sec.rows) {
+                h += '<tr>';
+                row.forEach(function (cell, i) {
+                    const cls = i === 0 ? ' class="term"'
+                              : (sec.columns[i] === 'Analogy' ? ' class="analogy"' : '');
+                    h += '<td' + cls + '>' + esc(cell) + '</td>';
+                });
+                h += '</tr>';
+            }
+            h += '</tbody></table>';
+
+            /* Optional extras (e.g. "Popular Models by Size") */
+            if (sec.extras) {
+                for (const extra of sec.extras) {
+                    h += '<h3>' + esc(extra.label) + '</h3>';
+                    h += '<ul class="extras-list">';
+                    for (const item of extra.items) h += '<li>' + md(item) + '</li>';
+                    h += '</ul>';
+                }
+            }
+            return h;
+        }
+
+        function renderDefinitions(sec) {
+            let h = '';
+            const color = sec.color || '';
+            for (const item of sec.items) {
+                h += '<div class="def-block ' + esc(color) + '">';
+                h += '<h4>' + esc(item.term) + '</h4>';
+                h += '<ul>';
+                for (const pt of item.points) h += renderPoint(pt);
+                h += '</ul>';
+                if (item.formula) h += '<div class="formula">' + item.formula + '</div>';
+                h += '</div>';
+            }
+            return h;
+        }
+
+        function renderPoint(pt) {
+            /* Simple string → plain <li> */
+            if (typeof pt === 'string') return '<li>' + md(pt) + '</li>';
+
+            /* Object with sub-list */
+            let h = '<li>' + md(pt.heading);
+            if (pt.sub) {
+                h += '<ul class="sub-list">';
+                for (const s of pt.sub) h += '<li>' + md(s) + '</li>';
+                h += '</ul>';
+            }
+            if (pt.ordered) {
+                h += '<ol>';
+                for (const s of pt.ordered) h += '<li>' + md(s) + '</li>';
+                h += '</ol>';
+            }
+            h += '</li>';
+            return h;
+        }
+
+        function renderTrees(sec) {
+            let h = '';
+            for (const item of sec.items) {
+                h += '<h3>' + esc(item.label) + '</h3>';
+                h += '<div class="tree">' + esc(item.tree.trimEnd()) + '</div>';
+            }
+            return h;
+        }
+
+        function renderChecklists(sec) {
+            let h = '';
+            for (const group of sec.groups) {
+                h += '<h3>' + esc(group.label) + '</h3>';
+                h += '<ul class="checklist">';
+                for (const item of group.items) h += '<li>' + esc(item) + '</li>';
+                h += '</ul>';
+            }
+            return h;
+        }
+
+        function renderPitfalls(sec) {
+            let h = '<ol class="pitfalls">';
+            for (const item of sec.items) h += '<li>' + md(item) + '</li>';
+            h += '</ol>';
+            return h;
+        }
+
+        /* ── Helpers ────────────────────────────────────────────── */
+
+        /** Escape HTML entities */
+        function esc(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        /** Minimal markdown-bold → <strong> (leaves HTML in formula fields alone) */
+        function md(str) {
+            if (str == null) return '';
+            return String(str).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        }
+    })();
+    </script>
+</body>
+</html>
