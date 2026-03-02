@@ -1,6 +1,6 @@
 title: The AI Architecture Cheat Sheet
 subtitle: Quick Reference Guide
-lastUpdated: February 2025
+lastUpdated: March 2026
 
 sections:
 
@@ -181,6 +181,35 @@ sections:
               - "**Self-Consistency:** Generate multiple answers and vote"
           - "**Trade-off:** Slower inference but better accuracy on complex problems."
 
+      - term: Tool Use (Function Calling)
+        points:
+          - "**Definition:** Models request external actions (code execution, API calls, database queries) during inference."
+          - "**Mechanism:** Model outputs structured JSON like `{\"tool\": \"calculator\", \"input\": \"sqrt(144)\"}` instead of text."
+          - "**Use Cases:** Precise math, real-time data (weather, stocks), code execution, database access, workflow automation."
+          - "**Tool Chaining:** Models can use multiple tools sequentially to accomplish complex tasks."
+          - "**Why It Matters:** Extends capabilities beyond text generation to interact with external systems."
+
+      - term: Multimodal Models
+        points:
+          - "**Definition:** Models that process text, images, audio, and video in a unified embedding space."
+          - "**How It Works:** All modalities tokenized into vectors; Transformer processes them identically."
+          - "**Unified Embedding Space:** Text tokens, image patches, and audio chunks all map to the same latent space."
+          - "**Examples:** GPT-4V and Claude (vision), Whisper (audio transcription), DALL-E (text-to-image)."
+          - "**Key Insight:** Since Transformers work on vectors, any modality can be tokenized and processed."
+
+      - term: Agentic Workflows
+        points:
+          - "**Definition:** Autonomous systems using perception-reasoning-action loops to complete multi-step tasks."
+          - heading: "**ReAct Pattern (Reasoning + Acting):**"
+            ordered:
+              - "**Thought:** Reason about next step"
+              - "**Action:** Execute tool or query"
+              - "**Observation:** Process results"
+              - "**Repeat** until goal achieved"
+          - "**Use Cases:** Coding assistants (Cursor, Devin), research automation, customer support, data analysis."
+          - "**Challenges:** High cost (many LLM calls), reliability (can loop indefinitely), needs monitoring."
+          - "**Best Practices:** Clear success criteria, robust error handling, human-in-the-loop for critical decisions."
+
   # ── Model Types & Sizes ─────────────────────────────────────────────
   - type: table
     heading: "Model Types & Sizes"
@@ -298,6 +327,46 @@ sections:
           - Test on your specific use case
           - Consider fine-tuning vs. prompt engineering
           - Plan for model updates and maintenance
+
+  # ── Emerging Architectures ──────────────────────────────────────────
+  - type: definitions
+    heading: Emerging Architectures (Beyond Transformers)
+    items:
+      - term: JEPA (Joint Embedding Predictive Architecture)
+        points:
+          - "**Vision:** Predict in representation space, not pixels or tokens."
+          - "**Goal:** Sample-efficient learning, world models, planning."
+          - "**Status:** Early implementations (V-JEPA, I-JEPA); research-phase."
+          - "**Advantage:** Could unlock learning from fewer samples and enable planning."
+
+      - term: Mamba & State Space Models (SSMs)
+        points:
+          - "**Key Feature:** Linear or near-linear sequence complexity vs. quadratic attention."
+          - "**Architecture:** Recurrent state with parallelizable training."
+          - "**Advantage:** Long context without same memory cost; efficient inference."
+          - "**Status:** Used in some long-context and efficient LLMs."
+          - "**Trade-off:** May not capture complex long-range dependencies as well as attention."
+
+      - term: Mixture of Experts (MoE)
+        points:
+          - "**Concept:** Sparse activation—each token routes to a subset of expert sub-networks."
+          - "**Benefit:** Scale total parameters (e.g., 400B+) while keeping compute per token similar."
+          - "**Models Using MoE:** DeepSeek-V3, Llama-4, Gemini-2.5, Mixtral."
+          - "**Trade-off:** Adds routing complexity; may require more data to train effectively."
+
+      - term: RWKV & RetNet
+        points:
+          - "**Key Capability:** Recurrent inference (O(1) memory) with parallelizable training."
+          - "**Advantage:** Constant-memory decoding, long context without attention bottleneck."
+          - "**Status:** Active use and ongoing development (RWKV-7, RetNet)."
+          - "**Narrative:** \"Successor to Transformer\"—solve attention's quadratic complexity."
+
+      - term: Hybrid Models
+        points:
+          - "**Concept:** Mix attention with SSMs and/or MoE in one architecture."
+          - "**Examples:** Jamba (attention + Mamba + MoE), upcoming Qwen hybrids."
+          - "**Trend:** \"Attention was never enough\"—combining mechanisms is dominant."
+          - "**Status:** Already in production and expanding rapidly."
 
   # ── Common Pitfalls ─────────────────────────────────────────────────
   - type: pitfalls
