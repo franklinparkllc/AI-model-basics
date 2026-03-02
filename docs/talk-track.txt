@@ -11,11 +11,11 @@ Out of that process I built two web resources, and they're what we're going to a
 
 The first resource is a timeline — a curated history of the key research and key events in machine learning and AI, going back to the 1940s. Currently there are about 250 events that I kept encountering as I was consuming research and videos. You'll find some controls to search and filter the events or move about through time at your leisure. Each event card should have a link to the paper or summary of the event. 
 
-The second resource is an interactive slide-show that digs into the details of how AI models are built and used.
+The second resource is an interactive slide-show that digs into the details of how neural networks and GPT models are built and used. GPT stands for GENERATIVE PRE-TRAINED TRANSFORMER.
 
-Broadly it breaks into four sections:
+The slides are organized into four large topics:
 
-1. **Architecture** — the building blocks: how models represent and process language (Slides 1–12)
+1. **Architecture** — the building blocks: what are neural networks, what is a GPT model, and how are we mimicking human intelligence and processing language? (Slides 1–12)
 2. **Training** — how models learn from data (Slides 13–15)
 3. **Inference** — how models generate outputs when you use them (Slides 16–17)
 4. **Advanced Capabilities** — RAG, multimodal, reasoning, agents, and what's emerging at the frontier (Slides 18–23)
@@ -30,7 +30,7 @@ I wanted to call out a few of the early resources as great starting points and f
 
 ---
 
-At its most fundamental level, an AI model is a neural network. It was
+Wh
 
 A single neuron is just a number — a value. You wire thousands, then millions, then billions of these neurons together in layers, and you have a neural network. What flows between them are mathematical operations — mostly linear algebra: matrix multiplications, dot products, additions. If you've ever multiplied a grid of numbers by another grid of numbers, that's roughly what's happening, just at a scale that's hard to visualize. (Slide 4 gives a clean look at the basic feed-forward structure — data flowing in one direction, layers stacked on top of each other.)
 

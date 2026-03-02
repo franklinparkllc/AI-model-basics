@@ -106,10 +106,8 @@ const cardsData = [
         title: '4. Feed-Forward Neural Networks (FFNN)',
         description: 'The "classic" neural network architecture where data flows in one direction—the ancestor of all modern AI.',
         paragraphs: [
-            '<strong>Feed-forward neural networks</strong> were the first successful neural network architecture, dating back to the <strong>Perceptron</strong> (1958). These networks process information in a single direction: input → hidden layers → output, with no loops or memory.',
-            'Early perceptrons could only solve simple linear problems. The breakthrough came with <strong>multilayer networks</strong> and <strong>backpropagation</strong> (1986), which allowed models to learn complex, non-linear relationships by adjusting weights across multiple layers.',
-            'While these "classic" FFNNs are the foundation of deep learning, they have a fundamental limitation: they process each input independently. They have no "memory" of what came before, making them unsuitable for sequential data like sentences or music on their own.',
-            '<strong>Note on Terminology:</strong> In modern Transformers, we still use small FFNNs <em>inside</em> every layer (see Slide 10) to process tokens, but the overall Transformer architecture uses Attention to solve the "no memory" problem.'
+            'Rooted in the <strong>Perceptron</strong> (1958), feed-forward neural networks process information in one direction—input → hidden layers → output—with no loops or memory. The key breakthrough was <strong>backpropagation</strong> (1986), which enabled training of deep, multilayer networks capable of learning complex, non-linear relationships.',
+            'FFNNs are the foundation of deep learning, but they process each input independently. Because they have no memory of previous inputs, they struggle with sequential data like text or audio—a limitation that motivated the development of RNNs, and eventually the Transformer\'s Attention mechanism.'
         ],
         bullets: [
             '<strong>One-Way Flow:</strong> Data flows forward only (input → output), no feedback loops',
@@ -123,13 +121,8 @@ const cardsData = [
         },
         resources: [
             { type: 'video', title: 'The Essential Main Ideas of Neural Networks', meta: '19 min · StatQuest', url: 'https://youtu.be/CqOfi41LfDw?si=vGamzRxa1mtcQ3nf' },
-            { type: 'video', title: 'What is Backpropagation?', meta: '14 min · 3Blue1Brown', url: 'https://www.3blue1brown.com/lessons/backpropagation' }
-        ],
-        image: {
-            url: 'https://media.geeksforgeeks.org/wp-content/uploads/20251209120638608023/bhu.webp',
-            caption: 'A perceptron diagram',
-            attribution: 'GeeksForGeeks'
-        }
+            { type: 'video', title: 'Feed Forward Neural Network (FFNN)', meta: '14 min · Kenan Casey · Machine Learning Distilled', url: 'https://www.youtube.com/watch?v=VZ-TvUvtDbg' }
+        ]
     },
     {
         category: 'arch',
@@ -523,11 +516,9 @@ const cardsData = [
         title: '20. Reasoning: Two Paradigms',
         description: 'Reasoning capability evolved from simple prompting tricks to fundamental architectural changes in how models think.',
         paragraphs: [
-            'Early language models struggled with multi-step reasoning—they would jump to conclusions or make arithmetic errors. Two distinct approaches emerged to address this, representing fundamentally different philosophies about where "thinking" should happen.',
-            '<strong>Chain-of-Thought (CoT) — 2022:</strong> Discovered by Google Research, CoT is a <strong>prompting technique</strong> where you ask the model to "think step by step" or show its work. By generating intermediate reasoning steps, models dramatically improve on math, logic, and complex questions. Accuracy on grade-school math jumped from ~20% to ~60% with CoT prompting on GPT-3. <strong>Key limitation:</strong> The reasoning is visible, token-inefficient, and requires user-side prompt engineering.',
-            '<strong>Inference-Time Compute (Test-Time Scaling) — 2024-2025:</strong> A paradigm shift where reasoning is <strong>built into the model itself</strong>. Instead of immediately answering, the model generates <strong>hidden reasoning tokens</strong>—internal "thoughts" not shown to the user. It explores multiple solution paths, verifies steps, and backtracks from errors. Models like OpenAI\'s o1, o3, and DeepSeek-R1 can "think" for seconds or minutes before responding. Performance scales with thinking time—on competitive programming and math olympiad problems, these models approach human expert level.',
-            'This shift represents a fundamental change: reasoning moved from <strong>prompt engineering</strong> (user responsibility) to <strong>model architecture</strong> (system capability). Modern reasoning models automatically invest compute in reasoning when problems are hard—they don\'t need to be asked to think step-by-step.',
-            'Unlike training compute, which is fixed before deployment, <strong>test-time compute</strong> is spent at each query—more thinking time generally means better answers on hard problems.'
+            'Early language models struggled with multi-step reasoning—jumping to conclusions or making arithmetic errors. Two approaches emerged, representing different philosophies about where "thinking" should happen.',
+            '<strong>Chain-of-Thought (CoT) — 2022:</strong> A <strong>prompting technique</strong> where you ask the model to "think step by step." By generating intermediate reasoning steps, models dramatically improve on math, logic, and complex questions—but the reasoning is visible, token-inefficient, and requires user-side prompt engineering.',
+            '<strong>Inference-Time Compute (2024–2025):</strong> Reasoning <strong>built into the model itself</strong>. Instead of immediately answering, the model generates hidden reasoning tokens—internal "thoughts" not shown to the user—exploring multiple paths and backtracking from errors. Models like o1 and DeepSeek-R1 can "think" for seconds or minutes before responding. This shifts responsibility from <strong>prompt engineering</strong> (user) to <strong>model architecture</strong> (system): reasoning happens automatically when problems are hard.'
         ],
         bullets: [
             '<strong>CoT (2022):</strong> Visible reasoning, user controls format, token-inefficient, works with any model',
