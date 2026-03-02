@@ -12,36 +12,44 @@ The second resource is an interactive slide-show that digs into the details of h
 
 The slides are organized into four large topics:
 
-1. **Architecture** — the building blocks: what are neural networks, how did we get from simple perceptrons to GPT models? (Slides 1–9)
-2. **Inference** — how models generate outputs when you use them (Slides 10–13)
-3. **Training** — how models learn from data (Slides 14–16)
-4. **Advanced Capabilities** — RAG, multimodal, tool use, reasoning, agents, and what's emerging at the frontier (Slides 17–23)
+1. **Architecture** — the building blocks: intro and pipeline (1), feed-forward networks (2), tokens (3), embeddings and latent space (4), RNNs (5), LSTMs (6), encoder-decoder/Seq2Seq (7), the Transformer (8), and how attention works (9)
+
+2. **Inference** — frozen state and prompt stack (10), preparing the input (11), forward pass and autoregressive loop (12), and the selection “dice roll” (13)
+
+3. **Training** — pre-training (14), post-training (15), and bias, fairness & limitations (16)
+
+4. **Advanced Capabilities** — RAG (17), multimodal (18), tool use (19), reasoning (20), agents (21), recap (22), and looking ahead (23)
 
 Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for drilling into a particular topic.
 
-I wanted to call out a few of the early resources as great starting points and friendly resources to get going:
+I wanted to call out a few of the early resources as great, friendly, un-scary starting points:
 
 - *Generative AI in a Nutshell* is a great entry point — a high-level, approachable framing of where AI is and how to think about it. 
+
 - OKAI, the Brown University interactive lab, is excellent if you're a hands-on learner like me.
+
 - And I can't say enough about the 3Blue1Brown series on AI and machine learning — some of the clearest visual explanations of what's happening mathematically, without needing to be a mathematician.
 
 
 ---
 
-Let's rewind to 1958.
+I. ARCHITECTURE — From Text to Meaning to the Transformer
+[Slides 1–9 — overview]
 
-A single neuron is just a number — a value. You wire thousands, then millions, then billions of these neurons together in layers, and you have a neural network. What flows between them are mathematical operations — mostly linear algebra: matrix multiplications, dot products, additions. If you've ever multiplied a grid of numbers by another grid of numbers, that's roughly what's happening, just at a scale that's hard to visualize. (Slide 4 gives a clean look at the basic feed-forward structure — data flowing in one direction, layers stacked on top of each other.)
+Slide 1 sets the pipeline: **Architecture → Training → Inference → Advanced Capabilities**. At the heart of modern models is the **Transformer** (2017) — the de facto standard for language models. Everything we'll talk about flows from that.
 
-Now here's the important part. Running through all those connections are two types of numbers: **weights** and **biases**.
+Let's start with the foundation. **Slide 2** — the **perceptron** and **feed-forward networks**. Data flows one way: input → hidden layers → output. No memory, no loops. **Backpropagation** (1986) made training deep networks possible. This is the atom everything else is built from.
 
-**Weights** control how much one neuron influences the next — how loud or quiet a signal is as it passes through.
-**Biases** are offsets — they shift a neuron's output up or down before it passes to the next layer.
+**Slide 3** — 
+Models don't read text directly. They work on **tokens**: numeric IDs for pieces of words (e.g. "Ingenious" → In, gen, ious). Tokenization is why models struggle with counting letters or spelling backwards — they're blind to individual characters.
 
-When you're using Claude or ChatGPT, you are running a model whose weights and biases were set during training — and they are now frozen. The model is a fixed mathematical object. Billions of tuned numbers, locked in place. (Slide 10 covers this directly.)
+**Slide 4** — those token IDs get turned into **embeddings**: vectors in a multi-dimensional **latent space** where similar meanings sit close together. Positional encodings add word order so "dog bites man" and "man bites dog" aren't the same.
 
-This is one of the most practically important things to understand: **chatting with a model doesn't teach it anything permanent.** When you correct it, it adjusts within your current conversation — but the underlying weights don't change. You're not training it. You're querying a frozen artifact.
+**Slides 5–6** — **RNNs** and **LSTMs** added memory for sequences but had to process tokens one at a time and suffered from vanishing gradients. **Slide 7** — **encoder-decoder (Seq2Seq)** compressed a whole sentence into a single "context vector" and unpacked it into another sequence — powerful, but that single-vector bottleneck led to the next step.
 
-The architecture that made modern models possible — and that you'll see referenced throughout the slide deck — is called the **Transformer**, introduced in a 2017 paper called "Attention is All You Need." (Slides 8 and 9.) What made it revolutionary was that it could process all tokens in a sequence simultaneously — in parallel — rather than one at a time, as the earlier recurrent networks had to do. That parallelism enabled scale. Billions of parameters trained on trillions of tokens.
+**Slides 8 and 9** — the **Transformer**. If attention can carry context, why keep the sequential RNN? The Transformer is a stack of identical layers: **self-attention** (tokens communicate) then **feed-forward** (each token refined). All tokens are processed in parallel. That parallelism unlocked scale: billions of parameters, trillions of tokens. Inside each layer, **attention** uses Query, Key, and Value vectors — every token figures out which other tokens matter most. Multi-head attention runs 8–32 of these operations in parallel.
+
+One more thing that will matter for inference: when you're using Claude or ChatGPT, you're running a model whose **weights** were set during training — and they are **frozen**. (Slide 10.) **Chatting doesn't teach the model anything permanent.** You're querying a fixed artifact.
 
 ---
 
@@ -50,17 +58,15 @@ II. INFERENCE — What Happens When You Hit Send
 
 You've typed a message. What actually happens?
 
-The system assembles what I think of as a **prompt stack** (Slide 10): first there's a **system prompt** — hidden instructions that define how the model should behave. Then there's **conversation history** — because the model has no memory, every prior message in your conversation gets re-sent every single turn. Then there's **your message**.
+**Slide 10** — the system assembles a **prompt stack**: (1) **system prompt** (hidden instructions), (2) **conversation history** (re-sent every turn — the model has no memory), (3) **your message**. Weights are frozen; only **activations** hold the current conversation and vanish when the session ends.
 
-This entire stack gets tokenized — broken into numeric token IDs, as described in Slide 2 — and run through all those frozen Transformer layers. What comes out the other side is a probability distribution over every token in the model's vocabulary.
+**Slide 11** — **Preparing the input.** The full prompt is assembled, tokenized (Slide 3), then embedded and given positional encodings (Slide 4). That sequence of vectors is what enters the Transformer. Every turn re-processes everything; cost and latency scale with context length.
 
-That's the dice roll (Slide 13). The model doesn't "know" the answer. It computes that "Medici" has a 75% probability of being the next right token, or that "Florence" has a 15% chance. Then it picks one, appends it to the sequence, and runs the whole process again for the next token. That's why text streams — you're watching the model generate one token at a time, each one feeding into the next.
+**Slide 12** — the **forward pass** and **autoregressive loop**. The vectors flow up through every Transformer layer. The final token's vector is turned into scores (logits) over the vocabulary; a token is chosen (Slide 13); that token is appended and the whole process repeats. One token at a time — that's why you see streaming. In practice, **KV caching** avoids recomputing the full history for each new token.
 
-The **temperature** setting you may have seen in some interfaces is literally a dial on that dice roll. Low temperature: always pick the highest-probability token — safe, predictable. High temperature: let lower-probability tokens through — more creative, more surprising, more prone to going off the rails.
+**Slide 13** — the **selection dice roll**. Logits go through **softmax** to become probabilities. **Temperature** is the dial: low = pick the safest token; high = more variation and creativity. Many models use **weight tying** — the same embedding table used at input is used (transposed) at output. The model doesn't "know" the answer; it assigns probabilities. If the most plausible next token is wrong, it'll pick it anyway — **plausibility, not truth**. That's the core of why hallucinations happen.
 
-And here's the practical insight about hallucinations: if the statistically most plausible next token is factually wrong, the model will pick it anyway. It's optimizing for plausibility, not truth. It's a very sophisticated mirror — not a database.
-
-We've seen how the machine runs. Now let's talk about how we built the machine — the difference between using a map and drawing the map.
+We've seen how the machine runs. Next: how we built the machine — the difference between using a map and drawing the map.
 
 ---
 
@@ -75,50 +81,45 @@ Now do that billions of times, across trillions of tokens of text from books, th
 
 This process runs for months on thousands of GPUs and costs millions to hundreds of millions of dollars. What you get at the end is called a **base model** — which is knowledgeable but not particularly useful. It completes sentences. It rambles. It doesn't know how to have a conversation.
 
-That's where **post-training** comes in. (Slide 15.) This is the phase where humans write ideal responses to thousands of prompts, and the model is fine-tuned to mimic helpful behavior. Then comes RLHF — Reinforcement Learning from Human Feedback — where humans rank responses, and the model learns to prefer the ones humans prefer. A newer alternative called **DPO** — Direct Preference Optimization — streamlines this by skipping the separate reward model entirely, optimizing preferences directly. This phase is where the guardrails go in, where the conversational norms are learned, where the model starts to become an assistant rather than just a text-completion engine.
+That's where **post-training** comes in (Slide 15). **Supervised Fine-Tuning (SFT):** humans write ideal responses; the model learns to mimic them. **RLHF** — Reinforcement Learning from Human Feedback — uses human rankings to train a reward model, then reinforcement learning optimizes the LLM to score highly. **DPO** — Direct Preference Optimization — skips the reward model and optimizes preferences directly from the same data; it's simpler and often more stable. This phase is where guardrails and conversational norms go in — and where some raw capability is traded for alignment and safety.
 
 Two practical implications here. First, the training data has a cutoff — the model doesn't know about things that happened after it was trained, unless you tell it or give it a tool to look things up. Second — and Slide 16 covers this directly — the model inherits whatever biases, gaps, and skewed representations exist in its training data. It's a mirror of the text it was trained on, not an arbiter of truth. That matters especially in high-stakes domains like hiring, legal analysis, or healthcare. No amount of post-training alignment fully eliminates those underlying biases — it reduces harmful outputs, but critical evaluation and human oversight remain essential.
 
 ---
 
-IV. RAG & VECTOR SEARCH — Teaching a Frozen Model New Tricks
+IV. RAG — Teaching a Frozen Model New Tricks
 [Slide 17 — ~1.5 minutes]
 
 Here's the practical problem. The model is frozen. Its training data has a cutoff. It knows nothing about your firm's documents, your portfolio companies, or anything that happened last month.
 
-**RAG** — Retrieval-Augmented Generation — is the most important solution to this problem, and it's worth understanding at a conceptual level because it underlies most serious enterprise AI deployments. (Slide 17.)
+**RAG** — Retrieval-Augmented Generation (Slide 17) — is the main solution. Before the model generates a response, you retrieve relevant chunks and inject them into the prompt. You're not retraining the model; you're giving it better context at inference time.
 
-The idea is straightforward: before the model generates a response, you retrieve relevant information from an external source and inject it into the prompt. You're not retraining the model — you're giving it better context at inference time.
+The retrieval step uses **semantic search**: the same embeddings and latent space we saw in Slide 4. You turn document chunks into vectors and store them in a **vector database**. When a question comes in, you embed it and find the chunks whose vectors are closest in meaning. Not keyword match — **semantic match**. "What did we say about our exit timeline?" can find the right paragraph even if those exact words don't appear. Infrastructure is typically an embedding model plus a vector store (e.g. Pinecone, Weaviate, Chroma).
 
-The magic is in how you retrieve. This is where **vector search** comes in, and it connects back to what we covered earlier with embeddings (Slide 3). Remember how embeddings place meaning in a high-dimensional coordinate space, where similar concepts cluster together? You can do the same with entire chunks of documents. You convert your company memos, research reports, emails — whatever — into vectors and store them in a vector database. When a question comes in, you convert that into a vector too, and find the chunks that are geometrically closest in meaning. Not keyword matches — **semantic matches**. "What did we say about our exit timeline?" finds the right paragraph even if neither the word "exit" nor "timeline" appears in it.
-
-**Graph RAG** is a newer evolution — instead of just retrieving similar chunks, you build a knowledge graph that captures relationships between entities. Who invested in what, which company is connected to which thesis, what events led to what outcomes. This is more expensive to build but gets you much closer to genuine knowledge retrieval for complex, multi-hop questions.
-
-The practical implication: if you're building an internal intelligence tool — and several of you are — RAG is probably at its core. Understanding the difference between vector similarity and keyword search changes how you design what goes into the retrieval layer. And critically: your private data stays in your retrieval system. It's injected at inference time but never enters the model's training data or "global brain." This is the primary way to use proprietary data safely with AI.
+Practical implications: RAG reduces hallucinations, enables citations, and keeps knowledge current without retraining. Your private data stays in your system; it's injected at inference time and never enters the model's training data or "global brain." That's the primary way to use proprietary data safely with AI.
 
 ---
 
-V. REASONING & AGENTS — From Chat to Action
-[Slides 20, 21 — ~2 minutes]
+V. MULTIMODAL, TOOL USE, REASONING & AGENTS
+[Slides 18–21 — ~2.5 minutes]
 
-Now we get to where things get genuinely exciting — and a little unsettling.
+**Slide 18 — Multimodal.** Models now handle images, audio, and video as well as text. The idea is a **unified embedding space**: images become patches (like tokens), audio becomes spectrograms, and everything is projected into the same latent space. The Transformer doesn't care what the vectors represent — it just processes them. So vision, speech, and text share the same "flavor profile" idea from Slide 4. Examples: GPT-4V, Claude, Gemini (vision + text); Whisper (audio); DALL-E, Midjourney (image generation).
 
-The first major step beyond basic inference was **Chain-of-Thought** prompting (Slide 20). Discovered by Google Research in 2022 — if you ask the model to "think step by step," it dramatically improves on math, logic, and multi-step reasoning. Accuracy on grade-school math jumped from roughly 20% to 60% with that single prompting change. The model was always capable of more — it just needed room to reason before committing to an answer.
-
-The next evolution — and this is very recent, 2024–2025 — is **inference-time compute**, or reasoning models. Instead of you prompting the model to think step by step, the model does it internally. OpenAI's o1 and o3, DeepSeek-R1 — these models generate hidden reasoning tokens before they respond. They explore multiple paths, check their own work, backtrack when they hit a dead end. They can spend seconds or minutes "thinking" before giving you an answer. This is AI's version of System 2 thinking — slow, deliberate, effortful — as opposed to the fast pattern-matching of a standard model.
-
-That capability is what enables **agents**. (Slide 21.)
-
-An agent is fundamentally different from a chatbot. A chatbot generates one response and stops. An agent operates in a loop: it perceives the situation, reasons about what to do, takes an action using a tool, observes what happened, and loops again until the task is done.
-
-The tools it can use are real: web search, code execution, database queries, file reads and writes, API calls. If you've used Cursor, Claude Code, or Devin — and several of you mentioned demos along these lines — you've seen an agent loop in action. The model reads code, runs a test, sees the error, edits the file, runs the test again. It's not magic. It's the ReAct pattern — Reasoning plus Acting — iterated until the job is done.
-
-This is what firms were showing off at conference this past week. Sourcing agents, intelligence-gathering agents. The ones building on coding agents or custom orchestration tools: that's what they're doing. They're building loops.
+**Slide 19 — Tool use.** LLMs are prediction engines with frozen weights — they can't run a calculator or hit an API. **Tool use** (function calling) lets the model output a structured request; your system runs the tool and feeds the result back into the conversation. That extends the model beyond text: web search, code execution, database queries, booking APIs. Models can chain multiple tools in sequence — which is what makes agents possible.
 
 ---
 
-VI. WHICH MODEL FOR WHAT — A Practical Selection Guide
-[~1.5 minutes — not a specific slide, but draws on the overall framework]
+VI. REASONING & AGENTS — From Chat to Action
+[Slides 20–21 — ~2 minutes]
+
+**Slide 20 — Reasoning: two paradigms.** **Chain-of-Thought (CoT)** — a prompting technique from 2022: ask the model to "think step by step." Visible reasoning, more output tokens, big gains on math and logic. **Inference-time compute** (2024–2025): reasoning built into the model. Models like o1 and DeepSeek-R1 generate hidden reasoning tokens — they "think" for seconds or minutes before answering. That's AI's version of System 2: slow, deliberate, effortful. CoT proved models can reason if given space; inference-time compute teaches them when and how to allocate that thinking automatically.
+
+**Slide 21 — Agentic workflows.** An **agent** isn't a one-shot chatbot. It runs a **perception–reasoning–action loop**: observe, reason, act (via tools), observe the result, repeat until the goal is met. The **ReAct** pattern — Thought → Action → Observation → Repeat — is the core. Tools are real: web search, code execution, databases, APIs. Frameworks like LangGraph, AutoGPT, CrewAI power coding assistants (Cursor, Devin), research tools, support bots. Agents need clear success criteria, error handling, and often human-in-the-loop for high-stakes tasks. They're costlier (many LLM calls per task) but can accomplish multi-step work autonomously.
+
+---
+
+VII. WHICH MODEL FOR WHAT — A Practical Selection Guide
+[~1.5 minutes — Slide 22 Recap summarizes "when to use what"]
 
 One of the most common practical questions I get is: which model should I be using? The answer has changed dramatically in the last twelve months and will keep changing — but here's a framework that holds up.
 
@@ -148,20 +149,24 @@ Think in three tiers based on what you're trading off: speed and cost against ca
 
 *The Meta-Point:* You are no longer paying for the answer; you are paying for the silence while it thinks.
 
+Slide 22 (**Recap**) sums it up: **when to use what** — prompt engineering (cheap, start here) → RAG (factual accuracy, private data, citations) → fine-tuning (specialized domains) → reasoning models (complex logic/math). Model size: smaller models are faster and cheaper but less capable; choose the smallest that meets your accuracy needs.
+
 ---
 
-VII. FRONTIER — What's Coming Next
-[Slide 23 — ~1 minute]
+VIII. FRONTIER — What's Coming Next
+[Slide 23 — Looking Ahead — ~1 minute]
 
-I want to leave you with a quick look at where research is heading, because some of these names will start showing up in what you read. (Slide 23.)
+Slide 23 points at what's already in production or in heavy research.
 
-**Mixture of Experts** is already here — DeepSeek, Llama-4, and Gemini use it. Instead of activating the entire network for every token, the model routes each token to specialized sub-networks. You scale total parameters without scaling the compute cost per token. This is part of why DeepSeek was such a shock when it arrived: massive capability, fraction of the cost.
+**JEPA** (Joint Embedding Predictive Architecture) — Yann LeCun's direction: predict in representation space, not tokens or pixels. Goal: world models, planning, sample-efficient learning. V-JEPA and I-JEPA are early implementations.
 
-**Mamba and State Space Models** are an alternative to the Transformer's quadratic attention mechanism — designed for very long contexts at much lower memory cost. Still emerging, but gaining traction.
+**Mamba & State Space Models (SSMs)** — linear or near-linear sequence complexity instead of quadratic attention. Long context with lower memory cost; used in some long-context and efficient LLMs.
 
-**Hybrids** are a major trend — models that mix attention with State Space Models and Mixture of Experts in a single architecture. Jamba, for instance, combines attention, Mamba, and MoE. The era of "one architecture to rule them all" may be ending.
+**Mixture of Experts (MoE)** — route each token to a subset of "expert" sub-networks instead of one dense stack. Scale total parameters (e.g. 400B+) without scaling compute per token. DeepSeek-V3, Llama-4, Gemini-2.5, Mixtral use it.
 
-And the one I find most philosophically interesting: **JEPA** — Joint Embedding Predictive Architecture — Yann LeCun's project at Meta. The argument is that predicting the next token, as brilliant as it has been, isn't how the world actually works. JEPA predicts in abstract representation space — more like how humans build mental models of situations. The bet is that this architecture gets us closer to genuine reasoning and planning, as opposed to very sophisticated pattern completion.
+**RWKV & RetNet** — RNN-like inference (O(1) memory) with parallelizable training. "Successor to Transformer" narrative; constant-memory decoding and long context. RWKV-7 and RetNet are in active use.
+
+**Hybrids** — models that combine attention with SSMs and/or MoE (e.g. Jamba: attention + Mamba + MoE). "Attention was never enough"; combining mechanisms is a major trend.
 
 We're not there yet. But these are the threads worth pulling.
 

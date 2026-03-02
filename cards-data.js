@@ -36,7 +36,38 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '2. Tokens & Tokenization',
+        title: '2. Feed-Forward Neural Networks (FFNN)',
+        description: 'The "classic" neural network architecture where data flows in one direction—the ancestor of all modern AI.',
+        paragraphs: [
+            'FFNN were the most primative form of neural network rooted in the research around <strong>Perceptrons</strong> (1958). Feed-forward neural networks process information in one direction—input → hidden layers → output—with no loops or memory. The key breakthrough was <strong>backpropagation</strong> (1986), which enabled training of deep, multilayer networks capable of learning complex, non-linear relationships.',
+            'FFNNs are the foundation of deep learning, but they process each input independently. Because they have no memory of previous inputs, they struggle with sequential data like text or audio—a limitation that motivated the development of RNNs, and eventually the Transformer\'s Attention mechanism.',
+            'A key ingredient is the <strong>activation function</strong> (e.g., ReLU) applied between layers. Without it, stacking layers would just produce another linear transformation—no matter how deep. Activation functions introduce <strong>non-linearity</strong>, allowing the network to learn complex, curved decision boundaries instead of just straight lines.'
+        ],
+        bullets: [
+            '<strong>One-Way Flow:</strong> Data flows forward only (input → output), no feedback loops',
+            '<strong>No Memory:</strong> Each input processed independently, no context from previous inputs',
+            '<strong>Backpropagation (1986):</strong> Enables training of deep multilayer networks',
+            '<strong>Activation Functions:</strong> Introduce non-linearity so the network can learn complex patterns, not just linear relationships',
+            '<strong>Limitation:</strong> Cannot model temporal dependencies or sequential patterns'
+        ],
+        callout: {
+            type: 'insight',
+            content: '<strong>The Foundation:</strong> Feed-forward networks established the basic architecture and training methods (backpropagation) that all subsequent neural networks build upon. Their limitation—no memory—led to the development of RNNs for sequential data.'
+        },
+        resources: [
+            { type: 'video', title: 'The Essential Main Ideas of Neural Networks', meta: '19 min · StatQuest', url: 'https://youtu.be/CqOfi41LfDw?si=vGamzRxa1mtcQ3nf' },
+            { type: 'video', title: 'Feed Forward Neural Network (FFNN)', meta: '14 min · Kenan Casey · Machine Learning Distilled', url: 'https://www.youtube.com/watch?v=VZ-TvUvtDbg' }
+        ],
+        image: {
+            url: 'https://media.geeksforgeeks.org/wp-content/uploads/20251209120638608023/bhu.webp',
+            caption: 'A perceptron diagram',
+            attribution: 'GeeksForGeeks'
+        }
+    },
+    {
+        category: 'arch',
+        badge: 'Architecture',
+        title: '3. Tokens & Tokenization',
         description: 'Models don\'t read text directly—they process numeric token IDs that represent pieces of words.',
         paragraphs: [
             'AI models operate on numbers, not letters. A <strong>tokenizer</strong> converts text into integer IDs representing vocabulary fragments. For example, "Ingenious" might split into three tokens: <code>In</code>, <code>gen</code>, and <code>ious</code>.',
@@ -69,7 +100,7 @@ const cardsData = [
     {
         category: 'arch',
         badge: 'Architecture',
-        title: '3. From Numbers to Meaning: Embeddings & Latent Space',
+        title: '4. From Numbers to Meaning: Embeddings & Latent Space',
         description: 'Token IDs are just numbers—embeddings transform them into rich, meaningful representations in a high-dimensional "Latent Space."',
         paragraphs: [
             'After tokenization, the model has a sequence of token IDs—integers like [4829, 2121, 8945]. But numbers alone are meaningless. The model needs to understand what each token <em>represents</em>.',
@@ -96,37 +127,6 @@ const cardsData = [
             url: 'https://www.ddbm.com/hs-fs/hubfs/Imported_Blog_Media/linear-relationships-4-1.jpg?width=1534&name=linear-relationships-4-1.jpg',
             caption: 'Embeddings in latent space',
             attribution: 'DDBM'
-        }
-    },
-    {
-        category: 'arch',
-        badge: 'Architecture',
-        title: '4. Feed-Forward Neural Networks (FFNN)',
-        description: 'The "classic" neural network architecture where data flows in one direction—the ancestor of all modern AI.',
-        paragraphs: [
-            'Rooted in the <strong>Perceptron</strong> (1958), feed-forward neural networks process information in one direction—input → hidden layers → output—with no loops or memory. The key breakthrough was <strong>backpropagation</strong> (1986), which enabled training of deep, multilayer networks capable of learning complex, non-linear relationships.',
-            'FFNNs are the foundation of deep learning, but they process each input independently. Because they have no memory of previous inputs, they struggle with sequential data like text or audio—a limitation that motivated the development of RNNs, and eventually the Transformer\'s Attention mechanism.',
-            'A key ingredient is the <strong>activation function</strong> (e.g., ReLU) applied between layers. Without it, stacking layers would just produce another linear transformation—no matter how deep. Activation functions introduce <strong>non-linearity</strong>, allowing the network to learn complex, curved decision boundaries instead of just straight lines.'
-        ],
-        bullets: [
-            '<strong>One-Way Flow:</strong> Data flows forward only (input → output), no feedback loops',
-            '<strong>No Memory:</strong> Each input processed independently, no context from previous inputs',
-            '<strong>Backpropagation (1986):</strong> Enables training of deep multilayer networks',
-            '<strong>Activation Functions:</strong> Introduce non-linearity so the network can learn complex patterns, not just linear relationships',
-            '<strong>Limitation:</strong> Cannot model temporal dependencies or sequential patterns'
-        ],
-        callout: {
-            type: 'insight',
-            content: '<strong>The Foundation:</strong> Feed-forward networks established the basic architecture and training methods (backpropagation) that all subsequent neural networks build upon. Their limitation—no memory—led to the development of RNNs for sequential data.'
-        },
-        resources: [
-            { type: 'video', title: 'The Essential Main Ideas of Neural Networks', meta: '19 min · StatQuest', url: 'https://youtu.be/CqOfi41LfDw?si=vGamzRxa1mtcQ3nf' },
-            { type: 'video', title: 'Feed Forward Neural Network (FFNN)', meta: '14 min · Kenan Casey · Machine Learning Distilled', url: 'https://www.youtube.com/watch?v=VZ-TvUvtDbg' }
-        ],
-        image: {
-            url: 'https://media.geeksforgeeks.org/wp-content/uploads/20251209120638608023/bhu.webp',
-            caption: 'A perceptron diagram',
-            attribution: 'GeeksForGeeks'
         }
     },
     {
@@ -302,8 +302,8 @@ const cardsData = [
         paragraphs: [
             'When you press "Send," a precise sequence of operations begins. The first three steps prepare the raw input before any generation can happen.',
             '<strong>Step 1 — Prompt Assembly:</strong> The system combines hidden instructions (system prompt), prior conversation turns (history), and your new message into a single text block. This assembled prompt is the model\'s <em>entire</em> view of the conversation.',
-            '<strong>Step 2 — Tokenization:</strong> The full prompt is split into token IDs (Slide 2). A short question might become 20 tokens; a long conversation with system instructions might be 4,000+. Each token costs compute and counts against the context window.',
-            '<strong>Step 3 — Embedding & Position:</strong> Each token ID is converted into a vector (Slide 3), and positional encodings are added so the model knows word order. The result is a sequence of rich, position-aware vectors ready to enter the Transformer.'
+            '<strong>Step 2 — Tokenization:</strong> The full prompt is split into token IDs (Slide 3). A short question might become 20 tokens; a long conversation with system instructions might be 4,000+. Each token costs compute and counts against the context window.',
+            '<strong>Step 3 — Embedding & Position:</strong> Each token ID is converted into a vector (Slide 4), and positional encodings are added so the model knows word order. The result is a sequence of rich, position-aware vectors ready to enter the Transformer.'
         ],
         bullets: [
             '<strong>Every Turn Re-Processes Everything:</strong> The full prompt (system + history + your message + tokens generated so far) is re-tokenized and re-run through all layers on every single token generation step',
@@ -348,7 +348,7 @@ const cardsData = [
         description: 'The final step: turning a refined vector back into a human word.',
         paragraphs: [
             'At the roof of the skyscraper, the model has a highly refined vector representing "what should come next." To turn this back into a word, the model multiplies this vector against the <strong>unembedding matrix</strong> — producing a dot-product score (<strong>logit</strong>) for every token in its vocabulary. A high dot product means the output vector is "pointing in the same direction" as that token\'s embedding — i.e., the model considers it a plausible next word.',
-            'In many models, the unembedding matrix is actually the <strong>transpose of the embedding matrix</strong> from Slide 3 — a technique called <strong>weight tying</strong>. The same table that converts token IDs into vectors at the input is used in reverse to convert vectors back into token scores at the output. This closes a satisfying loop: <em>token → vector → [Transformer layers] → refined vector → dot product with embeddings → token</em>.',
+            'In many models, the unembedding matrix is actually the <strong>transpose of the embedding matrix</strong> from Slide 4 — a technique called <strong>weight tying</strong>. The same table that converts token IDs into vectors at the input is used in reverse to convert vectors back into token scores at the output. This closes a satisfying loop: <em>token → vector → [Transformer layers] → refined vector → dot product with embeddings → token</em>.',
             'These logit scores are converted into probabilities via <strong>softmax</strong>. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.',
             '<strong>Temperature</strong> acts as a confidence filter. At Temperature 0, the model is a cautious expert — always picks the safest, most probable path. At Temperature 1.0+, it becomes a creative risk-taker — willing to explore surprising edges of the vocabulary. Most production systems default to a moderate temperature that balances reliability with natural-sounding variation.'
         ],
@@ -375,7 +375,7 @@ const cardsData = [
         description: 'Pre-training is where models learn the patterns, facts, and structures of human knowledge from massive text datasets.',
         paragraphs: [
             'During pre-training, the model consumes <strong>trillions of tokens</strong> from books, websites, research papers, and code repositories. The training objective is simple: predict the next token. Wrong predictions trigger tiny weight adjustments via <strong>backpropagation</strong>. Every learnable parameter from the architecture section — the embedding matrix, the Q/K/V attention matrices, the feed-forward weights in every layer — is tuned through this process. Nothing is hand-programmed; the model discovers what to pay attention to and how to process meaning entirely from data.',
-            'The same backpropagation algorithm popularized in 1986 (see Slide 4) now runs across thousands of GPUs simultaneously, allowing the model to learn from errors at an astronomical scale.',
+            'The same backpropagation algorithm popularized in 1986 (see Slide 2) now runs across thousands of GPUs simultaneously, allowing the model to learn from errors at an astronomical scale.',
             'This process takes months on thousands of GPUs and costs millions of dollars. The result? A <strong>base model</strong> that can complete sentences, generate code, and recall facts—but often produces rambling or unhelpful outputs.'
         ],
         bullets: [
@@ -507,7 +507,7 @@ const cardsData = [
         ],
         callout: {
             type: 'analogy',
-            content: '<strong>The Flavor Profile Returns:</strong> Remember embeddings from Slide 3? Multimodal models extend the same idea. A photograph of a sunset, the phrase "golden hour," and an audio clip of waves crashing all get "flavor profiles" that land near each other in latent space. The model doesn\'t distinguish between seeing, reading, and hearing — it just works with vectors.'
+            content: '<strong>The Flavor Profile Returns:</strong> Remember embeddings from Slide 4? Multimodal models extend the same idea. A photograph of a sunset, the phrase "golden hour," and an audio clip of waves crashing all get "flavor profiles" that land near each other in latent space. The model doesn\'t distinguish between seeing, reading, and hearing — it just works with vectors.'
         },
         resources: [
             { type: 'video', title: 'How Multimodal Models Work', meta: '12 min · Visual explanation', url: 'https://www.youtube.com/watch?v=vAmKB7iPkWw' },
