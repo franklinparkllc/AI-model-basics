@@ -38,16 +38,30 @@ I. ARCHITECTURE — From Text to Meaning to the Transformer
 
 Slide 1 sets the pipeline: **Architecture → Training → Inference → Advanced Capabilities**. At the heart of modern models is the **Transformer** (2017) — the de facto standard for language models. Everything we'll talk about flows from that.
 
-Let's start with the foundation. **Slide 2** — the **perceptron** and **feed-forward networks**. Data flows one way: input → hidden layers → output. No memory, no loops. **Backpropagation** (1986) made training deep networks possible. This is the atom everything else is built from.
+Let's start with the foundation. 
+
+**Slide 2** — the **perceptron** and **feed-forward networks**. Data flows one way: input → hidden layers → output. No memory, no loops. **Backpropagation** (1986) made training deep networks possible. This is the basic building block for the current models/AI that we are all using today.
+
+You may also hear these FFNN's called multi-layer perceptrons and they are directly connected to Frank Rosenblatt's work from the late 50's, which is itself inspired by bio/neuro work from the turn of the century and research by McCullough and Pitts in the 1940's. Neural networks are so named because they model human neurons (called nodes/activations in model-world) and connect many neurons into a network to process data.
+
+They do this introducing weights and biases. I'll draw a quick diagram of that here.
 
 **Slide 3** — 
-Models don't read text directly. They work on **tokens**: numeric IDs for pieces of words (e.g. "Ingenious" → In, gen, ious). Tokenization is why models struggle with counting letters or spelling backwards — they're blind to individual characters.
+For slide 3 and 4 I want to talk about a couple core primatives that go into building neural networks. So models don't read text directly. They work on **tokens**: numeric IDs for pieces of words (e.g. "Ingenious" → In, gen, ious). Tokenization is why models struggle with counting letters or spelling backwards — they're blind to individual characters.
 
 **Slide 4** — those token IDs get turned into **embeddings**: vectors in a multi-dimensional **latent space** where similar meanings sit close together. Positional encodings add word order so "dog bites man" and "man bites dog" aren't the same.
 
-**Slides 5–6** — **RNNs** and **LSTMs** added memory for sequences but had to process tokens one at a time and suffered from vanishing gradients. **Slide 7** — **encoder-decoder (Seq2Seq)** compressed a whole sentence into a single "context vector" and unpacked it into another sequence — powerful, but that single-vector bottleneck led to the next step.
+Tokens and embeddings are why we can generalize across different media types (text, audio, visual) and languages.
 
-**Slides 8 and 9** — the **Transformer**. If attention can carry context, why keep the sequential RNN? The Transformer is a stack of identical layers: **self-attention** (tokens communicate) then **feed-forward** (each token refined). All tokens are processed in parallel. That parallelism unlocked scale: billions of parameters, trillions of tokens. Inside each layer, **attention** uses Query, Key, and Value vectors — every token figures out which other tokens matter most. Multi-head attention runs 8–32 of these operations in parallel.
+**Slides 5–6** — **RNNs** and **LSTMs** were evolutions of basic FFNN and added memory for sequences but had to process tokens one at a time and suffered from vanishing gradients. 
+
+**Slide 7** — **encoder-decoder (Seq2Seq)** As compute and storage scaled in the early 2010's, we started to see more research into this concept of attention. Could we overcome some of issues related to RNNs and LSTMs related to how these networks processed data in a serial fasion?. We saw some of the early work in "Attention" mechanisms in seminal papers around Word2Vec and Seq2Seq.
+
+**Slides 8 and 9** — 2017 brought the world the **Transformer**, which really was a turning point in AI model building. 
+
+If attention can carry context, why keep the sequential RNN? The Transformer is a stack of identical layers: **self-attention** (tokens communicate) then **feed-forward** (each token refined). 
+
+All tokens are processed in parallel. That parallelism unlocked scale: billions of parameters, trillions of tokens. Inside each layer, **attention** uses Query, Key, and Value vectors — every token figures out which other tokens matter most. Multi-head attention runs 8–32 of these operations in parallel.
 
 One more thing that will matter for inference: when you're using Claude or ChatGPT, you're running a model whose **weights** were set during training — and they are **frozen**. (Slide 10.) **Chatting doesn't teach the model anything permanent.** You're querying a fixed artifact.
 
@@ -129,7 +143,7 @@ Think in three tiers based on what you're trading off: speed and cost against ca
 
 *The Lineup:* GPT-5 mini, Gemini 3 Flash, Claude 4.5 Haiku.
 
-*The Pitch:* These are the "sub-second" models. In 2026, we don't just use these for email categorization anymore; we use them as the "eyes and ears" of agentic loops. They are incredibly cheap — fractions of a cent for thousands of tokens.
+*The Pitch:* These are the "sub-second" models. In 2026, we don't just use these for email categorization anymore; we use them as the "eyes and ears" of agentic loops. They are relatively cheap — fractions of a cent for thousands of tokens.
 
 *The Warning:* They are still System 1 thinkers. They will "reflexively" answer even if they don't know the fact, leading to confident hallucinations in specialized domains.
 
