@@ -1,16 +1,35 @@
+Welcome and thank you all for coming today. I hope you'll enjoy the content and this opportunity to meet your fellow enthusiasts. Thank you to the Fitler Club for hosting us and thank you to my friends at Foundry and Code and Coffee for sharing their time and wisdom.
+
+We are spending the next three hours together, but I promise there is very very little lecturing.
+
+Today's agenda should move briskly:
+- I will kick things off with a small discussion on AI model theory
+- Afterwards you'll hear from two organizations: Muhammad and Zakir from Foundry will say hello and try to recruit you on to team AGENTS. I won't steal their thunder. Then Tony from Code and Coffee will try to recruit you to team IDE.
+- AGENTS is more suited for folks you are either less technical or just want to get a something built in the exciting new world of persistent AI assistants - things like OpenClaw
+- IDE is more suited for engineers who want to upgrade or share their work in some of the newer, mult-agent software development IDE's like AntiGravity or Claude Code.
+- On either side, we'll split up into smaller groups with the aim of getting something built over a 90-minute workshop.
+- A bunch of us will be hovering and ready to help teams get unstuck as you build
+- At 4:30 we'll re-convene for demos and learnings
+
+Any questions?
+
 ---
 
-Thanks for coming today. I'm really looking forward to this.
+Ok, so I am kicking things off with a little bit of a theory talk on AI. I started building with AI a couple years ago. I found it so empowering and enjoyable at that time, that I felt motivated to do a small presentation in the theater here at Fitler.
 
-Over a year ago I decided to incorporate AI tools into my professional life, and I did a small presentation in the theater at Fitler. I was developing some basic software with that tool for personal and professional reasons.
+I have continued to develop lots of little tools for my personal and professional life. The experience has only gotten better.
 
-Then, about three months ago I decided to jump into the deep end. Instead of justing *using* AI tools, I decided I wanted to actually understand what's happening when I use them. What's going on under the hood and how are these tools built? Out of that process I built two web resources, and they're what we're going to anchor on today. 
+About three months ago, coincident to meeting Ayhaan at Foundry, I decided to jump into the deep end. Instead of just using AI tools, I decided I wanted to actually understand these tools a bit more. What's going on under the hood and how are these tools built? 
 
-Both resources are public GitHub repositories rendered on GitHub pages. I will be tending to them, but I would  genuinely welcome your contributions, corrections, and suggestions. Everything is linked in the Discord channel, so ping away at your leisure.
+My learning process usually involves building and teaching. This is the latter. So consider yourself lab rats.
 
-The first resource is a timeline — a curated history of the key research and key events in machine learning and AI, going back to the 1940s. Currently there are about 250 events that I kept encountering as I was consuming research and videos. You'll find some controls to search and filter the events or move about through time at your leisure. Each event card should have a link to the paper or summary of the event. 
+On the build side, I created a couple resources accessible from the web. One resource is an interactive timeline summarizing AI/ML research and the second resource is a presentation which we'll go through today. 
 
-The second resource is an interactive slide-show that digs into the details of how neural networks and GPT models are built and used. By the way, GPT stands for GENERATIVE PRE-TRAINED TRANSFORMER. Hopefully that will make a little more sense once we are done.
+I will be tending to both projects, but I would  genuinely welcome your contributions and corrections. Everything is linked in the Discord channel. They are totally open source.
+
+The timeline is a curated history of the key research and key events in machine learning and AI, going back to the 1940s. Currently there are about 250 events that I kept encountering as I was consuming research and videos. You'll find some controls to search and filter the events or move about through time at your leisure. Each event card should have a link to the paper or summary of the event. 
+
+The interactive slide-show digs into the details of how neural networks and GPT models are built and used. By the way, GPT stands for GENERATIVE PRE-TRAINED TRANSFORMER. Hopefully that will make a little more sense once we are done.
 
 The slides are organized into four large topics:
 
@@ -36,8 +55,6 @@ I wanted to call out a few of the early resources as great, un-scary starting po
 ---
 
 I. ARCHITECTURE — Let's talk about building blocks and architecture for transformer models over the next nine slides
-
-The transformer block or transformer architecture is at the heart of modern foundation models. Everything we'll talk about pivots around a seminal paper called "Attention is all you need", written in 2017.
 
 But, let's start with the basics. 
 

@@ -41,7 +41,7 @@ const cardsData = [
         paragraphs: [
             'FFNN were the most primative form of neural network rooted in the research around <strong>Perceptrons</strong> (1958). Feed-forward neural networks process information in one direction—input → hidden layers → output—with no loops or memory. The key breakthrough was <strong>backpropagation</strong> (1986), which enabled training of deep, multilayer networks capable of learning complex, non-linear relationships.',
             'FFNNs are the foundation of deep learning, but they process each input independently. Because they have no memory of previous inputs, they struggle with sequential data like text or audio—a limitation that motivated the development of RNNs, and eventually the Transformer\'s Attention mechanism.',
-            'A key ingredient is the <strong>activation function</strong> (e.g., ReLU) applied between layers. Without it, stacking layers would just produce another linear transformation—no matter how deep. Activation functions introduce <strong>non-linearity</strong>, allowing the network to learn complex, curved decision boundaries instead of just straight lines.'
+            '<strong>Activation functions</strong> (like ReLU) are applied between layers to introduce non-linearity. Without them, stacking layers wouldn\'t add any benefit—the network would be no more powerful than a single layer. They enable networks to learn complex patterns.'
         ],
         bullets: [
             '<strong>One-Way Flow:</strong> Data flows forward only (input → output), no feedback loops',
