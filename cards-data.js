@@ -347,14 +347,14 @@ const cardsData = [
         title: '13. The Selection Dice Roll',
         description: 'The final step: turning a refined vector back into a human word.',
         paragraphs: [
-            'At the roof of the skyscraper, the model has a highly refined vector representing "what should come next." To turn this back into a word, the model multiplies this vector against the <strong>unembedding matrix</strong> — producing a dot-product score (<strong>logit</strong>) for every token in its vocabulary. A high dot product means the output vector is "pointing in the same direction" as that token\'s embedding — i.e., the model considers it a plausible next word.',
-            'In many models, the unembedding matrix is actually the <strong>transpose of the embedding matrix</strong> from Slide 4 — a technique called <strong>weight tying</strong>. The same table that converts token IDs into vectors at the input is used in reverse to convert vectors back into token scores at the output. This closes a satisfying loop: <em>token → vector → [Transformer layers] → refined vector → dot product with embeddings → token</em>.',
-            'These logit scores are converted into probabilities via <strong>softmax</strong>. The model doesn\'t "know" the answer; it just knows that "Medici" has a 75% chance of being the next right word.',
-            '<strong>Temperature</strong> acts as a confidence filter. At Temperature 0, the model is a cautious expert — always picks the safest, most probable path. At Temperature 1.0+, it becomes a creative risk-taker — willing to explore surprising edges of the vocabulary. Most production systems default to a moderate temperature that balances reliability with natural-sounding variation.'
+            'At the roof of the skyscraper, the model holds a highly refined vector representing the "concept" of what should come next. To turn this back into a word, the model multiplies this vector against the <strong>unembedding matrix</strong>—calculating a dot-product score (<strong>logit</strong>) for every token in its vocabulary. A high logit means the output vector is "pointing in the same direction" as that token\'s coordinates in latent space.',
+            'While earlier models (like GPT-2) often used <strong>weight tying</strong>—reusing the input embedding table as the output table—many modern frontier models use independent matrices to allow for more nuanced output selection. This process effectively translates the model\'s "internal thought" back into the language of tokens.',
+            'These logit scores are then converted into a probability distribution via <strong>softmax</strong>. The model doesn\'t "know" the answer is Medici; it simply calculates that Medici has a 75% probability of being the most plausible continuation in this specific context.',
+            '<strong>Temperature</strong> acts as a confidence filter. At Temperature 0, the model is a "cautious expert," always picking the single most probable token. At Temperature 1.0+, it becomes a "creative risk-taker," sampling from the less likely (but often more interesting) edges of its vocabulary.'
         ],
         bullets: [
             '<strong>Logits:</strong> Raw dot-product scores between the output vector and every token\'s embedding in the vocabulary',
-            '<strong>Weight Tying:</strong> Many models reuse the embedding matrix (transposed) as the unembedding matrix — the same table works in both directions',
+            '<strong>Weight Tying:</strong> Earlier models reused the embedding matrix (transposed) as the unembedding matrix — the same table works in both directions',
             '<strong>Temperature:</strong> A slider that adjusts how much "risk" the model takes in selection',
             '<strong>Probabilistic:</strong> The model is optimized for "plausibility," not necessarily truth',
             '<strong>Streaming:</strong> Tokens are sent to the user as they are generated, one by one'
@@ -434,18 +434,17 @@ const cardsData = [
         category: 'train',
         badge: 'Training',
         title: '16. Bias, Fairness & Limitations',
-        description: 'AI models inherit the biases, gaps, and perspectives present in their training data—they are mirrors, not arbiters of truth.',
+        description: 'AI models inherit the gaps and perspectives of their training data—they are mirrors, not arbiters of truth.',
         paragraphs: [
-            'Training data comes from the internet, books, and human-generated content—all of which contain biases, stereotypes, and uneven representation. Models learn these patterns just as they learn grammar and facts. If training data overrepresents certain demographics or perspectives, the model will too.',
-            '<strong>Post-training alignment</strong> can reduce some harmful outputs (e.g., refusing to generate hate speech), but it doesn\'t eliminate underlying biases. A model might still generate biased resume summaries, make assumptions based on names, or reflect cultural stereotypes—even when trying to be helpful.',
-            'This matters in high-stakes domains: healthcare (misdiagnosis patterns), hiring (resume screening bias), legal systems (risk assessment), education (unequal tutoring quality). No model is "objective"—all reflect their training data\'s worldview.'
+            'Training data is a massive scrape of human history, which includes our biases, stereotypes, and cultural blind spots. Models learn these patterns with the same mathematical rigor they use to learn grammar. If the data overrepresents a specific worldview, the model will treat that worldview as the "default" statistical reality.',
+            'Post-training alignment (RLHF/DPO) can act as a safety filter, teaching the model to refuse to generate explicit hate speech or harmful content. However, this does not "fix" the underlying bias. A model may still reflect subtle stereotypes in resume screening, healthcare suggestions, or creative writing because those patterns are baked into its billions of parameters.',
+            'This creates a "Fluency Trap." Because the model is so articulate, we tend to attribute objective truth to its outputs. In reality, it is a statistical mirror. It doesn\'t have a moral compass or a fact-checking department; it has a map of how humans have spoken in the past.'
         ],
         bullets: [
-            '<strong>Sources of Bias:</strong> Training data imbalances, historical stereotypes, language and cultural gaps, majority perspectives dominating',
-            '<strong>Types of Harm:</strong> Stereotyping, erasure (underrepresented groups), performance gaps (works better for some demographics)',
-            '<strong>Mitigation Strategies:</strong> Diverse training data, red-teaming for harmful outputs, constitutional AI principles, ongoing monitoring',
-            '<strong>User Responsibility:</strong> Critical evaluation of outputs, awareness of limitations, human oversight in high-stakes decisions',
-            '<strong>Data Security:</strong> When using models with proprietary or sensitive data, RAG is the primary approach — your documents stay in your system and are injected at inference time, never entering the model\'s training data or "global brain"'
+            '<strong>Representation Bias:</strong> Dominant cultures and languages are better represented than minority ones.',
+            '<strong>The Fluency Trap:</strong> High linguistic quality can mask factual errors or biased reasoning.',
+            '<strong>Mitigation vs. Cure:</strong> Alignment reduces harmful outputs but rarely eliminates latent bias.',
+            '<strong>User Responsibility:</strong> Human oversight is non-negotiable in high-stakes domains like hiring, legal, or medical.'
         ],
         callout: {
             type: 'insight',
@@ -459,19 +458,18 @@ const cardsData = [
     {
         category: 'adv',
         badge: 'Advanced',
-        title: '17. RAG: Giving Models Access to Knowledge',
-        description: 'RAG extends simple chat by letting models retrieve and use external documents—overcoming knowledge cutoffs and accessing private data.',
+        title: '17. RAG & Data Security',
+        description: 'RAG transforms models from "closed-book" memory engines into "open-book" practitioners with access to your private data.',
         paragraphs: [
-            'Simple chat is limited to the model\'s training data (with a knowledge cutoff date) and has no access to your private documents. <strong>Retrieval-Augmented Generation (RAG)</strong> solves this by dynamically fetching relevant information and inserting it into the model\'s context before generating a response.',
-            '<strong>How it works:</strong> (1) User asks a question. (2) System searches a document collection using <strong>semantic search</strong> (embeddings from the architecture section, stored in vector databases—specialized indexes optimized for finding similar vectors quickly). (3) Retrieved documents are injected into the prompt. (4) Model generates an answer informed by both its training and the retrieved text.',
-            'RAG transforms models from "closed-book" systems (answering from memory) to "open-book" systems (consulting references). This dramatically reduces hallucinations on factual questions and enables models to work with proprietary data, internal wikis, legal databases, and real-time information.'
+            'Standard models are frozen in time; they only know what they learned during training. <strong>Retrieval-Augmented Generation (RAG)</strong> allows the model to "look things up" in your private document collection. When you ask a question, the system finds the relevant paragraphs in your database and feeds them to the model as "required reading" for its answer.',
+            'This is the industry standard for Data Security and Privacy. Because your proprietary documents are injected into the prompt at inference time (the "Context Window"), they are never used to train the model. Your data stays in your secure environment; the model\'s "global brain" never permanently learns your secrets.',
+            'RAG effectively turns the model into a senior researcher with a library card. It doesn\'t have to guess from its own potentially biased or outdated memory; it can cite specific sources, verify facts against your internal wikis, and provide answers grounded in your specific business reality.'
         ],
         bullets: [
-            '<strong>Key Benefits:</strong> Reduces hallucinations, enables citations/sources, keeps knowledge current without retraining, works with private data',
-            '<strong>Use Cases:</strong> Customer support (search help docs), legal research (case law), enterprise Q&A (internal wikis), academic research (paper collections)',
-            '<strong>Infrastructure:</strong> Requires embedding model + vector database (Pinecone, Weaviate, Chroma) to enable fast semantic search',
-            '<strong>Trade-offs:</strong> Adds latency, requires document indexing, quality depends on retrieval relevance',
-            '<strong>Data Privacy:</strong> RAG is the primary way to use private or proprietary data with AI — your documents are retrieved and injected at inference time but never become part of the model\'s training data. The model\'s "global brain" never sees your data permanently'
+            '<strong>Knowledge Cutoff:</strong> RAG bypasses the model\'s training date by providing real-time information.',
+            '<strong>Privacy by Design:</strong> Proprietary data is used as context, not training material.',
+            '<strong>Reduced Hallucination:</strong> Models are less likely to "make things up" when the answer is right in front of them.',
+            '<strong>Citations:</strong> RAG allows the model to point to the exact document used for its response.'
         ],
         callout: {
             type: 'analogy',

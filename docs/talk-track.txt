@@ -8,17 +8,17 @@ Out of that process I built two web resources, and they're what we're going to a
 
 The first resource is a timeline — a curated history of the key research and key events in machine learning and AI, going back to the 1940s. Currently there are about 250 events that I kept encountering as I was consuming research and videos. You'll find some controls to search and filter the events or move about through time at your leisure. Each event card should have a link to the paper or summary of the event. 
 
-The second resource is an interactive slide-show that digs into the details of how neural networks and GPT models are built and used. GPT stands for GENERATIVE PRE-TRAINED TRANSFORMER.
+The second resource is an interactive slide-show that digs into the details of how neural networks and GPT models are built and used. By the way, GPT stands for GENERATIVE PRE-TRAINED TRANSFORMER. Hopefully that will make a little more sense once we are done.
 
 The slides are organized into four large topics:
 
-1. **Architecture** — the building blocks: intro and pipeline (1), feed-forward networks (2), tokens (3), embeddings and latent space (4), RNNs (5), LSTMs (6), encoder-decoder/Seq2Seq (7), the Transformer (8), and how attention works (9)
+1. **Architecture** — the building blocks: We have nice slides that look at the basic building blocks and networks that led us to the GPTs: feed-forward networks, tokens, embeddings, latest space, attention mechanisms
 
-2. **Inference** — frozen state and prompt stack (10), preparing the input (11), forward pass and autoregressive loop (12), and the selection “dice roll” (13)
+2. **Inference** — We'll have a few slides then on what happens when you prompt an AI model, also called inference.
 
-3. **Training** — pre-training (14), post-training (15), and bias, fairness & limitations (16)
+3. **Training** — Then we'll take a step back and look at how these models are actually trained and some of the yellow flags to think about as you work with AI.
 
-4. **Advanced Capabilities** — RAG (17), multimodal (18), tool use (19), reasoning (20), agents (21), recap (22), and looking ahead (23)
+4. **Advanced Capabilities** — Finally, we'll look at how you can overcome some of those yellow flags and what's happening out in the wild with AI models.
 
 Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for drilling into a particular topic.
 
@@ -36,34 +36,48 @@ I wanted to call out a few of the early resources as great, friendly, un-scary s
 I. ARCHITECTURE — From Text to Meaning to the Transformer
 [Slides 1–9 — overview]
 
-Slide 1 sets the pipeline: **Architecture → Training → Inference → Advanced Capabilities**. At the heart of modern models is the **Transformer** (2017) — the de facto standard for language models. Everything we'll talk about flows from that.
+Slide 1 sets the pipeline: **Architecture → Training → Inference → Advanced Capabilities**. At the heart of modern models is the **Transformer** (2017) — the de facto standard for language models. Everything we'll talk about pivots around this seminal paper called "Attention is all you need".
 
-Let's start with the foundation. 
+But, let's start with the foundation. 
 
-**Slide 2** — the **perceptron** and **feed-forward networks**. Data flows one way: input → hidden layers → output. No memory, no loops. **Backpropagation** (1986) made training deep networks possible. This is the basic building block for the current models/AI that we are all using today.
+**Slide 2** — the **perceptron** and feed-forward networks. This is the basic building block for the current models/AI that we are all using today.
 
-You may also hear these FFNN's called multi-layer perceptrons and they are directly connected to Frank Rosenblatt's work from the late 50's, which is itself inspired by bio/neuro work from the turn of the century and research by McCullough and Pitts in the 1940's. Neural networks are so named because they model human neurons (called nodes/activations in model-world) and connect many neurons into a network to process data.
+You may also hear these FFNN's called multi-layer perceptrons and they are directly connected to Frank Rosenblatt's work from the late 50's, which is itself inspired by bio/neuro work from the turn of the century and research by McCullough and Pitts in the 1940's.
 
-They do this introducing weights and biases. I'll draw a quick diagram of that here.
+Neural networks are so named because they model human neurons (called nodes/activations in model-world) and the architecture of moderal AI systems connects many nodes into a network to process data.
+
+The nodes are connected by weights and biases. I'll draw a quick diagram of that here.
 
 **Slide 3** — 
-For slide 3 and 4 I want to talk about a couple core primatives that go into building neural networks. So models don't read text directly. They work on **tokens**: numeric IDs for pieces of words (e.g. "Ingenious" → In, gen, ious). Tokenization is why models struggle with counting letters or spelling backwards — they're blind to individual characters.
+For slide 3 and 4 I want to talk about a couple core primatives that go into building neural networks. 
 
-**Slide 4** — those token IDs get turned into **embeddings**: vectors in a multi-dimensional **latent space** where similar meanings sit close together. Positional encodings add word order so "dog bites man" and "man bites dog" aren't the same.
+So models don't read text directly. They work on **tokens**: numeric IDs for pieces of words (e.g. "Ingenious" → In, gen, ious). 
+
+Tokenization is why models struggle with counting letters or spelling backwards — they're blind to individual characters.
+
+**Slide 4** — those token IDs get turned into **embeddings**: vectors in a multi-dimensional **latent space** where similar meanings sit close together. 
+
+Positional encodings add word order so "dog bites man" and "man bites dog" aren't the same.
 
 Tokens and embeddings are why we can generalize across different media types (text, audio, visual) and languages.
 
-**Slides 5–6** — **RNNs** and **LSTMs** were evolutions of basic FFNN and added memory for sequences but had to process tokens one at a time and suffered from vanishing gradients. 
+Slides 5–6: 
+Before 2017, if you wanted to process language, you used Recurrent Neural Networks (RNNs) or LSTMs. They were the first to add 'memory.' But they had a major hardware problem: they were processing data serially, one after another. 
 
-**Slide 7** — **encoder-decoder (Seq2Seq)** As compute and storage scaled in the early 2010's, we started to see more research into this concept of attention. Could we overcome some of issues related to RNNs and LSTMs related to how these networks processed data in a serial fasion?. We saw some of the early work in "Attention" mechanisms in seminal papers around Word2Vec and Seq2Seq.
+To understand the 10th word, you had to process the first nine in order. This created a 'vanishing gradient'—by the time the model got to the end of a long sentence, it had effectively forgotten how it started.
 
-**Slides 8 and 9** — 2017 brought the world the **Transformer**, which really was a turning point in AI model building. 
+You couldn't just throw more GPUs at the problem because the math was stuck in a line.
 
-If attention can carry context, why keep the sequential RNN? The Transformer is a stack of identical layers: **self-attention** (tokens communicate) then **feed-forward** (each token refined). 
+In 2014, we saw the 'Encoder-Decoder' breakthrough. This is what gave us Google Translate. It tried to compress an entire sentence into a single 'Thought Vector.' But as sentences got longer, that vector became a bottleneck—it’s hard to summarize War and Peace in one mathematical point. 
 
-All tokens are processed in parallel. That parallelism unlocked scale: billions of parameters, trillions of tokens. Inside each layer, **attention** uses Query, Key, and Value vectors — every token figures out which other tokens matter most. Multi-head attention runs 8–32 of these operations in parallel.
+This is where 'Attention' was first born. It was a "crutch" for the RNNs and LSTMs of the time.
 
-One more thing that will matter for inference: when you're using Claude or ChatGPT, you're running a model whose **weights** were set during training — and they are **frozen**. (Slide 10.) **Chatting doesn't teach the model anything permanent.** You're querying a fixed artifact.
+Then came 2017 and the 'Attention is All You Need' paper. The 'Eureka' moment was realizing we could delete the RNN entirely. By using Self-Attention, every token could look at every other token simultaneously. 
+
+This unlocked massive parallelization. We could finally use thousands of GPUs to train on the entire internet at once.
+
+The self-attention mechanism is a longer-talk on its own. But it is a way for all the vector to understand the relationships and importance of all the other vectors in the prompt. And because the Attention mechanism is a "Causal" model you also had this "snowball effect" where by the time you reach the final token of your prompt, that single vector is the 'smartest' one in the room. It is the only one that has 'seen' the entire prompt and is ready to predict what comes next.
+
 
 ---
 
@@ -80,22 +94,31 @@ You've typed a message. What actually happens?
 
 **Slide 13** — the **selection dice roll**. Logits go through **softmax** to become probabilities. **Temperature** is the dial: low = pick the safest token; high = more variation and creativity. Many models use **weight tying** — the same embedding table used at input is used (transposed) at output. The model doesn't "know" the answer; it assigns probabilities. If the most plausible next token is wrong, it'll pick it anyway — **plausibility, not truth**. That's the core of why hallucinations happen.
 
-We've seen how the machine runs. Next: how we built the machine — the difference between using a map and drawing the map.
+We've seen how the machine runs. Next we'll see how these machines were built.
 
 ---
 
-III. TRAINING — Where the Intelligence Is Born
+III. TRAINING
 [Slides 14–16 — ~2.5 minutes]
 
 So how do those billions of weights get tuned in the first place? That's what training is.
 
-**Pre-training** (Slide 14) is where the model acquires what we might loosely call general intelligence. The objective is almost laughably simple: given a sequence of tokens, predict the next one. That's it. The model sees "The cat sat on the..." and has to predict "mat." When it's wrong, the error travels backward through the network — a process called **backpropagation** — and the weights are nudged, just slightly, in the right direction.
+**Pre-training** (Slide 14) is where the model acquires what we might loosely call general intelligence. Initially, we set random weights and biases and feed data to a neural network and ask it to make a prediction. That's it. The model sees "The cat sat on the..." and has to predict "mat." When it's wrong, the error travels backward through the network — a process called **backpropagation** — and the weights are nudged, just slightly, in the right direction.
 
 Now do that billions of times, across trillions of tokens of text from books, the internet, research papers, code — and something remarkable happens. In order to get good at next-token prediction, the model has to learn grammar, facts, logic, reasoning, even some understanding of cause and effect. It's not explicitly taught any of those things. They emerge as a consequence of doing one thing — prediction — at extraordinary scale.
 
 This process runs for months on thousands of GPUs and costs millions to hundreds of millions of dollars. What you get at the end is called a **base model** — which is knowledgeable but not particularly useful. It completes sentences. It rambles. It doesn't know how to have a conversation.
 
-That's where **post-training** comes in (Slide 15). **Supervised Fine-Tuning (SFT):** humans write ideal responses; the model learns to mimic them. **RLHF** — Reinforcement Learning from Human Feedback — uses human rankings to train a reward model, then reinforcement learning optimizes the LLM to score highly. **DPO** — Direct Preference Optimization — skips the reward model and optimizes preferences directly from the same data; it's simpler and often more stable. This phase is where guardrails and conversational norms go in — and where some raw capability is traded for alignment and safety.
+Slide 15: Post-Training — From Knowledge to Helpful Presence
+"If pre-training gives the model its 'raw intelligence,' post-training is where we give it a personality, a set of manners, and a moral compass. We start with a base model that is brilliant but unruly—it doesn't know how to follow instructions; it just knows how to finish sentences. To fix this, we use three layers of refinement.
+
+First is Supervised Fine-Tuning (SFT). This is the 'Master and Apprentice' phase. Humans write out thousands of ideal responses to specific prompts. The model learns to mimic this professional, helpful tone. It’s effective, but it doesn't scale well—you can't write a perfect answer for every possible question in the world.
+
+To solve that, we used to rely on RLHF (Reinforcement Learning from Human Feedback). In this setup, humans rank multiple model answers—A is better than B. We then had to train a separate 'Teacher Model' (a Reward Model) to learn those human preferences and 'grade' the student model. It worked, but it was notoriously unstable and expensive to maintain.
+
+By 2026, the industry has largely moved to DPO (Direct Preference Optimization). This is the breakthrough that has made the current generation of models feel so much more 'intuitive.' We’ve effectively cut out the middleman. We no longer need that separate 'Teacher Model' to grade the student. Instead, DPO allows us to optimize the model’s weights directly using human preference data. It is simpler, more stable, and allows the model to align with our intent much more precisely.
+
+But there is a trade-off to keep in mind: Alignment is a tax on creativity. Every guardrail we put in—every time we teach the model to say 'I cannot answer that' for safety—we are narrowing its 'latent space' slightly. We are trading unbounded, raw capability for a system that is safe, predictable, and ready for professional use."
 
 Two practical implications here. First, the training data has a cutoff — the model doesn't know about things that happened after it was trained, unless you tell it or give it a tool to look things up. Second — and Slide 16 covers this directly — the model inherits whatever biases, gaps, and skewed representations exist in its training data. It's a mirror of the text it was trained on, not an arbiter of truth. That matters especially in high-stakes domains like hiring, legal analysis, or healthcare. No amount of post-training alignment fully eliminates those underlying biases — it reduces harmful outputs, but critical evaluation and human oversight remain essential.
 
@@ -128,7 +151,9 @@ VI. REASONING & AGENTS — From Chat to Action
 
 **Slide 20 — Reasoning: two paradigms.** **Chain-of-Thought (CoT)** — a prompting technique from 2022: ask the model to "think step by step." Visible reasoning, more output tokens, big gains on math and logic. **Inference-time compute** (2024–2025): reasoning built into the model. Models like o1 and DeepSeek-R1 generate hidden reasoning tokens — they "think" for seconds or minutes before answering. That's AI's version of System 2: slow, deliberate, effortful. CoT proved models can reason if given space; inference-time compute teaches them when and how to allocate that thinking automatically.
 
-**Slide 21 — Agentic workflows.** An **agent** isn't a one-shot chatbot. It runs a **perception–reasoning–action loop**: observe, reason, act (via tools), observe the result, repeat until the goal is met. The **ReAct** pattern — Thought → Action → Observation → Repeat — is the core. Tools are real: web search, code execution, databases, APIs. Frameworks like LangGraph, AutoGPT, CrewAI power coding assistants (Cursor, Devin), research tools, support bots. Agents need clear success criteria, error handling, and often human-in-the-loop for high-stakes tasks. They're costlier (many LLM calls per task) but can accomplish multi-step work autonomously.
+**Slide 21 — Agentic workflows.** An **agent** isn't a one-shot chatbot. It runs a **perception–reasoning–action loop**: observe, reason, act (via tools), observe the result, repeat until the goal is met. That pattern is referred to as System 2 thinking.
+
+What are these tools? Currently, the tools are things like web search, code execution, databases, APIs. Frameworks like LangGraph, AutoGPT, CrewAI power coding assistants (Cursor, Devin), research tools, support bots. Agents need clear success criteria, error handling, and often human-in-the-loop for high-stakes tasks. They're costlier (many LLM calls per task) but can accomplish multi-step work autonomously.
 
 ---
 
