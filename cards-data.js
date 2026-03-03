@@ -50,10 +50,6 @@ const cardsData = [
             '<strong>Activation Functions:</strong> Introduce non-linearity so the network can learn complex patterns, not just linear relationships',
             '<strong>Limitation:</strong> Cannot model temporal dependencies or sequential patterns'
         ],
-        callout: {
-            type: 'insight',
-            content: '<strong>The Foundation:</strong> Feed-forward networks established the basic architecture and training methods (backpropagation) that all subsequent neural networks build upon. Their limitation—no memory—led to the development of RNNs for sequential data.'
-        },
         resources: [
             { type: 'video', title: 'The Essential Main Ideas of Neural Networks', meta: '19 min · StatQuest', url: 'https://youtu.be/CqOfi41LfDw?si=vGamzRxa1mtcQ3nf' },
             { type: 'video', title: 'Feed Forward Neural Network (FFNN)', meta: '14 min · Kenan Casey · Machine Learning Distilled', url: 'https://www.youtube.com/watch?v=VZ-TvUvtDbg' }
