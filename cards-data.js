@@ -287,7 +287,8 @@ const cardsData = [
         },
         resources: [
             { type: 'article', title: 'Claude Prompting Best Practices', meta: 'Anthropic · Prompt engineering', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices' },
-            { type: 'video', title: 'Context Engineering Explained', meta: '17 min', url: 'https://www.youtube.com/watch?v=p6s82Ax8yrs' }
+            { type: 'video', title: 'Context Engineering Explained', meta: '17 min', url: 'https://www.youtube.com/watch?v=p6s82Ax8yrs' },
+            { type: 'article', title: 'Andrew Mayne Prompts', meta: 'Prompt engineering techniques & history', url: 'https://andrewmayneprompts.com/' }
         ]
     },
     {
