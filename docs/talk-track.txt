@@ -2,9 +2,11 @@
 
 Thanks for coming today. I'm really looking forward to this.
 
-Over a year ago I decided to incorporate AI tools into my professional life, and I did a small presentation in the theater at Fitler. I was developing some basic software with that tool. About three months ago I decided to jump into the deep end — not just to *use* AI tools, but to actually understand what's happening when I use them. What's going on under the hood and how are these tools built?
+Over a year ago I decided to incorporate AI tools into my professional life, and I did a small presentation in the theater at Fitler. I was developing some basic software with that tool for personal and professional reasons.
 
-Out of that process I built two web resources, and they're what we're going to anchor on today. Both resources are public GitHub repositories rendered on GitHub pages. I'll be tending to them, but I would  genuinely welcome your contributions, corrections, and suggestions. Everything is linked in the Discord channel, so ping away at your leisure.
+Then, about three months ago I decided to jump into the deep end. Instead of justing *using* AI tools, I decided I wanted to actually understand what's happening when I use them. What's going on under the hood and how are these tools built? Out of that process I built two web resources, and they're what we're going to anchor on today. 
+
+Both resources are public GitHub repositories rendered on GitHub pages. I will be tending to them, but I would  genuinely welcome your contributions, corrections, and suggestions. Everything is linked in the Discord channel, so ping away at your leisure.
 
 The first resource is a timeline — a curated history of the key research and key events in machine learning and AI, going back to the 1940s. Currently there are about 250 events that I kept encountering as I was consuming research and videos. You'll find some controls to search and filter the events or move about through time at your leisure. Each event card should have a link to the paper or summary of the event. 
 
@@ -14,35 +16,34 @@ The slides are organized into four large topics:
 
 1. **Architecture** — the building blocks: We have nice slides that look at the basic building blocks and networks that led us to the GPTs: feed-forward networks, tokens, embeddings, latest space, attention mechanisms
 
-2. **Inference** — We'll have a few slides then on what happens when you prompt an AI model, also called inference.
+2. **Inference** — We'll have a few slides then give you some insight into what happens when you send a prompt off to an AI model for analysis.
 
-3. **Training** — Then we'll take a step back and look at how these models are actually trained and some of the yellow flags to think about as you work with AI.
+3. **Training** — We'll take a step back and look at how these models are actually trained and some of the yellow flags to think about as you work with AI.
 
-4. **Advanced Capabilities** — Finally, we'll look at how you can overcome some of those yellow flags and what's happening out in the wild with AI models.
+4. **Advanced Capabilities** — Finally, we'll look at how you can overcome some of those yellow flags and what's happening out in the wild with newer AI models.
 
-Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found genuinely useful for drilling into a particular topic.
+Each slide is structured the same way: a topic, some key takeaways, and then at the bottom a set of resources — interactive tools, videos, papers — that I found useful for drilling into a particular topic.
 
-I wanted to call out a few of the early resources as great, friendly, un-scary starting points:
+I wanted to call out a few of the early resources as great, un-scary starting points:
 
-- *Generative AI in a Nutshell* is a great entry point — a high-level, approachable framing of where AI is and how to think about it. 
+- The Generative AI in a Nutshell is a high-level, approachable video that gives you a framework to think about how might want to interact with modern AI models. 
 
 - OKAI, the Brown University interactive lab, is excellent if you're a hands-on learner like me.
 
-- And I can't say enough about the 3Blue1Brown series on AI and machine learning — some of the clearest visual explanations of what's happening mathematically, without needing to be a mathematician.
+- And I can't say enough about the 3Blue1Brown series on AI and machine learning. You will find some of the clearest visual explanations of what's happening mathematically, without needing to be a mathematician.
 
 
 ---
 
-I. ARCHITECTURE — From Text to Meaning to the Transformer
-[Slides 1–9 — overview]
+I. ARCHITECTURE — Let's talk about building blocks and architecture for transformer models over the next nine slides
 
-Slide 1 sets the pipeline: **Architecture → Training → Inference → Advanced Capabilities**. At the heart of modern models is the **Transformer** (2017) — the de facto standard for language models. Everything we'll talk about pivots around this seminal paper called "Attention is all you need".
+The transformer block or transformer architecture is at the heart of modern foundation models. Everything we'll talk about pivots around a seminal paper called "Attention is all you need", written in 2017.
 
-But, let's start with the foundation. 
+But, let's start with the basics. 
 
-**Slide 2** — the **perceptron** and feed-forward networks. This is the basic building block for the current models/AI that we are all using today.
+**Slide 2** — the **perceptron** and feed-forward neural networks--the FFNN. This is the basic building block for the AI models that we are all using today.
 
-You may also hear these FFNN's called multi-layer perceptrons and they are directly connected to Frank Rosenblatt's work from the late 50's, which is itself inspired by bio/neuro work from the turn of the century and research by McCullough and Pitts in the 1940's.
+You may also hear these FFNN's called multi-layer perceptrons and they are directly connected to Frank Rosenblatt's work from the late 50's, which is itself inspired by bio/neuro work from the turn of the century  and research by McCullough and Pitts in the 1940's.
 
 Neural networks are so named because they model human neurons (called nodes/activations in model-world) and the architecture of moderal AI systems connects many nodes into a network to process data.
 
