@@ -1,6 +1,6 @@
 # AI Model Basics
 
-An interactive slideshow that teaches 21 core concepts about how modern AI models are built, trained, and used — from tokenization and transformers to RAG, reasoning, and agentic workflows.
+An interactive slideshow that teaches 23 concepts about how modern AI models are built, trained, and used — from tokenization and transformers to RAG, reasoning, and agentic workflows.
 
 Each slide includes clear explanations with analogies, key bullet points, visual callouts, and curated external resources.
 
@@ -18,34 +18,36 @@ Open `index.html` directly in any modern web browser. No build process or depend
 
 ### Architecture
 1. Introduction to Modern AI Models
-2. Tokens & Tokenization
-3. From Numbers to Meaning: Embeddings
-4. Feed-Forward Neural Networks
+2. Feed-Forward Neural Networks (FFNN)
+3. Tokens & Tokenization
+4. From Numbers to Meaning: Embeddings & Latent Space
 5. Recurrent Neural Networks (RNNs)
 6. Long Short-Term Memory (LSTM)
 7. Encoder-Decoder Architecture (Seq2Seq)
 8. The Transformer Architecture
 9. How Attention Works
 
-### Training
-10. Pre-Training
-11. Post-Training
-12. Bias, Fairness & Limitations
-
 ### Inference
-13. The Frozen State & Prompt Stack
-14. What Happens When You Send a Message?
-15. The Selection Dice Roll
+10. The Frozen State & Prompt Stack
+11. Preparing the Input
+12. The Forward Pass & Autoregressive Loop
+13. The Selection Dice Roll
+
+### Training
+14. Pre-Training
+15. Post-Training
+16. Bias, Fairness & Limitations
 
 ### Advanced
-16. RAG: Giving Models Access to Knowledge
-17. Beyond Text: Multimodal Models & Tool Use
-18. Reasoning: Two Paradigms
-19. Agentic Workflows
-20. Looking Ahead — Emerging Architectures
+17. RAG & Data Security
+18. Multimodal Models: Richer Perception
+19. Tool Use: From Words to Actions
+20. Reasoning: Two Paradigms
+21. Agentic Workflows
 
 ### Conclusion
-21. Recap: Key Learnings
+22. Recap: Key Learnings
+23. Looking Ahead — Emerging Architectures
 
 ## File Structure
 
