@@ -1,28 +1,23 @@
 # AI Model Basics
 
-An interactive slideshow presentation that explains how modern AI models are built, trained, and used. This educational tool breaks down complex concepts into digestible slides covering architecture, training, inference, and advanced capabilities.
+An interactive slideshow that teaches 21 core concepts about how modern AI models are built, trained, and used — from tokenization and transformers to RAG, reasoning, and agentic workflows.
 
-## Overview
+Each slide includes clear explanations with analogies, key bullet points, visual callouts, and curated external resources.
 
-This presentation covers 21 comprehensive topics about AI models, from the basics of Transformers to advanced concepts like RAG, tool use, and agentic workflows. Each slide includes:
+## Getting Started
 
-- Clear explanations with analogies
-- Key concepts and bullet points
-- Visual callouts (insights, analogies, notes)
-- Curated resources (videos, articles, tools)
+Open `index.html` directly in any modern web browser. No build process or dependencies required.
 
-## Features
-
-- **Interactive Navigation**: Navigate slides with arrow keys, buttons, or touch gestures
-- **Progress Tracking**: Visual progress bar showing your position in the presentation
-- **URL Hash Support**: Direct links to specific slides via URL hash
-- **Responsive Design**: Works on desktop, tablet, and mobile devices
-- **Modern UI**: Clean, minimalist design with smooth transitions
+**Navigation:**
+- Arrow keys (← →)
+- On-screen navigation buttons
+- Touch/swipe (mobile)
+- Direct URL hash (e.g., `#slide-5`)
 
 ## Topics Covered
 
-### Architecture (Arch)
-1. Introduction to modern AI models
+### Architecture
+1. Introduction to Modern AI Models
 2. Tokens & Tokenization
 3. From Numbers to Meaning: Embeddings
 4. Feed-Forward Neural Networks
@@ -32,62 +27,56 @@ This presentation covers 21 comprehensive topics about AI models, from the basic
 8. The Transformer Architecture
 9. How Attention Works
 
-### Training (Train)
+### Training
 10. Pre-Training
 11. Post-Training
 12. Bias, Fairness & Limitations
 
-### Inference (Infer)
+### Inference
 13. The Frozen State & Prompt Stack
 14. What Happens When You Send a Message?
 15. The Selection Dice Roll
 
-### Advanced (Adv)
+### Advanced
 16. RAG: Giving Models Access to Knowledge
 17. Beyond Text: Multimodal Models & Tool Use
 18. Reasoning: Two Paradigms
 19. Agentic Workflows
-20. Looking Ahead — emerging architectures (JEPA, Mamba, MoE, RWKV/RetNet, hybrids)
+20. Looking Ahead — Emerging Architectures
 
 ### Conclusion
 21. Recap: Key Learnings
-
-## Getting Started
-
-Simply open `index.html` in a modern web browser. No build process or dependencies required!
-
-### Local Development
-
-1. Clone this repository
-2. Open `index.html` in your browser
-3. Navigate using:
-   - Arrow keys (← →)
-   - Navigation buttons
-   - Touch gestures (swipe left/right)
-   - Direct URL links (e.g., `#slide-5`)
 
 ## File Structure
 
 ```
 AI-model-basics/
-├── index.html          # Main HTML file
-├── model-basics.css    # Stylesheet
-├── model-basics.js     # Slideshow logic
-├── cards-data.js       # Slide content data
-└── README.md           # This file
+├── index.html          # Main entry point; nav, version badge, script tags
+├── model-basics.js     # Slideshow controller (navigation, rendering, hash routing)
+├── cards-data.js       # All slide content as a JavaScript array
+├── model-basics.css    # All styling (CSS Grid layout, transitions, responsive)
+├── tests.html          # In-browser test suite (data validation + slideshow logic)
+├── docs/
+│   ├── cheat-sheet.html    # Printable/shareable reference sheet
+│   └── cheat-sheet.yaml    # Source data for the cheat sheet
+└── README.md
 ```
+
+## Features
+
+- **No build step** — pure HTML/CSS/JS, zero dependencies
+- **Progress bar** — visual indicator of position through the deck
+- **Version badge** — displayed in the nav; incremented with each content update
+- **AI Timeline link** and **Cheat Sheet** accessible from the nav bar
+- **Responsive** — works on desktop, tablet, and mobile
 
 ## Browser Support
 
 - Chrome/Edge (latest)
 - Firefox (latest)
 - Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+- iOS Safari, Chrome Mobile
 
 ## License
 
-This project is open source and available for educational purposes.
-
-## Contributing
-
-Contributions, suggestions, and improvements are welcome! Feel free to open issues or submit pull requests.
+Open source, available for educational purposes.
