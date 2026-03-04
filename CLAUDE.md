@@ -108,6 +108,14 @@ This should be done in the same commit as the content change to keep the display
 - **Version bumps:** Include version change in same commit as content edits
 - **Docs:** Keep supplementary materials in `docs/` directory; link in README if significant
 
+### Pre-Commit Alignment Check
+Before every commit and push, verify that `README.md` and `CLAUDE.md` are consistent with the current state of the codebase:
+- Slide count in both files matches the actual number of entries in `cardsData`
+- Topics list in `README.md` matches the actual slide titles and order in `cards-data.js`
+- Version number mentioned anywhere matches `<span class="version">` in `index.html`
+- File structure descriptions reflect actual files present
+- Any new slide fields or schema changes are reflected in the `CLAUDE.md` data structure schema
+
 ## Testing
 
 ### Automated Tests
