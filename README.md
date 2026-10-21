@@ -68,7 +68,8 @@ AI-model-basics/
 ## Features
 
 - **No build step** — pure HTML/CSS/JS, zero dependencies
-- **Progress bar** — visual indicator of position through the deck
+- **Two-column layout on wide screens** — explanations on the left, key points, callouts, and resources on the right; stacks to one column on smaller screens
+- **Progress bar** — visual indicator of position through the deck, coloured by section
 - **Version badge** — displayed in the nav; incremented with each content update
 - **AI Timeline link** and **Cheat Sheet** accessible from the nav bar
 - **Responsive** — works on desktop, tablet, and mobile

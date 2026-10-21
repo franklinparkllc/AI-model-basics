@@ -54,13 +54,15 @@ Each item in `cardsData` array follows this schema:
 
 ### Rendering
 - `renderSlides()` builds all slides once (no lazy loading)
-- `showSlide(index)` translates the container left using CSS `transform` and updates hash
-- Slides are 100vw wide, container scrolls horizontally
+- Each slide card has a `.slide-header` (badge, title, description, optional "View illustration" button) and a `.slide-body` split into `.slide-main` (paragraphs) and `.slide-aside` (bullets, callout, resources)
+- At 1100px and wider, `.slide-main` and `.slide-aside` sit side by side (about 55/45). `asideIsHeavy()` adds `.slide--balanced` (50/50) when the side column holds roughly as much text as the paragraphs. Narrower screens stack them in one column
+- `showSlide(index)` translates the container left using CSS `transform` and updates hash; `updateUI()` sets `data-category` on `<body>` so the progress bar uses the current section's colour
+- Slides are 100vw wide, container scrolls horizontally; if a slide's content is taller than the viewport, the card scrolls internally
 
 ## Important Rules & Conventions
 
 ### Version Numbering
-When `cards-data.js` changes (any content update), manually bump the version in `index.html`:
+When `cards-data.js` changes (any content update), or when a release ships visible UI changes, manually bump the version in `index.html`:
 ```html
 <span class="version">vN</span>  <!-- increment N, e.g., v10 → v11 -->
 ```
@@ -96,10 +98,14 @@ This should be done in the same commit as the content change to keep the display
 - Can override icons with custom `icon` field if needed
 
 ### Styling
-- Single stylesheet (`model-basics.css`) defines all layout and theming
+- Single stylesheet (`model-basics.css`) defines all layout and theming; colours and fonts are tokens on `:root`
+- Fonts: Bricolage Grotesque (titles, interface, side column) and Source Serif 4 (explanation paragraphs), loaded from Google Fonts in `index.html`
+- Section colours: `--arch`, `--infer`, `--train`, `--adv`. Each slide sets `--cat` from its `data-category`, which drives the card's top rule, badge, and bullet markers
+- The root font size scales with viewport width and height (`clamp()` on `html`), and the card's max width is in `rem`, so dense slides fit on 1440×900 and 1920×1080 without scrolling. Re-check both sizes after adding long content
 - Responsive design uses CSS Grid and media queries
 - Slide transitions use `transform` (GPU-accelerated) and CSS `transition`
 - Callout types have distinct colors; keep consistent with existing palette
+- `docs/cheat-sheet.html` has its own inline styles that mirror the colour tokens and UI font; update both when changing the palette
 
 ## Git Workflow & Conventions
 

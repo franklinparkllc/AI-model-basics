@@ -68,6 +68,17 @@ function init() {
     }
 }
 
+// True when the side column (bullets, callout, resources) carries about as much
+// text as the paragraphs, so the two-column layout should split evenly
+function asideIsHeavy(card) {
+    const textLength = html => html.replace(/<[^>]+>/g, '').length;
+    const mainLength = (card.paragraphs || []).reduce((sum, p) => sum + textLength(p), 0);
+    const asideLength = (card.bullets || []).reduce((sum, b) => sum + textLength(b), 0)
+        + (card.callout ? textLength(card.callout.content) : 0)
+        + (card.resources || []).length * 120;
+    return asideLength > mainLength * 0.95;
+}
+
 // Render all slides
 function renderSlides() {
     const container = getElement('slidesContainer');
@@ -84,22 +95,31 @@ function renderSlides() {
         slide.className = 'slide';
         slide.id = `slide-${index + 1}`;
         slide.setAttribute('data-category', card.category);
+        if (asideIsHeavy(card)) slide.classList.add('slide--balanced');
 
         let html = `
             <div class="slide-content">
-                ${card.image ? `<button class="slide-img-btn" data-slide-index="${index}" aria-label="View illustration: ${card.image.caption}" title="View illustration">&#128247;</button>` : ''}
-                <div class="slide-badge">${card.badge}</div>
-                <h1 class="slide-title">${card.title}</h1>
-                ${card.description ? `<p class="slide-description">${card.description}</p>` : ''}
+                <header class="slide-header">
+                    <div class="slide-heading">
+                        <div class="slide-badge">${card.badge}</div>
+                        <h1 class="slide-title">${card.title}</h1>
+                        ${card.description ? `<p class="slide-description">${card.description}</p>` : ''}
+                    </div>
+                    ${card.image ? `<button class="slide-img-btn" data-slide-index="${index}" aria-label="View illustration: ${card.image.caption}">View illustration</button>` : ''}
+                </header>
                 <div class="slide-body">
+                    <div class="slide-main">
         `;
 
-        // Paragraphs
+        // Paragraphs (main column)
         if (card.paragraphs) {
             card.paragraphs.forEach(p => {
                 html += `<p>${p}</p>`;
             });
         }
+
+        // Bullets, callout and resources go in the side column on wide screens
+        html += '</div><aside class="slide-aside">';
 
         // Bullets
         if (card.bullets) {
@@ -118,7 +138,7 @@ function renderSlides() {
         // Resources
         if (card.resources && card.resources.length > 0) {
             html += '<div class="resources">';
-            html += '<div class="resources-header"><span class="resources-label">Resources</span></div>';
+            html += '<h2 class="resources-label">Resources</h2>';
             html += '<div class="resources-list">';
             card.resources.forEach(res => {
                 const type = res.type || 'article';
@@ -136,7 +156,7 @@ function renderSlides() {
             html += '</div></div>';
         }
 
-        html += '</div></div>';
+        html += '</aside></div></div>';
         slide.innerHTML = html;
         container.appendChild(slide);
     });
@@ -179,6 +199,8 @@ function updateUI() {
     const progress = ((currentSlide + 1) / totalSlides) * 100;
     getElement('progressFill').style.width = `${progress}%`;
     getElement('progressText').textContent = `${currentSlide + 1} / ${totalSlides}`;
+    // Lets the nav pick up the current section's colour
+    document.body.setAttribute('data-category', slides[currentSlide].category);
 
     getElement('prevBtn').disabled = currentSlide === 0;
     getElement('nextBtn').disabled = currentSlide === totalSlides - 1;
