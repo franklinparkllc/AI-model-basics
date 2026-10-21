@@ -17,7 +17,7 @@ Open `index.html` directly in any modern web browser. No build process or depend
 ## Topics Covered
 
 ### Architecture
-1. Introduction to Modern AI Models
+1. Introduction to modern AI models
 2. Feed-Forward Neural Networks (FFNN)
 3. Tokens & Tokenization
 4. From Numbers to Meaning: Embeddings & Latent Space
@@ -47,7 +47,7 @@ Open `index.html` directly in any modern web browser. No build process or depend
 
 ### Conclusion
 22. Recap: Key Learnings
-23. Looking Ahead — Emerging Architectures
+23. Looking Ahead
 
 ## File Structure
 
@@ -60,7 +60,8 @@ AI-model-basics/
 ├── tests.html          # In-browser test suite (data validation + slideshow logic)
 ├── docs/
 │   ├── cheat-sheet.html    # Printable/shareable reference sheet
-│   └── cheat-sheet.yaml    # Source data for the cheat sheet
+│   ├── cheat-sheet.yaml    # Source data for the cheat sheet
+│   └── future-directions-plan.md  # Research plan for expanding "Looking Ahead" into a Frontier section
 └── README.md
 ```
 

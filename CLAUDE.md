@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**AI Model Basics** is an interactive HTML5 slideshow presentation (no build process required) that teaches 23 concepts about how modern AI models are built, trained, and used. The presentation flows through architecture, training, inference, and advanced capabilities.
+**AI Model Basics** is an interactive HTML5 slideshow presentation (no build process required) that teaches 23 concepts about how modern AI models are built, trained, and used. The presentation flows through architecture, inference, training, and advanced capabilities.
 
 ## Architecture & File Organization
 
@@ -14,7 +14,7 @@ The project is a pure **client-side web application** with a simple, flat struct
 - **model-basics.js** — Slideshow controller: renders slides from data, handles navigation (keyboard, buttons, touch), manages URL hash routing
 - **cards-data.js** — All slide content as a JavaScript array (`cardsData`); each object represents one slide with title, description, bullets, paragraphs, callouts, and curated resources
 - **model-basics.css** — All styling; uses CSS Grid for responsive layout, handles slide transitions with `transform: translateX()`
-- **docs/** — Supplementary materials: `cheat-sheet.html` (rendered reference) and `cheat-sheet.yaml` (source data)
+- **docs/** — Supplementary materials: `cheat-sheet.html` (rendered reference), `cheat-sheet.yaml` (source data), and `future-directions-plan.md` (planning notes for a future Frontier section)
 
 ## Key Architecture Patterns
 
