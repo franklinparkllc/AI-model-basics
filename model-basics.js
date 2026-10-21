@@ -68,10 +68,17 @@ function init() {
     }
 }
 
+// Length of an HTML string's visible text. Parsed in an inert <template>, so
+// nothing in it loads or runs
+const measureTemplate = document.createElement('template');
+function textLength(html) {
+    measureTemplate.innerHTML = html;
+    return measureTemplate.content.textContent.length;
+}
+
 // True when the side column (bullets, callout, resources) carries about as much
 // text as the paragraphs, so the two-column layout should split evenly
 function asideIsHeavy(card) {
-    const textLength = html => html.replace(/<[^>]+>/g, '').length;
     const mainLength = (card.paragraphs || []).reduce((sum, p) => sum + textLength(p), 0);
     const asideLength = (card.bullets || []).reduce((sum, b) => sum + textLength(b), 0)
         + (card.callout ? textLength(card.callout.content) : 0)

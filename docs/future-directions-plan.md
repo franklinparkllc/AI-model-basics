@@ -171,7 +171,7 @@ These two are smaller. Either combine them or attach them to earlier slides as c
 
 - **Category:** A new `frontier` category would need a CSS color variable and `li::before` rule in `model-basics.css` (around line 12 and lines 274–277), and the `validCategories` list in `tests.html` (line 136). The alternative is to keep `adv`.
 - **Slide count:** Going from 23 to roughly 29–30 means updating the count and topic list in `README.md` and `CLAUDE.md`, per the pre-commit alignment rule.
-- **Version:** bump `index.html` (currently v27).
+- **Version:** bump `index.html` (currently v27.1).
 - **Order:** decide whether the Recap (slide 22) moves to the end.
 - **Images:** JEPA, MoE, and diffusion each benefit greatly from a diagram. Find properly licensed figures (Meta blog, Maarten Grootendorst's visual guides with attribution, or Wikimedia).
 - **Link check:** after adding resources, rerun the YouTube title check used in the v26 pass, which queries `youtube.com/oembed?url=...`. Two dead links and four mislabeled ones were found that way.
